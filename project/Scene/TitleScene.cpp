@@ -1,16 +1,15 @@
 #include "TitleScene.h"
 #include "SceneManager.h"
 #include "Input.h"
-#include "GamePlayScene.h"
+#include "StageSelectScene.h"
+#include "DirectXCommon.h"
 
 void TitleScene::Initialize() {
 }
 
 void TitleScene::Update(Input* input) {
-	if (input->IsKeyTriggered(DIK_RETURN)) {
-
-
-		GetSceneManager()->SetNextScene(new GamePlayScene());
+	if (input->IsKeyTriggered(DIK_SPACE)) {
+		GetSceneManager()->SetNextScene(new StageSelectScene());
 	}
 }
 
