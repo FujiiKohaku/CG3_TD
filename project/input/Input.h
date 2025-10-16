@@ -10,12 +10,13 @@ class Input {
 public:
     bool Initialize(WinApp* winApp);
     void Update();
-    bool IsKeyPressed(BYTE keyCode) const;
+    bool IsKeyPressed(BYTE keyNumber) const;
+    bool IsKeyTriggered(BYTE keyNumber) const;
 
 private:
     Microsoft::WRL::ComPtr<IDirectInput8> directInput_ = nullptr;
     Microsoft::WRL::ComPtr<IDirectInputDevice8> keyboard_;
     BYTE keys_[256] {};
-    // WinDowsAPI
+    BYTE preKeys_[256] {};
     WinApp* winApp_ = nullptr;
 };
