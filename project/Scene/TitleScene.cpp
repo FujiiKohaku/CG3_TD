@@ -7,7 +7,9 @@ void TitleScene::Initialize() {
 }
 
 void TitleScene::Update(Input* input) {
-	if (input->IsKeyPressed(DIK_RETURN)) {
+	if (input->IsKeyTriggered(DIK_RETURN)) {
+
+
 		GetSceneManager()->SetNextScene(new GamePlayScene());
 	}
 }
