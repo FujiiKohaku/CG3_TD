@@ -80,7 +80,7 @@
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -105,7 +105,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,7 +134,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <Optimization>Disabled</Optimization>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -166,8 +166,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Pendulum.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Player\Pendulum.cpp" />
+    <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Scene\Game.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\GamePlayScene.cpp" />
@@ -245,8 +245,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
-    <ClInclude Include="Pendulum.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="Player\Pendulum.h" />
+    <ClInclude Include="Player\Player.h" />
     <ClInclude Include="Scene\Game.h" />
     <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\GamePlayScene.h" />

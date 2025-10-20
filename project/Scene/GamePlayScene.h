@@ -2,6 +2,7 @@
 // ======================= ヘッダー・ライブラリ関連 ==========================
 #define _USE_MATH_DEFINES
 // 標準ライブラリ//
+#include "BaseScene.h"
 #include "D3DResourceLeakChecker.h"
 #include "DebugCamera.h"
 #include "MatrixMath.h"
@@ -25,7 +26,6 @@
 #include <string>
 #include <vector>
 #include <wrl.h>
-#include "BaseScene.h"
 // Windows・DirectX関連
 #include <Windows.h> //ウィンドウAPIで消す
 #include <d3d12.h>
@@ -44,21 +44,24 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "dxcompiler.lib")
+// 個人ライブラリ
+#include "Player.h"
 class GamePlayScene : public BaseScene {
 public:
-	void Initialize()override;
-	void Update(Input* input)override;
-	void Draw()override;
-	void Finalize()override;
+    void Initialize() override;
+    void Update(Input* input) override;
+    void Draw() override;
+    void Finalize() override;
 
 private:
-	SoundManager soundManager_;
-	Object3dManager* object3dManager_ = nullptr;
-	SpriteManager* spriteManager_ = nullptr;
-	DebugCamera debugCamera_;
-	ModelCommon modelCommon_;
-	std::vector<Sprite*> sprites_;
-	Object3d object3d_, player2_, enemy_;
-	SoundData bgm;
-	bool isEnd = false;
+    SoundManager soundManager_;
+    Object3dManager* object3dManager_ = nullptr;
+    SpriteManager* spriteManager_ = nullptr;
+    DebugCamera debugCamera_;
+    ModelCommon modelCommon_;
+    std::vector<Sprite*> sprites_;
+    Object3d object3d_, player2_, enemy_;
+    SoundData bgm;
+    bool isEnd = false;
+    Player* player_;
 };
