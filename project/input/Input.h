@@ -12,6 +12,9 @@ public:
     void Update();
     bool IsKeyPressed(BYTE keyNumber) const;
     bool IsKeyTriggered(BYTE keyNumber) const;
+    // getter
+    const BYTE* GetKeys() const { return keys_; }
+    const BYTE* GetPreKeys() const { return preKeys_; }
 
 private:
     Microsoft::WRL::ComPtr<IDirectInput8> directInput_ = nullptr;

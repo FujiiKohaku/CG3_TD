@@ -16,13 +16,13 @@ class Pendulum
 	unsigned int color_ = 0xFFFFFFFF;
 	int strokeCount_ = 0;
 	float kickStrength_ = 1.5f;
-	//Vector3 anchorAtCut;// Ø’f‚ÌƒAƒ“ƒJ[ˆÊ’uiŠî€j
+	//Vector3 anchorAtCut;// åˆ‡æ–­æ™‚ã®ã‚¢ãƒ³ã‚«ãƒ¼ä½ç½®ï¼ˆåŸºæº–ï¼‰
 
-	// ‘Å‹…ˆÊ’u‚Ì—š—ğŠÇ—
+	// æ‰“çƒä½ç½®ã®å±¥æ­´ç®¡ç†
 	Vector3 lastAnchorPos_ = anchorPos_;
 	Vector3 prevAnchorPos_ = anchorPos_;
 
-	// Œ¸ŠŒW”i¬‚³‚¢‚Ù‚Ç’·‚­—h‚ê‚éA‘å‚«‚¢‚Ù‚Ç‚·‚®~‚Ü‚éj
+	// æ¸›è¡°ä¿‚æ•°ï¼ˆå°ã•ã„ã»ã©é•·ãæºã‚Œã‚‹ã€å¤§ãã„ã»ã©ã™ãæ­¢ã¾ã‚‹ï¼‰
 	float damping_ = 0.25f;
 
 public:
@@ -33,7 +33,7 @@ public:
 
 	void Reset();
 
-	//ƒQƒbƒ^[ƒƒ{
+	//ã‚²ãƒƒã‚¿ãƒ¼ãƒ­ãƒœ
 	const Vector3& GetAnchor() const { return anchorPos_; }
 	const Vector3& GetLastAnchor() const { return lastAnchorPos_; }
 	const Vector3& GetPrevAnchor() const { return prevAnchorPos_; }
@@ -42,7 +42,7 @@ public:
 	float GetAngle() const { return angle_; }
 	int GetIsCut() const { return isCut_; }
 
-	// ƒZƒbƒ^[
+	// ã‚»ãƒƒã‚¿ãƒ¼
 	void SetStrokeCount(int strokeCount) { strokeCount_ = strokeCount; }
 	void SetAnchorPos(Vector3 anchorPos) { anchorPos_ = anchorPos; }
 	void SetLastAnchorPos(Vector3 lastAnchorPos) { lastAnchorPos_ = lastAnchorPos; }
