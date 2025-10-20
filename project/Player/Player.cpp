@@ -162,10 +162,12 @@ bool Player::GetIsCut()
     return isCut_;
 }
 
-void Player::Initialize(Object3dManager* object3dManager)
+void Player::Initialize(Object3dManager* object3dManager, const std::string& modelName)
 {
     pendulum_ = new Pendulum;
     object3d_ = new Object3d;
+    object3d_->Initialize(object3dManager);
+    object3d_->SetModel(modelName);
 }
 
 void Player::Update(const char* keys, const char* preKeys, float deltaTime)
@@ -252,16 +254,8 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime)
     }
 }
 
-void Player::Draw(Object3dManager* object3dManager)
+void Player::Draw()
 {
-
-    static bool initialized = false;
-
-    if (!initialized) {
-        object3d_->Initialize(object3dManager);
-        object3d_->SetModel("axis.obj"); // 軸モデルなど見やすいもの
-        initialized = true;
-    }
 
     // 現在の位置に合わせる
     object3d_->SetTranslate(position_);

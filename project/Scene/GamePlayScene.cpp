@@ -159,7 +159,7 @@ void GamePlayScene::Initialize()
     // 振り子プレイヤー
     //=================================
     pendulumPlayer_ = new Player();
-    pendulumPlayer_->Initialize(object3dManager_);
+    pendulumPlayer_->Initialize(object3dManager_,"axis.obj");
 
 #ifdef _DEBUG
 
@@ -238,7 +238,7 @@ void GamePlayScene::Draw()
     object3d_.Draw();
     player2_.Draw();
     enemy_.Draw();
-    pendulumPlayer_->Draw(object3dManager_);
+    pendulumPlayer_->Draw();
     // ----- ImGui描画（デバッグUI） -----
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
 

@@ -79,11 +79,11 @@ public:
 
     bool GetIsCut();
 
-    void Initialize(Object3dManager* object3dManager);
+    void Initialize(Object3dManager* object3dManager, const std::string& modelName);
 
     void Update(const char* keys, const char* preKeys, float deltaTime);
 
-    void Draw(Object3dManager* object3dManager);
+    void Draw();
 
     void IsCollisionWall();
 
