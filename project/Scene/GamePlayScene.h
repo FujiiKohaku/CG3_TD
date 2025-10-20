@@ -64,4 +64,6 @@ private:
     SoundData bgm;
     bool isEnd = false;
     Player* pendulumPlayer_;
+
+  Camera* camera_;
 };

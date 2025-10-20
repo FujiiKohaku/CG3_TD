@@ -1,4 +1,5 @@
 #pragma once
+#include "Camera.h"
 #include "Input.h"
 #include "MatrixMath.h"
 #include "Object3d.h"
@@ -7,7 +8,6 @@
 #include "Struct.h"
 #include "algorithm"
 #include "cmath"
-
 class Player {
 
     Vector3 position_ = { 0.0f, 0.2f, 0.0f };
