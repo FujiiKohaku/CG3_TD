@@ -162,9 +162,10 @@ bool Player::GetIsCut()
     return isCut_;
 }
 
-void Player::Initialize()
+void Player::Initialize(Object3dManager* object3dManager)
 {
     pendulum_ = new Pendulum;
+    object3d_ = new Object3d;
 }
 
 void Player::Update(const char* keys, const char* preKeys, float deltaTime)
@@ -253,20 +254,19 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime)
 
 void Player::Draw(Object3dManager* object3dManager)
 {
-    // axis.objを使って描画
-    static Object3d object;
+
     static bool initialized = false;
 
     if (!initialized) {
-        object.Initialize(object3dManager);
-        object.SetModel("axis.obj"); // 軸モデルなど見やすいもの
+        object3d_->Initialize(object3dManager);
+        object3d_->SetModel("axis.obj"); // 軸モデルなど見やすいもの
         initialized = true;
     }
 
     // 現在の位置に合わせる
-    object.SetTranslate(position_);
-    object.Update();
-    object.Draw();
+    object3d_->SetTranslate(position_);
+    object3d_->Update();
+    object3d_->Draw();
 }
 
 void Player::IsCollisionWall()
@@ -364,6 +364,10 @@ Player::~Player()
     if (pendulum_) {
         delete pendulum_;
         pendulum_ = nullptr;
+    }
+    if (object3d_) {
+        delete object3d_;
+        object3d_ = nullptr;
     }
 }
 

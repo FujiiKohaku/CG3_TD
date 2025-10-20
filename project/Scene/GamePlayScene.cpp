@@ -159,7 +159,7 @@ void GamePlayScene::Initialize()
     // 振り子プレイヤー
     //=================================
     pendulumPlayer_ = new Player();
-    pendulumPlayer_->Initialize();
+    pendulumPlayer_->Initialize(object3dManager_);
 
 #ifdef _DEBUG
 

@@ -9,7 +9,7 @@
 #include "cmath"
 
 class Player {
-   
+
     Vector3 position_ = { 0.0f, 0.2f, 0.0f };
     Vector3 prevPosition_ = { 0.0f, 0.0f, 0.0f };
     Vector3 anchorPosition_ = { 0.0f, 0.0f, 0.0f };
@@ -20,7 +20,7 @@ class Player {
     unsigned int color_ = 0xFF0000FF;
 
     Pendulum* pendulum_ = nullptr;
-
+    Object3d* object3d_ = nullptr;
     // 壁の位置の初期化ほんとはここに入れるのは良くない
     const float wallXMin = -7.5f;
     const float wallXMax = 7.5f;
@@ -79,7 +79,7 @@ public:
 
     bool GetIsCut();
 
-    void Initialize();
+    void Initialize(Object3dManager* object3dManager);
 
     void Update(const char* keys, const char* preKeys, float deltaTime);
 
