@@ -48,14 +48,14 @@ void TitleScene::Initialize()
     logoObject_->SetModel(logoModel_);
     logoObject_->SetTranslate({ 0.0f, 0.0f, 0.0f });
     logoObject_->SetScale({ 1.0f, 1.0f, 1.0f });
-    logoObject_->SetRotate({ std::numbers::pi_v<float> / 2.0f, std::numbers::pi_v<float>, 0.0f });
+    logoObject_->SetRotate({ std::numbers::pi_v<float> /2.0f,0.0f, 0.0f });
 
     backGround_ = new Object3d();
     backGround_->Initialize(object3dManager_);
     backGround_->SetModel(BackModel_);
     backGround_->SetTranslate({ 0.0f, 0.0f, 5.0f });
     backGround_->SetScale({ 8.0f, 4.0f, 1.0f });
-    backGround_->SetRotate({ 0.0f, std::numbers::pi_v<float>, 0.0f });
+    backGround_->SetRotate({ 0.0f, 0.0f, 0.0f });
 
     plane_ = new Object3d();
     plane_->Initialize(object3dManager_);
