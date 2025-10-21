@@ -138,15 +138,7 @@ void GamePlayScene::Initialize()
 
     // プレイヤー
 
-    player2_.Initialize(object3dManager_);
-    player2_.SetModel("axis.obj");
-    player2_.SetTranslate({ 3.0f, 0.0f, 0.0f }); // 右に移動
-    // player2_.SetRotate({ 0.0f, std::numbers::pi_v<float>, 0.0f });
-    // 敵
 
-    enemy_.Initialize(object3dManager_);
-    enemy_.SetModel("plane.obj");
-    enemy_.SetTranslate({ -2.0f, 0.0f, 0.0f }); // 左に移動
 
     // スカイドーム
     skydome_.Initialize(object3dManager_);

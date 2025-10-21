@@ -114,7 +114,7 @@ Object3d::ModelData Object3d::LoadObjFile(const std::string& directoryPath, cons
             // 頂点座標
             Vector4 pos;
             s >> pos.x >> pos.y >> pos.z;
-            pos.x *= -1.0f; // 左手座標化
+           
             pos.w = 1.0f;
             positions.push_back(pos);
         } else if (identifier == "vt") {
@@ -127,7 +127,7 @@ Object3d::ModelData Object3d::LoadObjFile(const std::string& directoryPath, cons
             // 法線
             Vector3 n;
             s >> n.x >> n.y >> n.z;
-            n.x *= -1.0f; // 左手座標化
+           
             normals.push_back(n);
         } else if (identifier == "f") {
             // 面定義（3頂点以上にも対応）
