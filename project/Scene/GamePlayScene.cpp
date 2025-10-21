@@ -117,6 +117,7 @@ void GamePlayScene::Initialize()
     ModelManager::GetInstance()->initialize(GetDx());
     ModelManager::GetInstance()->LoadModel("plane.obj");
     ModelManager::GetInstance()->LoadModel("axis.obj");
+    ModelManager::GetInstance()->LoadModel("PlayerBall.obj");
     // =============================
     // 4. モデルと3Dオブジェクト生成
     // =============================
@@ -162,7 +163,7 @@ void GamePlayScene::Initialize()
     // 振り子プレイヤー
     //=================================
     pendulumPlayer_ = new Player();
-    pendulumPlayer_->Initialize(object3dManager_, "axis.obj");
+    pendulumPlayer_->Initialize(object3dManager_, "PlayerBall.obj");
 
 #ifdef _DEBUG
 
@@ -219,7 +220,7 @@ void GamePlayScene::Update(Input* input)
     const BYTE* keys = input->GetKeys();
     const BYTE* preKeys = input->GetPreKeys();
     // 振り子プレイヤーの更新処理
-    pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f);
+    pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f,input);
 
     // 各3Dオブジェクトの更新
     object3d_.Update();

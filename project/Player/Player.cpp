@@ -170,18 +170,18 @@ void Player::Initialize(Object3dManager* object3dManager, const std::string& mod
     object3d_->SetModel(modelName);
 }
 
-void Player::Update(const char* keys, const char* preKeys, float deltaTime)
+void Player::Update(const char* keys, const char* preKeys, float deltaTime, Input* input)
 {
     if (!pendulum_->GetIsCut()) {
         // 振り子モード
-        pendulum_->Update(keys, preKeys, deltaTime);
+        pendulum_->Update(keys, preKeys, deltaTime,input);
 
         // 球位置更新
         position_.x = pendulum_->GetAnchor().x + sinf(pendulum_->GetAngle()) * pendulum_->GetLength();
         position_.y = pendulum_->GetAnchor().y - cosf(pendulum_->GetAngle()) * pendulum_->GetLength();
         position_.z = pendulum_->GetAnchor().z;
 
-        if (keys[DIK_R] && !preKeys[DIK_R]) {
+        if (input->IsKeyTriggered(DIK_R)) {
             // 切断処理
             pendulum_->SetPrevAnchorPos(pendulum_->GetLastAnchor());
             pendulum_->SetLastAnchorPos(pendulum_->GetAnchor());

@@ -4,12 +4,12 @@ void Pendulum::Initialize()
 {
 }
 
-void Pendulum::Update(const char* keys, const char* preKeys, float deltaTime)
+void Pendulum::Update(const char* keys, const char* preKeys, float deltaTime, Input* input)
 {
     if (isCut_) return; // 切断後は処理しない
 
     // SPACEで加速
-    if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
+    if (input->IsKeyTriggered(DIK_SPACE)) {
         angularVelocity_ += kickStrength_;
     }
 
