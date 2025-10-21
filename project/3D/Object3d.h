@@ -1,4 +1,5 @@
 #pragma once
+#include "Camera.h"
 #include "DebugCamera.h"
 #include "Matrix4x4.h"
 #include "TextureManager.h"
@@ -71,6 +72,7 @@ public:
     void SetRotate(const Vector3& rotate) { transform.rotate = rotate; }
     void SetTranslate(const Vector3& translate) { transform.translate = translate; }
     void SetModel(const std::string& filePath);
+    void SetCamera(Camera* camera) { camera_ = camera; }
     // === getter ===
     const Vector3& GetScale() const { return transform.scale; }
     const Vector3& GetRotate() const { return transform.rotate; }
@@ -100,4 +102,6 @@ private:
 
     // モデル
     // ModelData modelData;
+    // カメラ
+    Camera* camera_ = nullptr;
 };

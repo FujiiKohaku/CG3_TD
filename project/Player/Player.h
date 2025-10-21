@@ -1,102 +1,101 @@
 #pragma once
-#include "Struct.h"
-#include "cmath"
-#include "algorithm"
-#include "MatrixMath.h"
+#include "Camera.h"
 #include "Input.h"
+#include "MatrixMath.h"
+#include "Object3d.h"
+#include "Object3dManager.h"
 #include "Pendulum.h"
+#include "Struct.h"
+#include "algorithm"
+#include "cmath"
+class Player {
 
-class Player
-{
-	Vector3 position_ = { 0.0f,0.2f,0.0f };
-	Vector3 prevPosition_ = { 0.0f,0.0f,0.0f };
-	Vector3 anchorPosition_ = { 0.0f,0.0f,0.0f };
-	Vector3 velocity_ = { 0.0f,0.0f,0.0f };
-	float decelerationRate_ = 0.98f;
-	float mass_ = 2.0f;
-	float radius_ = 0.05f;
-	unsigned int color_ = 0xFF0000FF;
+    Vector3 position_ = { 0.0f, 0.2f, 0.0f };
+    Vector3 prevPosition_ = { 0.0f, 0.0f, 0.0f };
+    Vector3 anchorPosition_ = { 0.0f, 0.0f, 0.0f };
+    Vector3 velocity_ = { 0.0f, 0.0f, 0.0f };
+    float decelerationRate_ = 0.98f;
+    float mass_ = 2.0f;
+    float radius_ = 0.05f;
+    unsigned int color_ = 0xFF0000FF;
 
-	Pendulum* pendulum_ = nullptr;
+    Pendulum* pendulum_ = nullptr;
+    Object3d* object3d_ = nullptr;
+    // å£ã®ä½ç½®ã®åˆæœŸåŒ–ã»ã‚“ã¨ã¯ã“ã“ã«å…¥ã‚Œã‚‹ã®ã¯è‰¯ããªã„
+    const float wallXMin = -7.5f;
+    const float wallXMax = 7.5f;
+    const float wallYMin = -1.0f;
+    const float wallYMax = 14.0f;
 
-	// •Ç‚ÌˆÊ’u‚Ì‰Šú‰»‚Ù‚ñ‚Æ‚Í‚±‚±‚É“ü‚ê‚é‚Ì‚Í—Ç‚­‚È‚¢
-	const float wallXMin = -7.5f;
-	const float wallXMax = 7.5f;
-	const float wallYMin = -1.0f;
-	const float wallYMax = 14.0f;
+    // å£è¡çªå‡¦ç†ï¼ˆã‚«ãƒ—ã‚»ãƒ«åˆ¤å®šï¼‰
+    Vector3 walls_[4][2] = {
+        { { wallXMin, wallYMin, 0 }, { wallXMin, wallYMax, 0 } },
+        { { wallXMax, wallYMin, 0 }, { wallXMax, wallYMax, 0 } },
+        { { wallXMin, wallYMin, 0 }, { wallXMax, wallYMin, 0 } },
+        { { wallXMin, wallYMax, 0 }, { wallXMax, wallYMax, 0 } }
+    };
 
-	// •ÇÕ“Ëˆ—iƒJƒvƒZƒ‹”»’èj
-	Vector3 walls_[4][2] = {
-		{{wallXMin, wallYMin,0},{wallXMin,wallYMax,0}},
-		{{wallXMax, wallYMin,0},{wallXMax,wallYMax,0}},
-		{{wallXMin, wallYMin,0},{wallXMax,wallYMin,0}},
-		{{wallXMin, wallYMax,0},{wallXMax,wallYMax,0}}
-	};
-
-	Vector3 bumperPos_ = { 0.0f,5.0f,0.0f };
-	float bumperRadius_ = 0.5f;
-	float bounce_ = 1.2f;
+    Vector3 bumperPos_ = { 0.0f, 5.0f, 0.0f };
+    float bumperRadius_ = 0.5f;
+    float bounce_ = 1.2f;
 
 public:
+    ~Player();
+    // å†…ç©
+    float Dot(const Vector3& v1, const Vector3& v2);
 
-	// “àÏ
-	float Dot(const Vector3& v1, const Vector3& v2);
+    Vector3 Add(const Vector3& v1, const Vector3& v2);
 
-	Vector3 Add(const Vector3& v1, const Vector3& v2);
+    Vector3 Subtract(const Vector3& v1, const Vector3& v2);
 
-	Vector3 Subtract(const Vector3& v1, const Vector3& v2);
+    Vector3 Multiply(const float& i, const Vector3& v1);
 
-	Vector3 Multiply(const float& i, const Vector3& v1);
+    Matrix4x4 Add(Matrix4x4 matrix1, Matrix4x4 matrix2);
 
-	Matrix4x4 Add(Matrix4x4 matrix1, Matrix4x4 matrix2);
+    Matrix4x4 Subtract(Matrix4x4 matrix1, Matrix4x4 matrix2);
 
-	Matrix4x4 Subtract(Matrix4x4 matrix1, Matrix4x4 matrix2);
+    float LengthSq(const Vector3& v);
 
-	float LengthSq(const Vector3& v);
+    float Length(const Vector3& v);
 
-	float Length(const Vector3& v);
+    bool CapsuleIntersectsSegment3D(const Vector3& capsuleStart, const Vector3& capsuleEnd, float radius, const Vector3& segStart, const Vector3& segEnd);
 
-	bool CapsuleIntersectsSegment3D(const Vector3& capsuleStart, const Vector3& capsuleEnd, float radius, const Vector3& segStart, const Vector3& segEnd);
+    // --- å£å¤–ãƒã‚§ãƒƒã‚¯ï¼ˆOBå‡¦ç†ï¼‰ ---
+    bool isOutOfBounds();
 
-	// --- •ÇŠOƒ`ƒFƒbƒNiOBˆ—j ---
-	bool isOutOfBounds();
+    // çƒã¨çƒã®è¡çªåˆ¤å®š
+    bool SphereIntersectsSphere(
+        const Vector3& posA, float radiusA,
+        const Vector3& posB, float radiusB);
 
-	// ‹…‚Æ‹…‚ÌÕ“Ë”»’è
-	bool SphereIntersectsSphere(
-		const Vector3& posA, float radiusA,
-		const Vector3& posB, float radiusB
-	);
+    // çƒã¨çƒã®åå°„å‡¦ç†
+    void ReflectSphereVelocity(
+        Vector3& position, Vector3& velocity,
+        const Vector3& otherPos, float selfRadius, float otherRadius,
+        float bounce = 1.1f // åå°„å€ç‡ï¼ˆãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ1.1å€ï¼‰
+    );
 
-	// ‹…‚Æ‹…‚Ì”½Ëˆ—
-	void ReflectSphereVelocity(
-		Vector3& position, Vector3& velocity,
-		const Vector3& otherPos, float selfRadius, float otherRadius,
-		float bounce = 1.1f // ”½Ë”{—¦iƒfƒtƒHƒ‹ƒg1.1”{j
-	);
+    Vector3 GetAnchorPosition();
 
+    bool GetIsCut();
 
-	Vector3 GetAnchorPosition();
+    void Initialize(Object3dManager* object3dManager, const std::string& modelName);
 
-	bool GetIsCut();
+    void Update(const char* keys, const char* preKeys, float deltaTime);
 
-	void Initialize();
+    void Draw();
 
-	void Update(const char* keys, const char* preKeys, float deltaTime);
+    void IsCollisionWall();
 
-	//void Draw(const Matrix4x4& viewProj, const Matrix4x4& viewport);
+    void Reset();
 
-	void IsCollisionWall();
+    void VelocityReset();
 
-	void Reset();
+    // ã‚²ãƒƒã‚¿ãƒ¼ãƒ­ãƒœ
+    const Vector3& GetPosition() const { return position_; }
+    const float& GetRadius() const { return radius_; }
+    const unsigned int& GetColor() const { return color_; }
 
-	void VelocityReset();
-
-	// ƒQƒbƒ^[ƒƒ{
-	const Vector3& GetPosition() const { return position_; }
-	const float& GetRadius() const { return radius_; }
-	const unsigned int& GetColor() const { return color_; }
-
-	// ƒZƒbƒ^[
-	void SetVelocity(Vector3 velocity) { velocity_ = velocity; }
+    // ã‚»ãƒƒã‚¿ãƒ¼
+    void SetVelocity(Vector3 velocity) { velocity_ = velocity; }
 };
-

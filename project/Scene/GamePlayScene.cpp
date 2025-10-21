@@ -106,7 +106,10 @@ void GamePlayScene::Initialize()
     object3dManager_->Initialize(GetDx());
 
     // カメラ
-
+    camera_ = new Camera();
+    camera_->SetTranslate({ 0.0f, 20.0f, -100.0f }); // 原点から離す
+    camera_->SetRotate({ 0.2f, 0.0f, 0.0f }); // 下向き
+    object3dManager_->SetDefaultCamera(camera_);
     // モデル共通設定
 
     modelCommon_.Initialize(GetDx());
@@ -138,7 +141,7 @@ void GamePlayScene::Initialize()
     player2_.Initialize(object3dManager_);
     player2_.SetModel("axis.obj");
     player2_.SetTranslate({ 3.0f, 0.0f, 0.0f }); // 右に移動
-   // player2_.SetRotate({ 0.0f, std::numbers::pi_v<float>, 0.0f });
+    // player2_.SetRotate({ 0.0f, std::numbers::pi_v<float>, 0.0f });
     // 敵
 
     enemy_.Initialize(object3dManager_);
@@ -154,6 +157,12 @@ void GamePlayScene::Initialize()
     soundManager_.Initialize();
     // サウンドファイルを読み込み（パスはプロジェクトに合わせて調整）
     bgm = soundManager_.SoundLoadWave("Resources/BGM.wav");
+
+    //=================================
+    // 振り子プレイヤー
+    //=================================
+    pendulumPlayer_ = new Player();
+    pendulumPlayer_->Initialize(object3dManager_, "axis.obj");
 
 #ifdef _DEBUG
 
@@ -207,11 +216,17 @@ void GamePlayScene::Update(Input* input)
     // ==============================
     //  更新処理（Update）
     // ==============================
+    const BYTE* keys = input->GetKeys();
+    const BYTE* preKeys = input->GetPreKeys();
+    // 振り子プレイヤーの更新処理
+    pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f);
 
     // 各3Dオブジェクトの更新
     object3d_.Update();
     player2_.Update();
     enemy_.Update();
+    camera_->Update();
+    
 }
 
 void GamePlayScene::Draw()
@@ -228,7 +243,7 @@ void GamePlayScene::Draw()
     object3d_.Draw();
     player2_.Draw();
     enemy_.Draw();
-
+    pendulumPlayer_->Draw();
     // ----- ImGui描画（デバッグUI） -----
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
 
@@ -241,21 +256,24 @@ void GamePlayScene::Draw()
 
 void GamePlayScene::Finalize()
 {
-    // 1. 描画系（Object/Sprite）を先に破棄
+    // 1. Player / Object3dなどユーザ作成オブジェクト破棄
+    delete pendulumPlayer_;
     delete object3dManager_;
-    sprites_.clear();
     delete spriteManager_;
+    sprites_.clear();
 
-    // 2. ImGuiを破棄（DirectXがまだ生きているうちに）
+    // 2. ImGui破棄
     ImGui_ImplDX12_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
 
-    // 3. モデルやテクスチャを解放
+    // 3. TextureManager / ModelManager
     ModelManager::GetInstance()->Finalize();
     TextureManager::GetInstance()->Finalize();
 
-    // 4. サウンドを解放
+    // 4. Sound
     soundManager_.Finalize(&bgm);
 
+    // 5. GPU待機
+    GetDx()->WaitForGPU();
 }

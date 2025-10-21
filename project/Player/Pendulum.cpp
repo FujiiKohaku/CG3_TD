@@ -6,16 +6,16 @@ void Pendulum::Initialize()
 
 void Pendulum::Update(const char* keys, const char* preKeys, float deltaTime)
 {
-    if (isCut_) return; // Ø’fŒã‚Íˆ—‚µ‚È‚¢
+    if (isCut_) return; // åˆ‡æ–­å¾Œã¯å‡¦ç†ã—ãªã„
 
-    // SPACE‚Å‰Á‘¬
+    // SPACEã§åŠ é€Ÿ
     if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
         angularVelocity_ += kickStrength_;
     }
 
     if (angularVelocity_ > angularVelocityMax_) angularVelocity_ = angularVelocityMax_;
 
-    // Šp‰Á‘¬“xiŒ¸Š‚İj
+    // è§’åŠ é€Ÿåº¦ï¼ˆæ¸›è¡°è¾¼ã¿ï¼‰
     angularAcceleration_ = (-9.8f / length_) * sinf(angle_) - damping_ * angularVelocity_;
     angularVelocity_ += angularAcceleration_ * deltaTime;
     angle_ += angularVelocity_ * deltaTime;
@@ -23,7 +23,7 @@ void Pendulum::Update(const char* keys, const char* preKeys, float deltaTime)
 
 void Pendulum::Reset()
 {
-    // ‰ŠúŠp“xE‘¬“x‚ğƒŠƒZƒbƒg
+    // åˆæœŸè§’åº¦ãƒ»é€Ÿåº¦ã‚’ãƒªã‚»ãƒƒãƒˆ
     angle_ = 0.0f;
     angularVelocity_ = 0.0f;
     angularAcceleration_ = 0.0f;

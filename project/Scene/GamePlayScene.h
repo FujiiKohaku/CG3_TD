@@ -63,5 +63,7 @@ private:
     Object3d object3d_, player2_, enemy_;
     SoundData bgm;
     bool isEnd = false;
-    Player* player_;
+    Player* pendulumPlayer_;
+
+  Camera* camera_;
 };
