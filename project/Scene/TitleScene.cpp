@@ -99,7 +99,7 @@ void TitleScene::Update(Input* input)
     if (t > 6.28f)
         t = 0.0f;
    // plane_->SetRotate({ 0.0f, r, 0.0f });
-   // backGround_->SetRotate({ 0.0f, std::numbers::pi_v<float>, 0.0f });
+   //backGround_->SetRotate({ 0.0f, std::numbers::pi_v<float>, 0.0f });
 }
 
 void TitleScene::Draw()
