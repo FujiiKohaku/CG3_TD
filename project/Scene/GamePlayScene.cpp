@@ -149,7 +149,7 @@ void GamePlayScene::Initialize()
     enemy_.SetTranslate({ -2.0f, 0.0f, 0.0f }); // 左に移動
 
     // スカイドーム
-	skydome_.Initialize(object3dManager_);
+    skydome_.Initialize(object3dManager_);
 
 #pragma endregion
 
@@ -223,14 +223,14 @@ void GamePlayScene::Update(Input* input)
     const BYTE* keys = input->GetKeys();
     const BYTE* preKeys = input->GetPreKeys();
     // 振り子プレイヤーの更新処理
-    pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f,input);
+    pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f, input);
 
     // 各3Dオブジェクトの更新
-    object3d_.Update();
-    player2_.Update();
-    enemy_.Update();
+    // object3d_.Update();
+    // player2_.Update();
+    // enemy_.Update();
     camera_->Update();
-	  skydome_.Update();
+    skydome_.Update();
 }
 
 void GamePlayScene::Draw()
@@ -244,10 +244,10 @@ void GamePlayScene::Draw()
 
     // ----- 3Dオブジェクト描画 -----
     object3dManager_->PreDraw(); // 3D描画準備
-	  skydome_.Draw();
-    object3d_.Draw();
-    player2_.Draw();
-    enemy_.Draw();
+    skydome_.Draw();
+    // object3d_.Draw();
+    // player2_.Draw();
+    // enemy_.Draw();
     pendulumPlayer_->Draw();
     // ----- ImGui描画（デバッグUI） -----
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
