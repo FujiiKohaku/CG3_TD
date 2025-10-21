@@ -54,7 +54,7 @@ void TitleScene::Initialize()
     backGround_->Initialize(object3dManager_);
     backGround_->SetModel(BackModel_);
     backGround_->SetTranslate({ 0.0f, 0.0f, 5.0f });
-    backGround_->SetScale({ 1.0f, 1.0f, 1.0f });
+    backGround_->SetScale({ 8.0f, 4.0f, 1.0f });
     backGround_->SetRotate({ 0.0f, std::numbers::pi_v<float>, 0.0f });
 
     plane_ = new Object3d();

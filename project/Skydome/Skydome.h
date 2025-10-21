@@ -8,7 +8,7 @@ public:
 	void Draw();
 	~Skydome();
 private:
-	// ƒIƒuƒWƒFƒNƒg
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	Object3d* object_ = nullptr;
 };
 

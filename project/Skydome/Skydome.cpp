@@ -2,7 +2,7 @@
 
 void Skydome::Initialize(Object3dManager* object3dManager)
 {
-	// ƒIƒuƒWƒFƒNƒg¶¬
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
 	object_ = new Object3d();
 	object_->Initialize(object3dManager); 
 	object_->SetModel("skydome.obj");
