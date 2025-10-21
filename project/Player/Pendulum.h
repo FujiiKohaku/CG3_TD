@@ -7,7 +7,7 @@ class Pendulum
 {
 	bool isCut_ = false;
 	Vector3 anchorPos_ = { 0.0f,0.0f,0.0f };
-	float length_ = 0.8f;
+	float length_ = 3.0f;
 	float angle_ = 0.0f;
 	float radius_ = 0.05f;
 	float angularVelocity_ = 0.0f;
@@ -29,7 +29,7 @@ public:
 
 	void Initialize();
 
-	void Update(const char* keys, const char* preKeys, float deltaTime);
+	void Update(const char* keys, const char* preKeys, float deltaTime, Input* input);
 
 	void Reset();
 

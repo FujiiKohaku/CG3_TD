@@ -16,7 +16,7 @@ class Player {
     Vector3 velocity_ = { 0.0f, 0.0f, 0.0f };
     float decelerationRate_ = 0.98f;
     float mass_ = 2.0f;
-    float radius_ = 0.05f;
+    float radius_ = 0.5f;
     unsigned int color_ = 0xFF0000FF;
 
     Pendulum* pendulum_ = nullptr;
@@ -81,7 +81,7 @@ public:
 
     void Initialize(Object3dManager* object3dManager, const std::string& modelName);
 
-    void Update(const char* keys, const char* preKeys, float deltaTime);
+    void Update(const char* keys, const char* preKeys, float deltaTime,Input* input);
 
     void Draw();
 

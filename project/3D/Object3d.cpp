@@ -90,89 +90,84 @@ void Object3d::Draw()
 // ===============================================
 // OBJファイルの読み込み
 // ===============================================
+// ===============================================
+// OBJファイルの読み込み（完全版）
+// ===============================================
 Object3d::ModelData Object3d::LoadObjFile(const std::string& directoryPath, const std::string filename)
 {
-    // 1.中で必要となる変数の宣言
-    ModelData modelData; // 構築するModelData
-    std::vector<Vector4> positions; // 位置
+    ModelData modelData;
+    std::vector<Vector4> positions; // 頂点座標
     std::vector<Vector3> normals; // 法線
-    std::vector<Vector2> texcoords; // テクスチャ座標
-    std::string line; // ファイルから読んだ一行を格納するもの
+    std::vector<Vector2> texcoords; // UV座標
+    std::string line;
 
-    // 2.ファイルを開く
-    std::ifstream file(directoryPath + "/" + filename); // ファイルを開く
-    assert(file.is_open()); // とりあえず開けなかったら止める
+    // ファイルを開く
+    std::ifstream file(directoryPath + "/" + filename);
+    assert(file.is_open());
 
-    // 3.実際にファイルを読み,ModelDataを構築していく
     while (std::getline(file, line)) {
-        std::string identifiler;
+        std::string identifier;
         std::istringstream s(line);
-        s >> identifiler; // 先頭の識別子を読む
+        s >> identifier;
 
-        // identifierに応じた処理
-        if (identifiler == "v") {
-            Vector4 position;
-            s >> position.x >> position.y >> position.z;
-            // 左手座標にする
-            position.x *= -1.0f;
+        if (identifier == "v") {
+            // 頂点座標
+            Vector4 pos;
+            s >> pos.x >> pos.y >> pos.z;
+            pos.x *= -1.0f; // 左手座標化
+            pos.w = 1.0f;
+            positions.push_back(pos);
+        } else if (identifier == "vt") {
+            // テクスチャ座標
+            Vector2 uv;
+            s >> uv.x >> uv.y;
+            uv.y = 1.0f - uv.y; // 上下反転
+            texcoords.push_back(uv);
+        } else if (identifier == "vn") {
+            // 法線
+            Vector3 n;
+            s >> n.x >> n.y >> n.z;
+            n.x *= -1.0f; // 左手座標化
+            normals.push_back(n);
+        } else if (identifier == "f") {
+            // 面定義（3頂点以上にも対応）
+            std::vector<VertexData> faceVertices;
+            std::string vertexDef;
 
-            position.w = 1.0f;
-            positions.push_back(position);
-        } else if (identifiler == "vt") {
-            Vector2 texcoord;
-            s >> texcoord.x >> texcoord.y;
-            // 上下逆にする
-
-            // texcoord.y *= -1.0f;
-            texcoord.y = 1.0f - texcoord.y;
-            // CG2_06_02_kusokusosjsusuawihoafwhgiuwhkgfau
-            texcoords.push_back(texcoord);
-        } else if (identifiler == "vn") {
-            Vector3 normal;
-            s >> normal.x >> normal.y >> normal.z;
-            // 左手座標にする
-            normal.x *= -1.0f;
-
-            normals.push_back(normal);
-        } else if (identifiler == "f") {
-            VertexData triangle[3]; // 三つの頂点を保存
-            // 面は三角形限定。その他は未対応
-            for (int32_t faceVertex = 0; faceVertex < 3; ++faceVertex) {
-                std::string vertexDefinition;
-                s >> vertexDefinition;
-                // 頂点の要素へのIndexは「位置/UV/法線」で格納されているので、分解してえIndexを取得する
-                std::istringstream v(vertexDefinition);
-                uint32_t elementIndices[3];
-                for (int32_t element = 0; element < 3; ++element) {
+            while (s >> vertexDef) {
+                std::istringstream v(vertexDef);
+                uint32_t indices[3] = {};
+                for (int i = 0; i < 3; i++) {
                     std::string index;
-
-                    std::getline(v, index, '/'); // 区切りでインデックスを読んでいく
-                    elementIndices[element] = std::stoi(index);
+                    if (!std::getline(v, index, '/'))
+                        break;
+                    if (!index.empty())
+                        indices[i] = std::stoi(index);
                 }
-                // 要素へのIndexから、実際の要素の値を取得して、頂点を構築する
-                Vector4 position = positions[elementIndices[0] - 1];
-                Vector2 texcoord = texcoords[elementIndices[1] - 1];
-                Vector3 normal = normals[elementIndices[2] - 1];
-                // X軸を反転して左手座標系に
 
-                triangle[faceVertex] = { position, texcoord, normal };
+                Vector4 pos = positions.at(indices[0] - 1);
+                Vector2 uv = texcoords.at(indices[1] - 1);
+                Vector3 nor = normals.at(indices[2] - 1);
+                faceVertices.push_back({ pos, uv, nor });
             }
-            // 逆順にして格納（2 → 1 → 0）
-            modelData.vertices.push_back(triangle[2]);
-            modelData.vertices.push_back(triangle[1]);
-            modelData.vertices.push_back(triangle[0]);
-            //?
-        } else if (identifiler == "mtllib") {
-            // materialTemplateLibraryファイルの名前を取得する
-            std::string materialFilename;
-            s >> materialFilename;
-            // 基本的にobjファイルと同一階層mtlは存在させるので、ディレクトリ名とファイル名を渡す。
-            modelData.material = LoadMaterialTemplateFile(directoryPath, materialFilename);
+
+            // 🔹 多角形→三角形分割処理
+            for (size_t i = 1; i + 1 < faceVertices.size(); i++) {
+                modelData.vertices.push_back(faceVertices[0]);
+                modelData.vertices.push_back(faceVertices[i]);
+                modelData.vertices.push_back(faceVertices[i + 1]);
+            }
+        } else if (identifier == "mtllib") {
+            // マテリアルファイル読み込み
+            std::string mtlFile;
+            s >> mtlFile;
+            modelData.material = LoadMaterialTemplateFile(directoryPath, mtlFile);
         }
     }
-    // 4.ModelDataを返す
+
     return modelData;
 }
+
 #pragma endregion
 
 #pragma region MTL読み込み処理

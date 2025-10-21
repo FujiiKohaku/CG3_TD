@@ -1,0 +1,2 @@
+C:\Projects\TD\CG3_LE2C_FUJII\project\externals\DirectXTex\Bin\Desktop_2022_Win10\x64\Debug\DirectXTex.lib
+C:\Projects\TD\CG3_TD\project\externals\DirectXTex\Bin\Desktop_2022_Win10\x64\Debug\DirectXTex.lib

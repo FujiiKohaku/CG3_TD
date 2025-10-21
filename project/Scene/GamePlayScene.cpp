@@ -112,12 +112,11 @@ void GamePlayScene::Initialize()
     object3dManager_->SetDefaultCamera(camera_);
     // モデル共通設定
 
-    modelCommon_.Initialize(GetDx());
-
     ModelManager::GetInstance()->initialize(GetDx());
     ModelManager::GetInstance()->LoadModel("plane.obj");
     ModelManager::GetInstance()->LoadModel("skydome.obj");
     ModelManager::GetInstance()->LoadModel("axis.obj");
+    ModelManager::GetInstance()->LoadModel("PlayerBall.obj");
     // =============================
     // 4. モデルと3Dオブジェクト生成
     // =============================
@@ -167,7 +166,7 @@ void GamePlayScene::Initialize()
     // 振り子プレイヤー
     //=================================
     pendulumPlayer_ = new Player();
-    pendulumPlayer_->Initialize(object3dManager_, "axis.obj");
+    pendulumPlayer_->Initialize(object3dManager_, "PlayerBall.obj");
 
 #ifdef _DEBUG
 
@@ -224,15 +223,14 @@ void GamePlayScene::Update(Input* input)
     const BYTE* keys = input->GetKeys();
     const BYTE* preKeys = input->GetPreKeys();
     // 振り子プレイヤーの更新処理
-    pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f);
+    pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f,input);
 
     // 各3Dオブジェクトの更新
     object3d_.Update();
     player2_.Update();
     enemy_.Update();
     camera_->Update();
-	skydome_.Update();
-    
+	  skydome_.Update();
 }
 
 void GamePlayScene::Draw()
@@ -246,7 +244,7 @@ void GamePlayScene::Draw()
 
     // ----- 3Dオブジェクト描画 -----
     object3dManager_->PreDraw(); // 3D描画準備
-	skydome_.Draw();
+	  skydome_.Draw();
     object3d_.Draw();
     player2_.Draw();
     enemy_.Draw();

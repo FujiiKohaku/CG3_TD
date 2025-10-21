@@ -33,6 +33,11 @@ bool Input::Initialize(WinApp* winApp)
 
 void Input::Update()
 {
+
+    // 前フレームのキー状態をコピーして保持
+    memcpy(preKeys_, keys_, sizeof(keys_));
+
+    // 現在のキー状態を取得
     HRESULT result = keyboard_->Acquire();
     if (FAILED(result)) {
         return; // 非アクティブならスキップ
