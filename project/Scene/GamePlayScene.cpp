@@ -112,8 +112,6 @@ void GamePlayScene::Initialize()
     object3dManager_->SetDefaultCamera(camera_);
     // モデル共通設定
 
-    modelCommon_.Initialize(GetDx());
-
     ModelManager::GetInstance()->initialize(GetDx());
     ModelManager::GetInstance()->LoadModel("plane.obj");
     ModelManager::GetInstance()->LoadModel("axis.obj");
@@ -226,7 +224,6 @@ void GamePlayScene::Update(Input* input)
     player2_.Update();
     enemy_.Update();
     camera_->Update();
-    
 }
 
 void GamePlayScene::Draw()

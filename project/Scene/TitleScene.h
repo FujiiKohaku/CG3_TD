@@ -14,7 +14,11 @@ public:
 
 private:
     Object3d* logoObject_ = nullptr; // ロゴ3Dオブジェクト
+    Object3d* backGround_ = nullptr; // 背景
+    Object3d* plane_ = nullptr; // 背景
     Model* logoModel_ = nullptr; // ロゴモデル
+    Model* BackModel_ = nullptr;
+    Model* planeModel_ = nullptr;
     Object3dManager* object3dManager_ = nullptr;
     Camera* camera_ = nullptr;
 };

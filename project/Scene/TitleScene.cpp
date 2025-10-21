@@ -34,11 +34,12 @@ void TitleScene::Initialize()
     //----------------------------------------
     // モデル読み込み
     //----------------------------------------
-    ModelManager::GetInstance()->LoadModel("axis.obj");
+    ModelManager::GetInstance()->LoadModel("plane.obj");
     ModelManager::GetInstance()->LoadModel("titleTex.obj");
+    ModelManager::GetInstance()->LoadModel("rainbow.obj");
     logoModel_ = ModelManager::GetInstance()->FindModel("titleTex.obj");
-    assert(logoModel_ && "axis.obj のロードに失敗しました");
-
+    BackModel_ = ModelManager::GetInstance()->FindModel("rainbow.obj");
+    planeModel_ = ModelManager::GetInstance()->FindModel("plane.obj");
     //----------------------------------------
     //  Object3d 作成
     //----------------------------------------
@@ -48,6 +49,20 @@ void TitleScene::Initialize()
     logoObject_->SetTranslate({ 0.0f, 0.0f, 0.0f });
     logoObject_->SetScale({ 1.0f, 1.0f, 1.0f });
     logoObject_->SetRotate({ std::numbers::pi_v<float> / 2.0f, std::numbers::pi_v<float>, 0.0f });
+
+    backGround_ = new Object3d();
+    backGround_->Initialize(object3dManager_);
+    backGround_->SetModel(BackModel_);
+    backGround_->SetTranslate({ 0.0f, 0.0f, 5.0f });
+    backGround_->SetScale({ 1.0f, 1.0f, 1.0f });
+    backGround_->SetRotate({ 0.0f, std::numbers::pi_v<float>, 0.0f });
+
+    plane_ = new Object3d();
+    plane_->Initialize(object3dManager_);
+    plane_->SetModel(planeModel_);
+    plane_->SetTranslate({ 0.0f, 0.0f, 4.0f });
+    plane_->SetScale({ 1.0f, 1.0f, 1.0f });
+    plane_->SetRotate({ 0.0f, 0.0f, std::numbers::pi_v<float> / 2.0f });
 }
 
 void TitleScene::Update(Input* input)
@@ -58,13 +73,17 @@ void TitleScene::Update(Input* input)
     }
 
     logoObject_->Update();
+    backGround_->Update();
+    plane_->Update();
     camera_->Update();
 
     static float t = 0.0f;
     static float s = 0.0f;
+    static float r = 0.0f;
     // 時間を進める
     t += 0.1f;
     s += 3.5f;
+    r += 2.0f;
     // 爆発的拡大＋バウンド減衰
     float explosion = std::exp(-t * 1.0f) * std::sin(s * 100.0f); // 減衰振動
     float scale = 1.0f + std::abs(explosion) * 4.0f; // 最大約5倍！
@@ -79,6 +98,8 @@ void TitleScene::Update(Input* input)
     // ループ
     if (t > 6.28f)
         t = 0.0f;
+   // plane_->SetRotate({ 0.0f, r, 0.0f });
+   // backGround_->SetRotate({ 0.0f, std::numbers::pi_v<float>, 0.0f });
 }
 
 void TitleScene::Draw()
@@ -90,9 +111,14 @@ void TitleScene::Draw()
     object3dManager_->PreDraw();
 
     // モデル描画
-    if (logoObject_) {
-        logoObject_->Draw();
-    }
+
+    logoObject_->Draw();
+
+    backGround_->Draw();
+
+   // plane_->Draw();
+
+
 
     // 描画終了
     GetDx()->PostDraw();
@@ -100,6 +126,7 @@ void TitleScene::Draw()
 
 void TitleScene::Finalize()
 {
+    delete backGround_;
     delete logoObject_;
     delete object3dManager_;
     delete camera_;
