@@ -98,8 +98,8 @@ void TitleScene::Update(Input* input)
     // ループ
     if (t > 6.28f)
         t = 0.0f;
-   // plane_->SetRotate({ 0.0f, r, 0.0f });
-   //backGround_->SetRotate({ 0.0f, std::numbers::pi_v<float>, 0.0f });
+    // plane_->SetRotate({ 0.0f, r, 0.0f });
+    // backGround_->SetRotate({ 0.0f, std::numbers::pi_v<float>, 0.0f });
 }
 
 void TitleScene::Draw()
@@ -116,9 +116,7 @@ void TitleScene::Draw()
 
     backGround_->Draw();
 
-   // plane_->Draw();
-
-
+    // plane_->Draw();
 
     // 描画終了
     GetDx()->PostDraw();
@@ -126,6 +124,7 @@ void TitleScene::Draw()
 
 void TitleScene::Finalize()
 {
+    delete plane_;
     delete backGround_;
     delete logoObject_;
     delete object3dManager_;
