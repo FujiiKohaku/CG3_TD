@@ -107,8 +107,8 @@ void GamePlayScene::Initialize()
 
     // カメラ
     camera_ = new Camera();
-    camera_->SetTranslate({ 0.0f, 10.0f, -30.0f }); // 原点から離す
-    camera_->SetRotate({ 0.2f, 0.0f, 0.0f }); // 下向き
+    camera_->SetTranslate({ 0.0f, 0.0f, -100.0f }); // 原点から離す
+    camera_->SetRotate({ 0.0f, 0.0f, 0.0f }); // 下向き
     object3dManager_->SetDefaultCamera(camera_);
     // モデル共通設定
 
@@ -154,11 +154,18 @@ void GamePlayScene::Initialize()
     // サウンドファイルを読み込み（パスはプロジェクトに合わせて調整）
     bgm = soundManager_.SoundLoadWave("Resources/BGM.wav");
 
+    //=====================
+    // バンパー
+    //=====================
+    bumper_ = new Bumper();
+    bumper_->Initialize({ 0.0f,5.0f,0.0f }, 0.5f, 1.2f, object3dManager_, "PlayerBall.obj");// 一時的にプレイヤーのモデルを入れてる
+
     //=================================
     // 振り子プレイヤー
     //=================================
     pendulumPlayer_ = new Player();
     pendulumPlayer_->Initialize(object3dManager_, "PlayerBall.obj");
+    pendulumPlayer_->SetBumper(bumper_);
 
 #ifdef _DEBUG
 
@@ -237,6 +244,7 @@ void GamePlayScene::Draw()
     // ----- 3Dオブジェクト描画 -----
     object3dManager_->PreDraw(); // 3D描画準備
     skydome_.Draw();
+    bumper_->Draw();
     // object3d_.Draw();
     // player2_.Draw();
     // enemy_.Draw();
@@ -257,6 +265,7 @@ void GamePlayScene::Finalize()
     delete pendulumPlayer_;
     delete object3dManager_;
     delete spriteManager_;
+    delete bumper_;
     sprites_.clear();
 
     // 2. ImGui破棄
