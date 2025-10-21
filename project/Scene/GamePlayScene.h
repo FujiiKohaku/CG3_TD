@@ -46,6 +46,7 @@
 // 個人ライブラリ
 #include "Player.h"
 #include "Skydome.h"
+#include "Bumper.h"
 class GamePlayScene : public BaseScene {
 public:
 	void Initialize() override;
@@ -66,4 +67,5 @@ private:
 	Player* pendulumPlayer_;
 	Camera* camera_;
 	Skydome skydome_;
+	Bumper* bumper_;
 };

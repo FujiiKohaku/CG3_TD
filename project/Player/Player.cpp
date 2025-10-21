@@ -109,41 +109,57 @@ bool Player::isOutOfBounds()
     return false;
 }
 
-bool Player::SphereIntersectsSphere(const Vector3& posA, float radiusA, const Vector3& posB, float radiusB)
+bool Player::IsCollision(const AABB& aabb, const Sphere& spher)
 {
-    Vector3 diff = { posA.x - posB.x, posA.y - posB.y, posA.z - posB.z };
-    float distSq = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
-    float r = radiusA + radiusB;
-    return distSq < (r * r);
+    Vector3 clossPoint{
+        std::clamp(spher.center.x,aabb.min.x,aabb.max.x),
+        std::clamp(spher.center.y,aabb.min.y,aabb.max.y),
+        std::clamp(spher.center.z,aabb.min.z,aabb.max.z),
+    };
+
+    float distance = Length(Subtract(clossPoint, spher.center));
+
+    if (distance <= spher.radius) {
+        return true;
+
+    } else {
+        return false;
+
+    }
 }
 
-void Player::ReflectSphereVelocity(Vector3& position, Vector3& velocity, const Vector3& otherPos, float selfRadius, float otherRadius, float bounce)
+void Player::ReflectSphereFromAABB(Vector3& position, Vector3& velocity, const AABB& aabb, float radius, float bounce)
 {
-    Vector3 diff = { position.x - otherPos.x, position.y - otherPos.y, position.z - otherPos.z };
-    float dist = sqrtf(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
-    float sumRadius = selfRadius + otherRadius;
+    // 衝突点に最も近い点を求める
+    Vector3 closest{
+        std::clamp(position.x, aabb.min.x, aabb.max.x),
+        std::clamp(position.y, aabb.min.y, aabb.max.y),
+        std::clamp(position.z, aabb.min.z, aabb.max.z)
+    };
 
-    if (dist < sumRadius && dist > 1e-6f) {
-        // 正規化法線
-        Vector3 n = { diff.x / dist, diff.y / dist, diff.z / dist };
+    // AABB の面ごとの法線を判定
+    Vector3 normal = { 0,0,0 };
+    float pxMin = fabsf((position.x + radius) - aabb.min.x);
+    float pxMax = fabsf((position.x - radius) - aabb.max.x);
+    float pyMin = fabsf((position.y + radius) - aabb.min.y);
+    float pyMax = fabsf((position.y - radius) - aabb.max.y);
 
-        // めり込み補正
-        float penetration = sumRadius - dist;
-        position.x += n.x * penetration;
-        position.y += n.y * penetration;
-        position.z += n.z * penetration;
+    float minPenetration = FLT_MAX;
 
-        // 反射処理
-        float dotN = velocity.x * n.x + velocity.y * n.y + velocity.z * n.z;
-        velocity.x -= 2.0f * dotN * n.x;
-        velocity.y -= 2.0f * dotN * n.y;
-        velocity.z -= 2.0f * dotN * n.z;
+    if (pxMin < minPenetration && position.x < aabb.min.x) { normal = { -1,0,0 }; minPenetration = pxMin; }
+    if (pxMax < minPenetration && position.x > aabb.max.x) { normal = { 1,0,0 };  minPenetration = pxMax; }
+    if (pyMin < minPenetration && position.y < aabb.min.y) { normal = { 0,-1,0 }; minPenetration = pyMin; }
+    if (pyMax < minPenetration && position.y > aabb.max.y) { normal = { 0,1,0 };  minPenetration = pyMax; }
 
-        // 反射倍率
-        velocity.x *= bounce;
-        velocity.y *= bounce;
-        velocity.z *= bounce;
-    }
+    // めり込み補正
+    position = Add(position, Multiply(minPenetration * normal.x + minPenetration * normal.y, normal));
+
+    // 反射処理（R = V - 2*(V・N)*N）
+    float dotN = Dot(velocity, normal);
+    velocity = Subtract(velocity, Multiply(2.0f * dotN, normal));
+
+    // 反射倍率
+    velocity = Multiply(bounce, velocity);
 }
 
 Vector3 Player::GetAnchorPosition()
@@ -230,10 +246,26 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
             }
         }
 
-        // バンパーとの反射
-        if (SphereIntersectsSphere(position_, radius_, bumperPos_, bumperRadius_)) {
-            ReflectSphereVelocity(position_, velocity_, bumperPos_, radius_, bumperRadius_, bounce_);
+        playerSphere_ = { position_,radius_ };
+        bumperSphere_ = { bumper_->GetPosition(),bumper_->GetRadius() };
+
+        if (bumper_->IsCollision(playerSphere_, bumperSphere_)) {
+            point_ += 100;
+            bumper_->ReflectSphereVelocity(playerSphere_, velocity_, bumperSphere_);
+            position_ = playerSphere_.center;
         }
+
+        // バンパーとの反射
+       /* if (SphereIntersectsSphere(position_, radius_, bumperPos_, bumperRadius_)) {
+            point_ += 100;
+            ReflectSphereVelocity(position_, velocity_, bumperPos_, radius_, bumperRadius_, bounce_);
+        }*/
+
+        // ブロックとの反射
+        /*if (IsCollision(aabb_, playerSphere_)) {
+            point_ += 100;
+            ReflectSphereFromAABB(position_, velocity_, aabb_, radius_, bounce_);
+        }*/
 
         // 減速
         velocity_ = Multiply(decelerationRate_, velocity_);
@@ -256,7 +288,6 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
 
 void Player::Draw()
 {
-
     // 現在の位置に合わせる
     object3d_->SetTranslate(position_);
     object3d_->Update();
@@ -353,6 +384,7 @@ bool Player::CapsuleIntersectsSegment3D(const Vector3& capsuleStart, const Vecto
     float distSq = LengthSq(Subtract(p1, p2));
     return distSq <= (radius * radius);
 }
+
 Player::~Player()
 {
     if (pendulum_) {

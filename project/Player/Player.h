@@ -5,6 +5,7 @@
 #include "Object3d.h"
 #include "Object3dManager.h"
 #include "Pendulum.h"
+#include "Bumper.h"
 #include "Struct.h"
 #include "algorithm"
 #include "cmath"
@@ -18,14 +19,17 @@ class Player {
     float mass_ = 2.0f;
     float radius_ = 0.5f;
     unsigned int color_ = 0xFF0000FF;
+    int point_ = 0;
 
     Pendulum* pendulum_ = nullptr;
     Object3d* object3d_ = nullptr;
+    Bumper* bumper_ = nullptr;
+
     // 壁の位置の初期化ほんとはここに入れるのは良くない
-    const float wallXMin = -7.5f;
-    const float wallXMax = 7.5f;
+    const float wallXMin = -10.0f;
+    const float wallXMax = 10.0f;
     const float wallYMin = -1.0f;
-    const float wallYMax = 14.0f;
+    const float wallYMax = 19.0f;
 
     // 壁衝突処理（カプセル判定）
     Vector3 walls_[4][2] = {
@@ -35,9 +39,13 @@ class Player {
         { { wallXMin, wallYMax, 0 }, { wallXMax, wallYMax, 0 } }
     };
 
-    Vector3 bumperPos_ = { 0.0f, 5.0f, 0.0f };
-    float bumperRadius_ = 0.5f;
-    float bounce_ = 1.2f;
+    //float aabbWidth = 8.0f;
+    //float aabbHeight = 1.0f;
+
+    //AABB aabb_ = { {-aabbWidth / 2.0f,12.0f - aabbHeight / 2.0f,0.0f},{aabbWidth / 2.0f,12.0f + aabbHeight / 2.0f,0.0f} };
+
+    Sphere playerSphere_;
+    Sphere bumperSphere_;
 
 public:
     ~Player();
@@ -63,17 +71,10 @@ public:
     // --- 壁外チェック（OB処理） ---
     bool isOutOfBounds();
 
-    // 球と球の衝突判定
-    bool SphereIntersectsSphere(
-        const Vector3& posA, float radiusA,
-        const Vector3& posB, float radiusB);
+    bool IsCollision(const AABB& aabb, const Sphere& spher);
 
-    // 球と球の反射処理
-    void ReflectSphereVelocity(
-        Vector3& position, Vector3& velocity,
-        const Vector3& otherPos, float selfRadius, float otherRadius,
-        float bounce = 1.1f // 反射倍率（デフォルト1.1倍）
-    );
+    // ボックスとの反射処理
+    void ReflectSphereFromAABB(Vector3& position, Vector3& velocity, const AABB& aabb, float radius, float bounce);
 
     Vector3 GetAnchorPosition();
 
@@ -98,4 +99,6 @@ public:
 
     // セッター
     void SetVelocity(Vector3 velocity) { velocity_ = velocity; }
+    void SetBumper(Bumper* bumper) { bumper_ = bumper; }
+
 };
