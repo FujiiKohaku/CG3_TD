@@ -107,7 +107,7 @@ void GamePlayScene::Initialize()
 
     // カメラ
     camera_ = new Camera();
-    camera_->SetTranslate({ 0.0f, 20.0f, -100.0f }); // 原点から離す
+    camera_->SetTranslate({ 0.0f, 10.0f, -30.0f }); // 原点から離す
     camera_->SetRotate({ 0.2f, 0.0f, 0.0f }); // 下向き
     object3dManager_->SetDefaultCamera(camera_);
     // モデル共通設定
@@ -116,6 +116,7 @@ void GamePlayScene::Initialize()
 
     ModelManager::GetInstance()->initialize(GetDx());
     ModelManager::GetInstance()->LoadModel("plane.obj");
+    ModelManager::GetInstance()->LoadModel("skydome.obj");
     ModelManager::GetInstance()->LoadModel("axis.obj");
     // =============================
     // 4. モデルと3Dオブジェクト生成
@@ -147,6 +148,10 @@ void GamePlayScene::Initialize()
     enemy_.Initialize(object3dManager_);
     enemy_.SetModel("plane.obj");
     enemy_.SetTranslate({ -2.0f, 0.0f, 0.0f }); // 左に移動
+
+    // スカイドーム
+	skydome_.Initialize(object3dManager_);
+
 #pragma endregion
 
     //=================================
@@ -226,6 +231,7 @@ void GamePlayScene::Update(Input* input)
     player2_.Update();
     enemy_.Update();
     camera_->Update();
+	skydome_.Update();
     
 }
 
@@ -240,6 +246,7 @@ void GamePlayScene::Draw()
 
     // ----- 3Dオブジェクト描画 -----
     object3dManager_->PreDraw(); // 3D描画準備
+	skydome_.Draw();
     object3d_.Draw();
     player2_.Draw();
     enemy_.Draw();

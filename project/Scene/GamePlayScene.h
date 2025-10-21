@@ -6,7 +6,6 @@
 #include "D3DResourceLeakChecker.h"
 #include "DebugCamera.h"
 #include "MatrixMath.h"
-#include "Model.h"
 #include "ModelCommon.h"
 #include "Object3D.h"
 #include "Object3dManager.h"
@@ -46,24 +45,25 @@
 #pragma comment(lib, "dxcompiler.lib")
 // 個人ライブラリ
 #include "Player.h"
+#include "Skydome.h"
 class GamePlayScene : public BaseScene {
 public:
-    void Initialize() override;
-    void Update(Input* input) override;
-    void Draw() override;
-    void Finalize() override;
+	void Initialize() override;
+	void Update(Input* input) override;
+	void Draw() override;
+	void Finalize() override;
 
 private:
-    SoundManager soundManager_;
-    Object3dManager* object3dManager_ = nullptr;
-    SpriteManager* spriteManager_ = nullptr;
-    DebugCamera debugCamera_;
-    ModelCommon modelCommon_;
-    std::vector<Sprite*> sprites_;
-    Object3d object3d_, player2_, enemy_;
-    SoundData bgm;
-    bool isEnd = false;
-    Player* pendulumPlayer_;
-
-  Camera* camera_;
+	SoundManager soundManager_;
+	Object3dManager* object3dManager_ = nullptr;
+	SpriteManager* spriteManager_ = nullptr;
+	DebugCamera debugCamera_;
+	ModelCommon modelCommon_;
+	std::vector<Sprite*> sprites_;
+	Object3d object3d_, player2_, enemy_;
+	SoundData bgm;
+	bool isEnd = false;
+	Player* pendulumPlayer_;
+	Camera* camera_;
+	Skydome skydome_;
 };
