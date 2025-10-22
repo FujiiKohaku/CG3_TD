@@ -10,77 +10,6 @@ void GamePlayScene::Initialize()
     std::filesystem::create_directory("logs");
     // main関数の先頭//
 
-#pragma region object説明書
-    // ===============================
-    // 3Dモデルとオブジェクトの関係まとめ
-    // ===============================
-    //
-    // Model（モデル）
-    //   ・見た目のデータ（形・テクスチャ）を管理
-    //   ・同じモデルを複数のオブジェクトで使い回せる
-    //
-    // Object3d（オブジェクト）
-    //   ・実際に表示される実体
-    //   ・位置・回転・スケールを持つ
-    //   ・どのModelを使うかを指定して描画する
-    //
-    // ModelCommon / Object3dManager
-    //   ・共通の描画設定やパイプラインを管理
-    //
-    //  使用手順（操作説明）
-    // 1. Modelを作る → model.Initialize(&modelCommon);
-    // 2. Object3dを作る → object.Initialize(manager, camera);
-    // 3. Object3dにModelをセット → object.SetModel(&model);
-    // 4. 必要に応じて位置や回転を変更 → object.SetTranslate({x, y, z});
-    // 5. 毎フレーム Update() → Draw() で描画
-    //
-    // 例：
-    // Model modelPlayer;
-    // Object3d player;
-    // player.SetModel(&modelPlayer);
-    // player.SetTranslate({3, 0, 0});
-    // player.Draw();
-    //
-    // ===============================
-
-#pragma endregion
-
-#pragma region sprite説明書
-
-    // ===============================
-    // 2Dスプライト関連まとめ
-    // ===============================
-    //
-    //  TextureManager（シングルトン）
-    //   ・全テクスチャを一括で管理するクラス
-    //   ・同じ画像を何度も読み込まないようにする
-    //   ・Initialize(dxCommon)でDirectX情報を登録
-    //   ・LoadTexture("path")で画像をGPUに読み込み
-    //
-    // SpriteManager
-    //   ・スプライト描画用の共通設定を管理
-    //   ・複数のSpriteをまとめて扱う
-    //
-    //  Sprite
-    //   ・実際に画面に表示する2D画像
-    //   ・1枚ごとに位置・回転・スケールを持つ
-    //
-    // 使用手順
-    // 1. TextureManagerを初期化して画像を読み込む
-    // 2. SpriteManagerを初期化する
-    // 3. Spriteを生成して画像パスを指定して初期化
-    // 4. Update() → Draw() で描画する
-    //
-    //  例：スプライトを5枚生成
-    //   std::vector<Sprite*> sprites;
-    //   for (int i = 0; i < 5; i++) {
-    //       Sprite* sprite = new Sprite();
-    //       sprite->Initialize(spriteManager, "resources/uvChecker.png");
-    //       sprites.push_back(sprite);
-    //   }
-    //
-    // ===============================
-
 #pragma endregion
 
 #pragma region object sprite
@@ -117,6 +46,7 @@ void GamePlayScene::Initialize()
     ModelManager::GetInstance()->LoadModel("skydome.obj");
     ModelManager::GetInstance()->LoadModel("axis.obj");
     ModelManager::GetInstance()->LoadModel("PlayerBall.obj");
+    ModelManager::GetInstance()->LoadModel("cube.obj");
     // =============================
     // 4. モデルと3Dオブジェクト生成
     // =============================

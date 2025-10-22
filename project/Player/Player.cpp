@@ -111,10 +111,10 @@ bool Player::isOutOfBounds()
 
 bool Player::IsCollision(const AABB& aabb, const Sphere& spher)
 {
-    Vector3 clossPoint{
-        std::clamp(spher.center.x,aabb.min.x,aabb.max.x),
-        std::clamp(spher.center.y,aabb.min.y,aabb.max.y),
-        std::clamp(spher.center.z,aabb.min.z,aabb.max.z),
+    Vector3 clossPoint {
+        std::clamp(spher.center.x, aabb.min.x, aabb.max.x),
+        std::clamp(spher.center.y, aabb.min.y, aabb.max.y),
+        std::clamp(spher.center.z, aabb.min.z, aabb.max.z),
     };
 
     float distance = Length(Subtract(clossPoint, spher.center));
@@ -124,21 +124,20 @@ bool Player::IsCollision(const AABB& aabb, const Sphere& spher)
 
     } else {
         return false;
-
     }
 }
 
 void Player::ReflectSphereFromAABB(Vector3& position, Vector3& velocity, const AABB& aabb, float radius, float bounce)
 {
     // 衝突点に最も近い点を求める
-    Vector3 closest{
+    Vector3 closest {
         std::clamp(position.x, aabb.min.x, aabb.max.x),
         std::clamp(position.y, aabb.min.y, aabb.max.y),
         std::clamp(position.z, aabb.min.z, aabb.max.z)
     };
 
     // AABB の面ごとの法線を判定
-    Vector3 normal = { 0,0,0 };
+    Vector3 normal = { 0, 0, 0 };
     float pxMin = fabsf((position.x + radius) - aabb.min.x);
     float pxMax = fabsf((position.x - radius) - aabb.max.x);
     float pyMin = fabsf((position.y + radius) - aabb.min.y);
@@ -146,10 +145,22 @@ void Player::ReflectSphereFromAABB(Vector3& position, Vector3& velocity, const A
 
     float minPenetration = FLT_MAX;
 
-    if (pxMin < minPenetration && position.x < aabb.min.x) { normal = { -1,0,0 }; minPenetration = pxMin; }
-    if (pxMax < minPenetration && position.x > aabb.max.x) { normal = { 1,0,0 };  minPenetration = pxMax; }
-    if (pyMin < minPenetration && position.y < aabb.min.y) { normal = { 0,-1,0 }; minPenetration = pyMin; }
-    if (pyMax < minPenetration && position.y > aabb.max.y) { normal = { 0,1,0 };  minPenetration = pyMax; }
+    if (pxMin < minPenetration && position.x < aabb.min.x) {
+        normal = { -1, 0, 0 };
+        minPenetration = pxMin;
+    }
+    if (pxMax < minPenetration && position.x > aabb.max.x) {
+        normal = { 1, 0, 0 };
+        minPenetration = pxMax;
+    }
+    if (pyMin < minPenetration && position.y < aabb.min.y) {
+        normal = { 0, -1, 0 };
+        minPenetration = pyMin;
+    }
+    if (pyMax < minPenetration && position.y > aabb.max.y) {
+        normal = { 0, 1, 0 };
+        minPenetration = pyMax;
+    }
 
     // めり込み補正
     position = Add(position, Multiply(minPenetration * normal.x + minPenetration * normal.y, normal));
@@ -184,13 +195,33 @@ void Player::Initialize(Object3dManager* object3dManager, const std::string& mod
     object3d_ = new Object3d;
     object3d_->Initialize(object3dManager);
     object3d_->SetModel(modelName);
+
+    // 壁モデルを作成
+    for (int i = 0; i < 4; i++) {
+        wallObjects_[i] = new Object3d;
+        wallObjects_[i]->Initialize(object3dManager);
+        wallObjects_[i]->SetModel("cube.obj");
+    }
+
+    // 壁の座標設定
+    walls_[0][0] = { wallXMin, wallYMin, 0 };
+    walls_[0][1] = { wallXMin, wallYMax, 0 };
+
+    walls_[1][0] = { wallXMax, wallYMin, 0 };
+    walls_[1][1] = { wallXMax, wallYMax, 0 };
+
+    walls_[2][0] = { wallXMin, wallYMin, 0 };
+    walls_[2][1] = { wallXMax, wallYMin, 0 };
+
+    walls_[3][0] = { wallXMin, wallYMax, 0 };
+    walls_[3][1] = { wallXMax, wallYMax, 0 };
 }
 
 void Player::Update(const char* keys, const char* preKeys, float deltaTime, Input* input)
 {
     if (!pendulum_->GetIsCut()) {
         // 振り子モード
-        pendulum_->Update(keys, preKeys, deltaTime,input);
+        pendulum_->Update(keys, preKeys, deltaTime, input);
 
         // 球位置更新
         position_.x = pendulum_->GetAnchor().x + sinf(pendulum_->GetAngle()) * pendulum_->GetLength();
@@ -246,8 +277,8 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
             }
         }
 
-        playerSphere_ = { position_,radius_ };
-        bumperSphere_ = { bumper_->GetPosition(),bumper_->GetRadius() };
+        playerSphere_ = { position_, radius_ };
+        bumperSphere_ = { bumper_->GetPosition(), bumper_->GetRadius() };
 
         if (bumper_->IsCollision(playerSphere_, bumperSphere_)) {
             point_ += 100;
@@ -256,10 +287,10 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
         }
 
         // バンパーとの反射
-       /* if (SphereIntersectsSphere(position_, radius_, bumperPos_, bumperRadius_)) {
-            point_ += 100;
-            ReflectSphereVelocity(position_, velocity_, bumperPos_, radius_, bumperRadius_, bounce_);
-        }*/
+        /* if (SphereIntersectsSphere(position_, radius_, bumperPos_, bumperRadius_)) {
+             point_ += 100;
+             ReflectSphereVelocity(position_, velocity_, bumperPos_, radius_, bumperRadius_, bounce_);
+         }*/
 
         // ブロックとの反射
         /*if (IsCollision(aabb_, playerSphere_)) {
@@ -292,6 +323,8 @@ void Player::Draw()
     object3d_->SetTranslate(position_);
     object3d_->Update();
     object3d_->Draw();
+
+    DrawWalls();
 }
 
 void Player::IsCollisionWall()
@@ -404,4 +437,31 @@ float Player::Dot(const Vector3& v1, const Vector3& v2)
     resoult = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 
     return resoult;
+}
+
+void Player::DrawWalls()
+{
+    for (int i = 0; i < 4; i++) {
+        Vector3 start = walls_[i][0];
+        Vector3 end = walls_[i][1];
+        Vector3 center = {
+            (start.x + end.x) / 2.0f,
+            (start.y + end.y) / 2.0f,
+            (start.z + end.z) / 2.0f
+        };
+
+        // 壁の長さ（スケールに反映）
+        float length = Length(Subtract(end, start));
+        Vector3 scale;
+        if (i < 2) {
+            scale = { 0.1f, length, 0.1f }; // 縦の壁
+        } else {
+            scale = { length, 0.1f, 0.1f }; // 横の壁
+        }
+
+        wallObjects_[i]->SetTranslate(center);
+        wallObjects_[i]->SetScale(scale);
+        wallObjects_[i]->Update();
+        wallObjects_[i]->Draw();
+    }
 }

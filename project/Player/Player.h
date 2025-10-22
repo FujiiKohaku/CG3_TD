@@ -1,11 +1,11 @@
 #pragma once
+#include "Bumper.h"
 #include "Camera.h"
 #include "Input.h"
 #include "MatrixMath.h"
 #include "Object3d.h"
 #include "Object3dManager.h"
 #include "Pendulum.h"
-#include "Bumper.h"
 #include "Struct.h"
 #include "algorithm"
 #include "cmath"
@@ -39,10 +39,10 @@ class Player {
         { { wallXMin, wallYMax, 0 }, { wallXMax, wallYMax, 0 } }
     };
 
-    //float aabbWidth = 8.0f;
-    //float aabbHeight = 1.0f;
+    // float aabbWidth = 8.0f;
+    // float aabbHeight = 1.0f;
 
-    //AABB aabb_ = { {-aabbWidth / 2.0f,12.0f - aabbHeight / 2.0f,0.0f},{aabbWidth / 2.0f,12.0f + aabbHeight / 2.0f,0.0f} };
+    // AABB aabb_ = { {-aabbWidth / 2.0f,12.0f - aabbHeight / 2.0f,0.0f},{aabbWidth / 2.0f,12.0f + aabbHeight / 2.0f,0.0f} };
 
     Sphere playerSphere_;
     Sphere bumperSphere_;
@@ -82,7 +82,7 @@ public:
 
     void Initialize(Object3dManager* object3dManager, const std::string& modelName);
 
-    void Update(const char* keys, const char* preKeys, float deltaTime,Input* input);
+    void Update(const char* keys, const char* preKeys, float deltaTime, Input* input);
 
     void Draw();
 
@@ -101,4 +101,8 @@ public:
     void SetVelocity(Vector3 velocity) { velocity_ = velocity; }
     void SetBumper(Bumper* bumper) { bumper_ = bumper; }
 
+    void DrawWalls();
+
+private:
+    Object3d* wallObjects_[4];
 };
