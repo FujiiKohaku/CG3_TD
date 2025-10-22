@@ -68,8 +68,6 @@ void GamePlayScene::Initialize()
 
     // プレイヤー
 
-
-
     // スカイドーム
     skydome_.Initialize(object3dManager_);
 
@@ -88,15 +86,17 @@ void GamePlayScene::Initialize()
     // バンパー
     //=====================
     bumper_ = new Bumper();
-    bumper_->Initialize({ 0.0f,5.0f,0.0f }, 0.5f, 1.2f, object3dManager_, "PlayerBall.obj");// 一時的にプレイヤーのモデルを入れてる
+    bumper_->Initialize({ 0.0f, 5.0f, 0.0f }, 0.5f, 1.2f, object3dManager_, "PlayerBall.obj"); // 一時的にプレイヤーのモデルを入れてる
 
+    scoreBumper_ = new ScoreBumper();
+    scoreBumper_->Initialize({ 5.0f, 5.0f, 0.0f }, 0.5f, 1.2f, object3dManager_, "cube.obj"); // 一時的にcubeモデルを入れてる
     //=================================
     // 振り子プレイヤー
     //=================================
     pendulumPlayer_ = new Player();
     pendulumPlayer_->Initialize(object3dManager_, "PlayerBall.obj");
     pendulumPlayer_->SetBumper(bumper_);
-
+    pendulumPlayer_->SetScoreBumper(scoreBumper_);
 #ifdef _DEBUG
 
     Microsoft::WRL::ComPtr<ID3D12InfoQueue>
@@ -143,7 +143,13 @@ void GamePlayScene::Update(Input* input)
     // ==============================
 
     // ImGui::ShowDemoWindow();
-
+    // ==============================
+    // ImGui デバッグ表示
+    // ==============================
+     ImGui::Begin("Player Debug");
+     ImGui::Text("Score: %d", pendulumPlayer_->GetPoint()); // スコア表示
+    
+     ImGui::End();
     ImGui::Render(); // ImGuiの内部コマンドを生成（描画直前に呼ぶ）
 
     // ==============================
@@ -160,6 +166,7 @@ void GamePlayScene::Update(Input* input)
     // enemy_.Update();
     camera_->Update();
     skydome_.Update();
+
 }
 
 void GamePlayScene::Draw()
@@ -175,6 +182,7 @@ void GamePlayScene::Draw()
     object3dManager_->PreDraw(); // 3D描画準備
     skydome_.Draw();
     bumper_->Draw();
+    scoreBumper_->Draw();
     // object3d_.Draw();
     // player2_.Draw();
     // enemy_.Draw();
@@ -196,6 +204,7 @@ void GamePlayScene::Finalize()
     delete object3dManager_;
     delete spriteManager_;
     delete bumper_;
+    delete scoreBumper_;
     sprites_.clear();
 
     // 2. ImGui破棄

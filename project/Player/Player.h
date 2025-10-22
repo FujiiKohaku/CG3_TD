@@ -6,6 +6,7 @@
 #include "Object3d.h"
 #include "Object3dManager.h"
 #include "Pendulum.h"
+#include "ScoreBumper.h"
 #include "Struct.h"
 #include "algorithm"
 #include "cmath"
@@ -24,13 +25,14 @@ class Player {
     Pendulum* pendulum_ = nullptr;
     Object3d* object3d_ = nullptr;
     Bumper* bumper_ = nullptr;
+    // 得点バンパー
+    ScoreBumper* scoreBumper_ = nullptr;
 
     // 壁の位置の初期化ほんとはここに入れるのは良くない本当によくない
     const float wallXMin = -20.0f;
     const float wallXMax = 20.0f;
     const float wallYMin = -20.0f;
     const float wallYMax = 20.0f;
-
 
     // 壁衝突処理（カプセル判定）
     Vector3 walls_[4][2] = {
@@ -47,6 +49,7 @@ class Player {
 
     Sphere playerSphere_;
     Sphere bumperSphere_;
+    Sphere scoreBumperSphere_;
 
 public:
     ~Player();
@@ -97,11 +100,12 @@ public:
     const Vector3& GetPosition() const { return position_; }
     const float& GetRadius() const { return radius_; }
     const unsigned int& GetColor() const { return color_; }
+    const int GetPoint() const { return point_; }
 
     // セッター
     void SetVelocity(Vector3 velocity) { velocity_ = velocity; }
     void SetBumper(Bumper* bumper) { bumper_ = bumper; }
-
+    void SetScoreBumper(ScoreBumper* scorebumper) { scoreBumper_ = scorebumper; }
     void DrawWalls();
 
 private:
