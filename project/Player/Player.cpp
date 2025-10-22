@@ -428,6 +428,12 @@ Player::~Player()
         delete object3d_;
         object3d_ = nullptr;
     }
+    for (int i = 0; i < 4; i++) {
+        if (wallObjects_[i]) {
+            delete wallObjects_[i];
+            wallObjects_[i] = nullptr;
+        }
+    }
 }
 
 float Player::Dot(const Vector3& v1, const Vector3& v2)

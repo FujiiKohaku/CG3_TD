@@ -25,11 +25,12 @@ class Player {
     Object3d* object3d_ = nullptr;
     Bumper* bumper_ = nullptr;
 
-    // 壁の位置の初期化ほんとはここに入れるのは良くない
-    const float wallXMin = -10.0f;
-    const float wallXMax = 10.0f;
-    const float wallYMin = -1.0f;
-    const float wallYMax = 19.0f;
+    // 壁の位置の初期化ほんとはここに入れるのは良くない本当によくない
+    const float wallXMin = -20.0f;
+    const float wallXMax = 20.0f;
+    const float wallYMin = -20.0f;
+    const float wallYMax = 20.0f;
+
 
     // 壁衝突処理（カプセル判定）
     Vector3 walls_[4][2] = {
