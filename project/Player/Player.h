@@ -6,7 +6,6 @@
 #include "Object3d.h"
 #include "Object3dManager.h"
 #include "Pendulum.h"
-#include "ScoreBumper.h"
 #include "Struct.h"
 #include "algorithm"
 #include "cmath"
@@ -25,8 +24,8 @@ class Player {
     Pendulum* pendulum_ = nullptr;
     Object3d* object3d_ = nullptr;
     Bumper* bumper_ = nullptr;
-    // 得点バンパー
-    ScoreBumper* scoreBumper_ = nullptr;
+
+  
 
     // 壁の位置の初期化ほんとはここに入れるのは良くない本当によくない
     const float wallXMin = -20.0f;
@@ -105,7 +104,6 @@ public:
     // セッター
     void SetVelocity(Vector3 velocity) { velocity_ = velocity; }
     void SetBumper(Bumper* bumper) { bumper_ = bumper; }
-    void SetScoreBumper(ScoreBumper* scorebumper) { scoreBumper_ = scorebumper; }
     void DrawWalls();
 
 private:

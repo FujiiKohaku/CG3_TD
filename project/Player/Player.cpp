@@ -279,18 +279,12 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
 
         playerSphere_ = { position_, radius_ };
         bumperSphere_ = { bumper_->GetPosition(), bumper_->GetRadius() };
-        scoreBumperSphere_ = { scoreBumper_->GetPosition(), scoreBumper_->GetRadius() };
         if (bumper_->IsCollision(playerSphere_, bumperSphere_)) {
             point_ += 100;
             bumper_->ReflectSphereVelocity(playerSphere_, velocity_, bumperSphere_);
             position_ = playerSphere_.center;
         }
-        // スコアバンパー
-        if (scoreBumper_->IsCollision(playerSphere_, scoreBumperSphere_)) {
-            point_ += 100;
-            scoreBumper_->ReflectSphereVelocity(playerSphere_, velocity_, scoreBumperSphere_);
-            position_ = scoreBumperSphere_.center;
-        }
+       
 
         // バンパーとの反射
         /* if (SphereIntersectsSphere(position_, radius_, bumperPos_, bumperRadius_)) {
