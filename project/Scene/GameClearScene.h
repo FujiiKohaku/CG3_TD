@@ -23,4 +23,8 @@ private:
     Camera* camera_ = nullptr;
     Object3d* planeLine_ = nullptr; // 集中線
     Model* planeLineModel_ = nullptr;
+    Object3d* plane_ = nullptr; // 背景
+    Model* planeModel_ = nullptr;
+    Object3d* spacelogo_ = nullptr;
+    Model* spaceLogpModel_ = nullptr;
 };

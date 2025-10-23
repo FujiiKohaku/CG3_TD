@@ -34,9 +34,12 @@ void GameClearScene::Initialize()
     //----------------------------------------
     ModelManager::GetInstance()->LoadModel("clear.obj");
     ModelManager::GetInstance()->LoadModel("line.obj");
+    ModelManager::GetInstance()->LoadModel("rainbow.obj");
+    ModelManager::GetInstance()->LoadModel("PushSpace.obj");
     logoModel_ = ModelManager::GetInstance()->FindModel("clear.obj");
     planeLineModel_ = ModelManager::GetInstance()->FindModel("line.obj");
-
+    planeModel_ = ModelManager::GetInstance()->FindModel("rainbow.obj");
+    spaceLogpModel_ = ModelManager::GetInstance()->FindModel("PushSpace.obj");
     //----------------------------------------
     //  Object3d 作成
     //----------------------------------------
@@ -53,6 +56,19 @@ void GameClearScene::Initialize()
     planeLine_->SetTranslate({ 0.0f, 0.0f, 3.0f });
     planeLine_->SetScale({ 5.0f, 5.0f, 5.0f });
     planeLine_->SetRotate({ 0.0f, -std::numbers::pi_v<float> / 4.0f, 0.0f });
+
+    plane_ = new Object3d();
+    plane_->Initialize(object3dManager_);
+    plane_->SetModel(planeModel_);
+    plane_->SetTranslate({ 0.0f, 0.0f, 6.0f });
+    plane_->SetScale({ 8.0f, 4.0f, 1.0f });
+
+    spacelogo_ = new Object3d();
+    spacelogo_->Initialize(object3dManager_);
+    spacelogo_->SetModel(spaceLogpModel_);
+    spacelogo_->SetTranslate({ -2.0f, -1.0f, 0.0f });
+    spacelogo_->SetScale({ 0.5f, 0.5f, 0.5f });
+    spacelogo_->SetRotate({ std::numbers::pi_v<float> / 2.0f, 0.0f, 0.0f });
 }
 
 void GameClearScene::Update(Input* input)
@@ -66,7 +82,9 @@ void GameClearScene::Update(Input* input)
     logoObject_->Update();
     camera_->Update();
     planeLine_->Update();
+    plane_->Update();
     planeLine_->SetRotate({ 0.0f, s, 0.0f });
+    spacelogo_->Update();
 }
 
 void GameClearScene::Draw()
@@ -77,6 +95,8 @@ void GameClearScene::Draw()
     // ===== 3D描画 =====
     object3dManager_->PreDraw();
     logoObject_->Draw();
+    spacelogo_->Draw();
+    plane_->Draw();
     planeLine_->Draw();
     // ===== 描画終了 =====
     GetDx()->PostDraw();
@@ -89,6 +109,8 @@ void GameClearScene::Finalize()
     delete object3dManager_;
     delete camera_;
     delete planeLine_;
+    delete plane_;
+    delete spacelogo_;
     ModelManager::GetInstance()->Finalize();
     TextureManager::GetInstance()->Finalize();
 }
