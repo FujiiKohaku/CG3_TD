@@ -152,6 +152,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="3D\CreateSphere.cpp" />
+    <ClCompile Include="Scene\GameClearScene.cpp" />
     <ClCompile Include="Object\Goal.cpp" />
     <ClCompile Include="Object\Block.cpp" />
     <ClCompile Include="Object\Bumper.cpp" />
@@ -239,6 +240,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3D\CreateSphere.h" />
+    <ClInclude Include="Scene\GameClearScene.h" />
     <ClInclude Include="Object\Goal.h" />
     <ClInclude Include="Object\Block.h" />
     <ClInclude Include="Object\Bumper.h" />

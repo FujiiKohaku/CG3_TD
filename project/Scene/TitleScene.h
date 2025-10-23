@@ -27,7 +27,6 @@ private:
     Model* planeLineModel_ = nullptr;
     Object3dManager* object3dManager_ = nullptr;
     Camera* camera_ = nullptr;
-
     // スプライト
     SpriteManager* spriteManager_ = nullptr;
     Sprite* sprite_ = nullptr;

@@ -179,7 +179,7 @@ void GamePlayScene::Update(Input* input)
 
 	// プレイヤーがゴールしたらシーンを切り替える
 	if (pendulumPlayer_->GetIsGoal() == true) {
-		GetSceneManager()->SetNextScene(new StageSelectScene());// クリアシーンができたらここに入れて
+		GetSceneManager()->SetNextScene(new GameClearScene());// クリアシーンができたらここに入れて
 	}
 
 }

@@ -5,6 +5,12 @@
 #include "StageSelectScene.h"
 #include "TextureManager.h"
 #include <numbers>
+#include "ModelManager.h"
+#include "Object3d.h"
+#include "Object3dManager.h"
+#include "Sprite.h"
+#include "SpriteManager.h"
+
 void TitleScene::Initialize()
 {
     //----------------------------------------
@@ -59,6 +65,7 @@ void TitleScene::Initialize()
     planeModel_ = ModelManager::GetInstance()->FindModel("plane.obj");
     gizaModel_ = ModelManager::GetInstance()->FindModel("giza.obj");
     planeLineModel_ = ModelManager::GetInstance()->FindModel("line.obj");
+
     //----------------------------------------
     //  Object3d 作成
     //----------------------------------------
