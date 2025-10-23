@@ -34,16 +34,17 @@ void TitleScene::Initialize()
     //----------------------------------------
     //  2D
     //----------------------------------------
-    spriteManager_ = new SpriteManager();
-    spriteManager_->Initialize(GetDx());
+
     // テクスチャロード
     TextureManager::GetInstance()->LoadTexture("resources/uvChecker.png");
+    spriteManager_ = new SpriteManager();
+    spriteManager_->Initialize(GetDx());
     // スプライト生成
     sprite_ = new Sprite();
     sprite_->Initialize(spriteManager_, "resources/uvChecker.png");
     // 位置・サイズ・色設定
     sprite_->SetPosition({ 640.0f, 360.0f }); // 画面中央
-    sprite_->SetSize({ 1.0f, 1.0f }); // 大きめに
+    sprite_->SetSize({ 100.0f, 100.0f }); // 大きめに
     sprite_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f }); // 白
 
     //----------------------------------------
@@ -110,6 +111,7 @@ void TitleScene::Update(Input* input)
     plane_->Update();
     camera_->Update();
     giza_->Update();
+    sprite_->Update();
    // planeLine_->Update();
     static float t = 0.0f;
     static float s = 0.0f;
@@ -145,19 +147,20 @@ void TitleScene::Update(Input* input)
 
 void TitleScene::Draw()
 {
-    // 描画開始
+    // ===== 画面初期化 =====
     GetDx()->PreDraw();
- 
-    // ===== 3Dオブジェクト描画 =====
+
+    // ===== 3D描画 =====
     object3dManager_->PreDraw();
     logoObject_->Draw();
     giza_->Draw();
-   // planeLine_->Draw();
     backGround_->Draw();
-    // ===== スプライト描画 =====
-    spriteManager_->PreDraw();
+
+    // ===== 2D描画（最後に）=====
+    spriteManager_->PreDraw(); // ← PSO切り替え
     sprite_->Draw();
- // ===== 終了 =====
+
+    // ===== 描画終了 =====
     GetDx()->PostDraw();
 }
 
