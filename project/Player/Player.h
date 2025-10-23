@@ -9,6 +9,8 @@
 #include "Struct.h"
 #include "algorithm"
 #include "cmath"
+#include "Block.h"
+
 class Player {
 
     Vector3 position_ = { 0.0f, 0.2f, 0.0f };
@@ -24,7 +26,7 @@ class Player {
     Pendulum* pendulum_ = nullptr;
     Object3d* object3d_ = nullptr;
     Bumper* bumper_ = nullptr;
-
+    Block* block_ = nullptr;
   
 
     // 壁の位置の初期化ほんとはここに入れるのは良くない本当によくない
@@ -41,14 +43,9 @@ class Player {
         { { wallXMin, wallYMax, 0 }, { wallXMax, wallYMax, 0 } }
     };
 
-    // float aabbWidth = 8.0f;
-    // float aabbHeight = 1.0f;
-
-    // AABB aabb_ = { {-aabbWidth / 2.0f,12.0f - aabbHeight / 2.0f,0.0f},{aabbWidth / 2.0f,12.0f + aabbHeight / 2.0f,0.0f} };
-
     Sphere playerSphere_;
     Sphere bumperSphere_;
-    Sphere scoreBumperSphere_;
+    AABB blockAABB_;
 
 public:
     ~Player();
@@ -73,11 +70,6 @@ public:
 
     // --- 壁外チェック（OB処理） ---
     bool isOutOfBounds();
-
-    bool IsCollision(const AABB& aabb, const Sphere& spher);
-
-    // ボックスとの反射処理
-    void ReflectSphereFromAABB(Vector3& position, Vector3& velocity, const AABB& aabb, float radius, float bounce);
 
     Vector3 GetAnchorPosition();
 
@@ -104,6 +96,7 @@ public:
     // セッター
     void SetVelocity(Vector3 velocity) { velocity_ = velocity; }
     void SetBumper(Bumper* bumper) { bumper_ = bumper; }
+    void SetBlockAABB(Block* block) { block_ = block; }
     void DrawWalls();
 
 private:

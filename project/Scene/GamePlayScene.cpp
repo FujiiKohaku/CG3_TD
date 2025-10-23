@@ -88,6 +88,11 @@ void GamePlayScene::Initialize()
     bumper_ = new Bumper();
     bumper_->Initialize({ 0.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj"); // 一時的にプレイヤーのモデルを入れてる
 
+    //====================
+    // ブロック
+    //====================
+    block_ = new Block();
+    block_->Initialize({ 0.0f,13.0f,0.0f }, 10.0f, 3.0f, 1.2f, object3dManager_, "cube.obj"); // 一時的にcubeのモデルをセット
    
     //=================================
     // 振り子プレイヤー
@@ -95,6 +100,8 @@ void GamePlayScene::Initialize()
     pendulumPlayer_ = new Player();
     pendulumPlayer_->Initialize(object3dManager_, "PlayerBall.obj");
     pendulumPlayer_->SetBumper(bumper_);
+    pendulumPlayer_->SetBlockAABB(block_);
+
 #ifdef _DEBUG
 
     Microsoft::WRL::ComPtr<ID3D12InfoQueue>
@@ -178,6 +185,7 @@ void GamePlayScene::Draw()
     object3dManager_->PreDraw(); // 3D描画準備
     skydome_.Draw();
     bumper_->Draw();
+    block_->Draw();
    
     pendulumPlayer_->Draw();
     // ----- ImGui描画（デバッグUI） -----
@@ -197,7 +205,8 @@ void GamePlayScene::Finalize()
     delete object3dManager_;
     delete spriteManager_;
     delete bumper_;
-    delete scoreBumper_;
+    delete block_;
+    //delete scoreBumper_;
     sprites_.clear();
 
     // 2. ImGui破棄

@@ -46,7 +46,7 @@
 // 個人ライブラリ
 #include "Bumper.h"
 #include "Player.h"
-#include "ScoreBumper.h"
+//#include "ScoreBumper.h"
 #include "Skydome.h"
 class GamePlayScene : public BaseScene {
 public:
@@ -69,5 +69,6 @@ private:
     Camera* camera_;
     Skydome skydome_;
     Bumper* bumper_;
-    ScoreBumper* scoreBumper_;
+    Block* block_;
+    //ScoreBumper* scoreBumper_;
 };

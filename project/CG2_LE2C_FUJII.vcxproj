@@ -152,6 +152,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="3D\CreateSphere.cpp" />
+    <ClCompile Include="Object\Block.cpp" />
     <ClCompile Include="Object\Bumper.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="D3DResourceLeakChecker\D3DResourceLeakChecker.cpp" />
@@ -237,6 +238,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3D\CreateSphere.h" />
+    <ClInclude Include="Object\Block.h" />
     <ClInclude Include="Object\Bumper.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="D3DResourceLeakChecker\D3DResourceLeakChecker.h" />

@@ -8,14 +8,14 @@ class Bumper
     Vector3 position_ = {0.0f,0.0f,0.0f};
     float radius_ = 1.0f;
     float bounce_ = 1.0f;
-    float scare_ = 1.0f;
+    float scale_ = 1.0f;
     Object3d* object3d_ = nullptr;
 
     Sphere sphre_;
 
 public:
 
-    void Initialize(Vector3 position, float scare, float bounce, Object3dManager* object3dManager, const std::string& modelName);
+    void Initialize(Vector3 position, float scale, float bounce, Object3dManager* object3dManager, const std::string& modelName);
 
     void Update();
 
