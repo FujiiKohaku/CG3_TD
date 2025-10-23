@@ -125,10 +125,11 @@ bool Player::GetIsCut()
     return isCut_;
 }
 
-void Player::Initialize(Object3dManager* object3dManager, const std::string& modelName)
+void Player::Initialize(int clearPoint, Object3dManager* object3dManager, const std::string& modelName)
 {
     pendulum_ = new Pendulum;
     object3d_ = new Object3d;
+    clearPoint_ = clearPoint;
     object3d_->Initialize(object3dManager);
     object3d_->SetModel(modelName);
 
