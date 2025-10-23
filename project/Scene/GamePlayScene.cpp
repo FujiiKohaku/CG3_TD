@@ -88,15 +88,13 @@ void GamePlayScene::Initialize()
     bumper_ = new Bumper();
     bumper_->Initialize({ 0.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj"); // 一時的にプレイヤーのモデルを入れてる
 
-    scoreBumper_ = new ScoreBumper();
-    scoreBumper_->Initialize({ 5.0f, 5.0f, 0.0f }, 0.5f, 1.2f, object3dManager_, "cube.obj"); // 一時的にcubeモデルを入れてる
+   
     //=================================
     // 振り子プレイヤー
     //=================================
     pendulumPlayer_ = new Player();
     pendulumPlayer_->Initialize(object3dManager_, "PlayerBall.obj");
     pendulumPlayer_->SetBumper(bumper_);
-    pendulumPlayer_->SetScoreBumper(scoreBumper_);
 #ifdef _DEBUG
 
     Microsoft::WRL::ComPtr<ID3D12InfoQueue>
@@ -161,9 +159,7 @@ void GamePlayScene::Update(Input* input)
     pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f, input);
 
     // 各3Dオブジェクトの更新
-    // object3d_.Update();
-    // player2_.Update();
-    // enemy_.Update();
+
     camera_->Update();
     skydome_.Update();
 
@@ -182,10 +178,7 @@ void GamePlayScene::Draw()
     object3dManager_->PreDraw(); // 3D描画準備
     skydome_.Draw();
     bumper_->Draw();
-    scoreBumper_->Draw();
-    // object3d_.Draw();
-    // player2_.Draw();
-    // enemy_.Draw();
+   
     pendulumPlayer_->Draw();
     // ----- ImGui描画（デバッグUI） -----
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
