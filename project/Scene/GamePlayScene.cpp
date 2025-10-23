@@ -86,7 +86,7 @@ void GamePlayScene::Initialize()
     // バンパー
     //=====================
     bumper_ = new Bumper();
-    bumper_->Initialize({ 0.0f, 5.0f, 0.0f }, 0.5f, 1.2f, object3dManager_, "PlayerBall.obj"); // 一時的にプレイヤーのモデルを入れてる
+    bumper_->Initialize({ 0.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj"); // 一時的にプレイヤーのモデルを入れてる
 
     scoreBumper_ = new ScoreBumper();
     scoreBumper_->Initialize({ 5.0f, 5.0f, 0.0f }, 0.5f, 1.2f, object3dManager_, "cube.obj"); // 一時的にcubeモデルを入れてる

@@ -1,9 +1,10 @@
 ﻿#include "Bumper.h"
 
-void Bumper::Initialize(Vector3 position, float radius, float bounce, Object3dManager* object3dManager, const std::string& modelName)
+void Bumper::Initialize(Vector3 position, float scare, float bounce, Object3dManager* object3dManager, const std::string& modelName)
 {
 	position_ = position;
-	radius_ = radius;
+	scare_ = scare;
+    radius_ *= scare_/2.0f;
 	bounce_ = bounce;
 	object3d_ = new Object3d;
 	object3d_->Initialize(object3dManager);
@@ -21,6 +22,7 @@ void Bumper::Draw()
 	object3d_->SetTranslate(position_);
 	object3d_->Update();
 	object3d_->Draw();
+    object3d_->SetScale({ scare_, scare_, scare_ });
 }
 
 float Bumper::Length(const Vector3& v)
