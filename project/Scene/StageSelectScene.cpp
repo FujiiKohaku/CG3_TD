@@ -9,7 +9,7 @@ void StageSelectScene::Initialize() {
 
 void StageSelectScene::Update(Input* input) {
 	if (input->IsKeyTriggered(DIK_SPACE)) {
-		GetSceneManager()->SetNextScene(new GameClearScene());
+		GetSceneManager()->SetNextScene(new GamePlayScene());
 	}
 }
 
