@@ -1,11 +1,12 @@
 #pragma once
+#include "Bumper.h"
 #include "Camera.h"
 #include "Input.h"
 #include "MatrixMath.h"
 #include "Object3d.h"
 #include "Object3dManager.h"
 #include "Pendulum.h"
-#include "Bumper.h"
+#include "ScoreBumper.h"
 #include "Struct.h"
 #include "algorithm"
 #include "cmath"
@@ -24,12 +25,14 @@ class Player {
     Pendulum* pendulum_ = nullptr;
     Object3d* object3d_ = nullptr;
     Bumper* bumper_ = nullptr;
+    // 得点バンパー
+    ScoreBumper* scoreBumper_ = nullptr;
 
-    // 壁の位置の初期化ほんとはここに入れるのは良くない
-    const float wallXMin = -10.0f;
-    const float wallXMax = 10.0f;
-    const float wallYMin = -1.0f;
-    const float wallYMax = 19.0f;
+    // 壁の位置の初期化ほんとはここに入れるのは良くない本当によくない
+    const float wallXMin = -20.0f;
+    const float wallXMax = 20.0f;
+    const float wallYMin = -20.0f;
+    const float wallYMax = 20.0f;
 
     // 壁衝突処理（カプセル判定）
     Vector3 walls_[4][2] = {
@@ -39,13 +42,14 @@ class Player {
         { { wallXMin, wallYMax, 0 }, { wallXMax, wallYMax, 0 } }
     };
 
-    //float aabbWidth = 8.0f;
-    //float aabbHeight = 1.0f;
+    // float aabbWidth = 8.0f;
+    // float aabbHeight = 1.0f;
 
-    //AABB aabb_ = { {-aabbWidth / 2.0f,12.0f - aabbHeight / 2.0f,0.0f},{aabbWidth / 2.0f,12.0f + aabbHeight / 2.0f,0.0f} };
+    // AABB aabb_ = { {-aabbWidth / 2.0f,12.0f - aabbHeight / 2.0f,0.0f},{aabbWidth / 2.0f,12.0f + aabbHeight / 2.0f,0.0f} };
 
     Sphere playerSphere_;
     Sphere bumperSphere_;
+    Sphere scoreBumperSphere_;
 
 public:
     ~Player();
@@ -82,7 +86,7 @@ public:
 
     void Initialize(Object3dManager* object3dManager, const std::string& modelName);
 
-    void Update(const char* keys, const char* preKeys, float deltaTime,Input* input);
+    void Update(const char* keys, const char* preKeys, float deltaTime, Input* input);
 
     void Draw();
 
@@ -96,9 +100,14 @@ public:
     const Vector3& GetPosition() const { return position_; }
     const float& GetRadius() const { return radius_; }
     const unsigned int& GetColor() const { return color_; }
+    const int GetPoint() const { return point_; }
 
     // セッター
     void SetVelocity(Vector3 velocity) { velocity_ = velocity; }
     void SetBumper(Bumper* bumper) { bumper_ = bumper; }
+    void SetScoreBumper(ScoreBumper* scorebumper) { scoreBumper_ = scorebumper; }
+    void DrawWalls();
 
+private:
+    Object3d* wallObjects_[4];
 };
