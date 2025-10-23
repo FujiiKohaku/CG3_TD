@@ -10,7 +10,7 @@
 #include "algorithm"
 #include "cmath"
 #include "Block.h"
-#include "Goal.h"
+#include "Goal.h"#include "StageSelectScene.h"
 
 class Player {
 
@@ -23,7 +23,7 @@ class Player {
     float radius_ = 0.5f;
     unsigned int color_ = 0xFF0000FF;
     int point_ = 0;
-    int clearPoint_ = 1000;
+    int clearPoint_ = 0;
     int isGoal_ = false;
 
     Pendulum* pendulum_ = nullptr;
@@ -80,7 +80,7 @@ public:
 
     bool GetIsCut();
 
-    void Initialize(Object3dManager* object3dManager, const std::string& modelName);
+    void Initialize(int clearPoint, Object3dManager* object3dManager, const std::string& modelName);
 
     void Update(const char* keys, const char* preKeys, float deltaTime, Input* input);
 

@@ -104,7 +104,7 @@ void GamePlayScene::Initialize()
 	// 振り子プレイヤー
 	//=================================
 	pendulumPlayer_ = new Player();
-	pendulumPlayer_->Initialize(object3dManager_, "PlayerBall.obj");
+	pendulumPlayer_->Initialize(1000, object3dManager_, "PlayerBall.obj");
 	pendulumPlayer_->SetBumper(bumper_);
 	pendulumPlayer_->SetBlockAABB(block_);
 	pendulumPlayer_->SetGoal(goal_);
