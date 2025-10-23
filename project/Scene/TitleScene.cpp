@@ -32,14 +32,33 @@ void TitleScene::Initialize()
     object3dManager_->SetDefaultCamera(camera_);
 
     //----------------------------------------
+    //  2D
+    //----------------------------------------
+    spriteManager_ = new SpriteManager();
+    spriteManager_->Initialize(GetDx());
+    // テクスチャロード
+    TextureManager::GetInstance()->LoadTexture("resources/uvChecker.png");
+    // スプライト生成
+    sprite_ = new Sprite();
+    sprite_->Initialize(spriteManager_, "resources/uvChecker.png");
+    // 位置・サイズ・色設定
+    sprite_->SetPosition({ 640.0f, 360.0f }); // 画面中央
+    sprite_->SetSize({ 1.0f, 1.0f }); // 大きめに
+    sprite_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f }); // 白
+
+    //----------------------------------------
     // モデル読み込み
     //----------------------------------------
     ModelManager::GetInstance()->LoadModel("plane.obj");
     ModelManager::GetInstance()->LoadModel("titleTex.obj");
     ModelManager::GetInstance()->LoadModel("rainbow.obj");
+    ModelManager::GetInstance()->LoadModel("giza.obj");
+    //ModelManager::GetInstance()->LoadModel("line.obj");
     logoModel_ = ModelManager::GetInstance()->FindModel("titleTex.obj");
     BackModel_ = ModelManager::GetInstance()->FindModel("rainbow.obj");
     planeModel_ = ModelManager::GetInstance()->FindModel("plane.obj");
+    gizaModel_ = ModelManager::GetInstance()->FindModel("giza.obj");
+    //planeLineModel_ = ModelManager::GetInstance()->FindModel("line.obj");
     //----------------------------------------
     //  Object3d 作成
     //----------------------------------------
@@ -63,6 +82,20 @@ void TitleScene::Initialize()
     plane_->SetTranslate({ 0.0f, 0.0f, 4.0f });
     plane_->SetScale({ 1.0f, 1.0f, 1.0f });
     plane_->SetRotate({ 0.0f, 0.0f, std::numbers::pi_v<float> / 2.0f });
+
+    giza_ = new Object3d();
+    giza_->Initialize(object3dManager_);
+    giza_->SetModel(gizaModel_);
+    giza_->SetTranslate({ 0.0f, 0.0f, 4.0f });
+    giza_->SetScale({ 1.0f, 1.0f, 1.0f });
+    giza_->SetRotate({ std::numbers::pi_v<float> / 2.0f, 0.0f, 0.0f });
+
+   /* planeLine_ = new Object3d();
+    planeLine_->Initialize(object3dManager_);
+    planeLine_->SetModel(planeLineModel_);
+    planeLine_->SetTranslate({ 0.0f, 0.0f, 4.0f });
+    planeLine_->SetScale({ 1.0f, 1.0f, 1.0f });
+    planeLine_->SetRotate({ 0.0f, 0.0f, std::numbers::pi_v<float> / 2.0f });*/
 }
 
 void TitleScene::Update(Input* input)
@@ -76,7 +109,8 @@ void TitleScene::Update(Input* input)
     backGround_->Update();
     plane_->Update();
     camera_->Update();
-
+    giza_->Update();
+   // planeLine_->Update();
     static float t = 0.0f;
     static float s = 0.0f;
     static float r = 0.0f;
@@ -100,25 +134,30 @@ void TitleScene::Update(Input* input)
         t = 0.0f;
     // plane_->SetRotate({ 0.0f, r, 0.0f });
     // backGround_->SetRotate({ 0.0f, std::numbers::pi_v<float>, 0.0f });
+
+    float ease = (std::sin(t) + 1.0f) / 2.0f;
+    float rotateY = std::sin(t * 0.8f) * 0.5f;
+    float S = 1.0f + ease * 0.3f;
+
+    giza_->SetRotate({ t, rotateY, t });
+    giza_->SetScale({ S, S, S });
 }
 
 void TitleScene::Draw()
 {
     // 描画開始
     GetDx()->PreDraw();
-
-    // 3D描画の準備
+ 
+    // ===== 3Dオブジェクト描画 =====
     object3dManager_->PreDraw();
-
-    // モデル描画
-
     logoObject_->Draw();
-
+    giza_->Draw();
+   // planeLine_->Draw();
     backGround_->Draw();
-
-    // plane_->Draw();
-
-    // 描画終了
+    // ===== スプライト描画 =====
+    spriteManager_->PreDraw();
+    sprite_->Draw();
+ // ===== 終了 =====
     GetDx()->PostDraw();
 }
 
@@ -129,7 +168,10 @@ void TitleScene::Finalize()
     delete logoObject_;
     delete object3dManager_;
     delete camera_;
-
+    delete giza_;
+    delete planeLine_;
+    delete sprite_;
+    delete spriteManager_;
     ModelManager::GetInstance()->Finalize();
     TextureManager::GetInstance()->Finalize();
 }
