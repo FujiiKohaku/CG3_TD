@@ -213,6 +213,7 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
             }
         }
 
+        // バンパーとの当たり判定と反射
         playerSphere_ = { position_, radius_ };
         bumperSphere_ = { bumper_->GetPosition(), bumper_->GetRadius() };
         if (bumper_->IsCollision(playerSphere_, bumperSphere_)) {
@@ -221,17 +222,21 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
             position_ = playerSphere_.center;
         }
        
-        // ブロックとの反射
+        // ブロックとの当たり判定と反射
         blockAABB_ = { block_->GetBlockAABB() };
         if (block_->IsCollision(blockAABB_, playerSphere_)) {
             point_ += 100;
             block_->ReflectSphereFromAABB(position_, velocity_, blockAABB_, radius_, block_->GetBounce());
         }
 
-        /*if (IsCollision(aabb_, playerSphere_)) {
-            point_ += 100;
-            ReflectSphereFromAABB(position_, velocity_, aabb_, radius_, bounce_);
-        }*/
+        // ゴールとの当たり判定
+        if (point_ >= clearPoint_) {
+            goal_->SetIsActive(true);
+            goalSphere_ = { goal_->GetPosition(),goal_->GetRadius() };
+            if (goal_->IsCollision(playerSphere_, goalSphere_)) {
+                isGoal_ = true;
+            }
+        }
 
         // 減速
         velocity_ = Multiply(decelerationRate_, velocity_);

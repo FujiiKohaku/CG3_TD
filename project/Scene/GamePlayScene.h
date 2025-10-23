@@ -48,6 +48,10 @@
 #include "Player.h"
 //#include "ScoreBumper.h"
 #include "Skydome.h"
+
+// シーン管理
+#include "SceneManager.h"
+#include "StageSelectScene.h"
 class GamePlayScene : public BaseScene {
 public:
     void Initialize() override;
@@ -70,5 +74,6 @@ private:
     Skydome skydome_;
     Bumper* bumper_;
     Block* block_;
+    Goal* goal_;
     //ScoreBumper* scoreBumper_;
 };
