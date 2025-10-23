@@ -22,7 +22,7 @@ void Block::Initialize(Vector3 position, float width, float height,float bounce,
 
 void Block::Draw()
 {
-    // Œ»İ‚ÌˆÊ’u‚É‡‚í‚¹‚é
+    // ç¾åœ¨ã®ä½ç½®ã«åˆã‚ã›ã‚‹
     object3d_->SetTranslate(centerPosition_);
     object3d_->Update();
     object3d_->Draw();
@@ -108,14 +108,14 @@ Block::~Block()
 
 void Block::ReflectSphereFromAABB(Vector3& position, Vector3& velocity, const AABB& aabb, float radius, float bounce)
 {
-    // Õ“Ë“_‚ÉÅ‚à‹ß‚¢“_‚ğ‹‚ß‚é
+    // è¡çªç‚¹ã«æœ€ã‚‚è¿‘ã„ç‚¹ã‚’æ±‚ã‚ã‚‹
     Vector3 closest{
         std::clamp(position.x, aabb.min.x, aabb.max.x),
         std::clamp(position.y, aabb.min.y, aabb.max.y),
         std::clamp(position.z, aabb.min.z, aabb.max.z)
     };
 
-    // AABB ‚Ì–Ê‚²‚Æ‚Ì–@ü‚ğ”»’è
+    // AABB ã®é¢ã”ã¨ã®æ³•ç·šã‚’åˆ¤å®š
     Vector3 normal = { 0, 0, 0 };
     float pxMin = fabsf((position.x + radius) - aabb.min.x);
     float pxMax = fabsf((position.x - radius) - aabb.max.x);
@@ -141,13 +141,13 @@ void Block::ReflectSphereFromAABB(Vector3& position, Vector3& velocity, const AA
         minPenetration = pyMax;
     }
 
-    // ‚ß‚è‚İ•â³
+    // ã‚ã‚Šè¾¼ã¿è£œæ­£
     position = Add(position, Multiply(minPenetration * normal.x + minPenetration * normal.y, normal));
 
-    // ”½Ëˆ—iR = V - 2*(VEN)*Nj
+    // åå°„å‡¦ç†ï¼ˆR = V - 2*(Vãƒ»N)*Nï¼‰
     float dotN = Dot(velocity, normal);
     velocity = Subtract(velocity, Multiply(2.0f * dotN, normal));
 
-    // ”½Ë”{—¦
+    // åå°„å€ç‡
     velocity = Multiply(bounce, velocity);
 }

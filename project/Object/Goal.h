@@ -24,17 +24,17 @@ public:
 
     float Length(const Vector3& v);
 
-    // ‹…‚Æ‹…‚ÌÕ“Ë”»’è
+    // çƒã¨çƒã®è¡çªåˆ¤å®š
     bool IsCollision(const Sphere& s1, const Sphere& s2);
 
     ~Goal();
 
-    // ƒQƒbƒ^[ƒƒ{
+    // ã‚²ãƒƒã‚¿ãƒ¼ãƒ­ãƒœ
     const Vector3& GetPosition() const { return position_; }
     const float& GetRadius() const { return radius_; }
     const int& GetIsActive() const { return isActive_; }
 
-    // ƒZƒbƒ^[
+    // ã‚»ãƒƒã‚¿ãƒ¼
     void SetPosition(Vector3 position) { position_ = position; }
     void SetIsActive(int isActive) { isActive_ = isActive; }
 };

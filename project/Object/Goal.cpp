@@ -17,7 +17,7 @@ void Goal::Update()
 
 void Goal::Draw()
 {
-	// Œ»İ‚ÌˆÊ’u‚É‡‚í‚¹‚é
+	// ç¾åœ¨ã®ä½ç½®ã«åˆã‚ã›ã‚‹
 	object3d_->SetTranslate(position_);
 	object3d_->Update();
 	object3d_->Draw();
@@ -36,14 +36,14 @@ float Goal::Length(const Vector3& v)
 bool Goal::IsCollision(const Sphere& s1, const Sphere& s2)
 {
 	if (isActive_) {
-		// ’†SŠÔƒxƒNƒgƒ‹‚ğŒvZ
+		// ä¸­å¿ƒé–“ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—
 		Vector3 delta = {
 			s2.center.x - s1.center.x,
 			s2.center.y - s1.center.y,
 			s2.center.z - s1.center.z
 		};
 
-		// ‚Q‚Â‚Ì’†SŠÔ‹——£
+		// ï¼’ã¤ã®ä¸­å¿ƒé–“è·é›¢
 		float distance = Length(delta);
 
 		if (distance <= s1.radius + s2.radius) {

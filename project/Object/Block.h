@@ -35,13 +35,13 @@ public:
 
 	bool IsCollision(const AABB& aabb, const Sphere& spher);
 
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~Block();
 
-	// ƒ{ƒbƒNƒX‚Æ‚Ì”½Ëˆ—
+	// ãƒœãƒƒã‚¯ã‚¹ã¨ã®åå°„å‡¦ç†
 	void ReflectSphereFromAABB(Vector3& position, Vector3& velocity, const AABB& aabb, float radius, float bounce);
 
-	// ƒQƒbƒ^[ƒƒ{
+	// ã‚²ãƒƒã‚¿ãƒ¼ãƒ­ãƒœ
 	const Vector3& GetPosition() const { return centerPosition_; }
 	const float& GetBounce() const { return bounce_; }
 	const AABB& GetBlockAABB()const { return block_; }
