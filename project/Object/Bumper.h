@@ -38,7 +38,7 @@ public:
     const float& GetBounce() const { return bounce_; }
 
     void SetPosition(Vector3 position) { position_ = position; }
-    void SetPosition(float bounce) { bounce_ = bounce; }
+    void SetBounce(float bounce) { bounce_ = bounce; }
     void SetRadius(float radius) { radius_ = radius; }
 
 };

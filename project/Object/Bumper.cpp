@@ -90,8 +90,7 @@ void Bumper::ReflectSphereVelocity(Sphere& movingSphere, Vector3& velocity, cons
 	}
 }
 
-Bumper::~Bumper(){
-	if (object3d_) {
+Bumper::~Bumper(){if (object3d_) {
 		delete object3d_;
 		object3d_ = nullptr;
 	}

@@ -10,6 +10,7 @@
 #include "algorithm"
 #include "cmath"
 #include "Block.h"
+#include "Goal.h"
 
 class Player {
 
@@ -22,11 +23,14 @@ class Player {
     float radius_ = 0.5f;
     unsigned int color_ = 0xFF0000FF;
     int point_ = 0;
+    int clearPoint_ = 1000;
+    int isGoal_ = false;
 
     Pendulum* pendulum_ = nullptr;
     Object3d* object3d_ = nullptr;
     Bumper* bumper_ = nullptr;
     Block* block_ = nullptr;
+    Goal* goal_ = nullptr;
   
 
     // 壁の位置の初期化ほんとはここに入れるのは良くない本当によくない
@@ -45,6 +49,7 @@ class Player {
 
     Sphere playerSphere_;
     Sphere bumperSphere_;
+    Sphere goalSphere_;
     AABB blockAABB_;
 
 public:
@@ -92,11 +97,13 @@ public:
     const float& GetRadius() const { return radius_; }
     const unsigned int& GetColor() const { return color_; }
     const int GetPoint() const { return point_; }
+    const int GetIsGoal() const { return isGoal_; }
 
     // セッター
     void SetVelocity(Vector3 velocity) { velocity_ = velocity; }
     void SetBumper(Bumper* bumper) { bumper_ = bumper; }
     void SetBlockAABB(Block* block) { block_ = block; }
+    void SetGoal(Goal* goal) { goal_ = goal; }
     void DrawWalls();
 
 private:
