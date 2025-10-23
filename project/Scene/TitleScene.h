@@ -30,4 +30,7 @@ private:
     // スプライト
     SpriteManager* spriteManager_ = nullptr;
     Sprite* sprite_ = nullptr;
+    // push
+    Object3d* spacelogo_ = nullptr;
+    Model* spaceLogpModel_ = nullptr;
 };

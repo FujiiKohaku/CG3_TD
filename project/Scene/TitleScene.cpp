@@ -1,15 +1,15 @@
 #include "TitleScene.h"
 #include "DirectXCommon.h"
 #include "Input.h"
-#include "SceneManager.h"
-#include "StageSelectScene.h"
-#include "TextureManager.h"
-#include <numbers>
 #include "ModelManager.h"
 #include "Object3d.h"
 #include "Object3dManager.h"
+#include "SceneManager.h"
 #include "Sprite.h"
 #include "SpriteManager.h"
+#include "StageSelectScene.h"
+#include "TextureManager.h"
+#include <numbers>
 
 void TitleScene::Initialize()
 {
@@ -60,12 +60,13 @@ void TitleScene::Initialize()
     ModelManager::GetInstance()->LoadModel("rainbow.obj");
     ModelManager::GetInstance()->LoadModel("giza.obj");
     ModelManager::GetInstance()->LoadModel("line.obj");
+    ModelManager::GetInstance()->LoadModel("PushSpace.obj");
     logoModel_ = ModelManager::GetInstance()->FindModel("titleTex.obj");
     BackModel_ = ModelManager::GetInstance()->FindModel("rainbow.obj");
     planeModel_ = ModelManager::GetInstance()->FindModel("plane.obj");
     gizaModel_ = ModelManager::GetInstance()->FindModel("giza.obj");
     planeLineModel_ = ModelManager::GetInstance()->FindModel("line.obj");
-
+    spaceLogpModel_ = ModelManager::GetInstance()->FindModel("PushSpace.obj");
     //----------------------------------------
     //  Object3d 作成
     //----------------------------------------
@@ -103,6 +104,13 @@ void TitleScene::Initialize()
     planeLine_->SetTranslate({ 0.0f, 0.0f, 3.0f });
     planeLine_->SetScale({ 5.0f, 5.0f, 5.0f });
     planeLine_->SetRotate({ 0.0f, -std::numbers::pi_v<float> / 4.0f, 0.0f });
+
+    spacelogo_ = new Object3d();
+    spacelogo_->Initialize(object3dManager_);
+    spacelogo_->SetModel(spaceLogpModel_);
+    spacelogo_->SetTranslate({ -2.0f, -1.0f, 0.0f });
+    spacelogo_->SetScale({ 0.5f, 0.5f, 0.5f });
+    spacelogo_->SetRotate({ std::numbers::pi_v<float> / 2.0f, 0.0f, 0.0f });
 }
 
 void TitleScene::Update(Input* input)
@@ -118,6 +126,7 @@ void TitleScene::Update(Input* input)
     camera_->Update();
     giza_->Update();
     planeLine_->Update();
+    spacelogo_->Update();
     // planeLine_->Update();
     static float t = 0.0f;
     static float s = 0.0f;
@@ -160,6 +169,7 @@ void TitleScene::Draw()
     // ===== 3D描画 =====
     object3dManager_->PreDraw();
     logoObject_->Draw();
+    spacelogo_->Draw();
     giza_->Draw();
     backGround_->Draw();
     planeLine_->Draw();
@@ -181,6 +191,7 @@ void TitleScene::Finalize()
     delete planeLine_;
     delete sprite_;
     delete spriteManager_;
+    delete spacelogo_;
     ModelManager::GetInstance()->Finalize();
     TextureManager::GetInstance()->Finalize();
 }
