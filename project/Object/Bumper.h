@@ -6,15 +6,16 @@
 class Bumper
 {
     Vector3 position_ = {0.0f,0.0f,0.0f};
-    float radius_ = 0.0f;
+    float radius_ = 1.0f;
     float bounce_ = 1.0f;
+    float scale_ = 1.0f;
     Object3d* object3d_ = nullptr;
 
     Sphere sphre_;
 
 public:
 
-    void Initialize(Vector3 position, float radius, float bounce, Object3dManager* object3dManager, const std::string& modelName);
+    void Initialize(Vector3 position, float scale, float bounce, Object3dManager* object3dManager, const std::string& modelName);
 
     void Update();
 
@@ -37,7 +38,7 @@ public:
     const float& GetBounce() const { return bounce_; }
 
     void SetPosition(Vector3 position) { position_ = position; }
-    void SetPosition(float bounce) { bounce_ = bounce; }
+    void SetBounce(float bounce) { bounce_ = bounce; }
     void SetRadius(float radius) { radius_ = radius; }
 
 };
