@@ -80,7 +80,7 @@
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;Skydome;Object;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;Skydome;Object;fade;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,9 +134,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <Optimization>Disabled</Optimization>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-
       <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;Skydome;Object;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
