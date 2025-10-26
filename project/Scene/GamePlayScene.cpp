@@ -99,12 +99,12 @@ void GamePlayScene::Initialize()
     pendulumPlayer_->SetBlockAABB(block_);
     pendulumPlayer_->SetGoal(goal_);
 
-    // コインイニシャライズ
-    for (int i = 0; i < 5; i++) {
-        Coin* coin = new Coin();
-        coin->Initialize({ -5.0f + i * 3.0f, 3.0f, 0.0f }, 1.0f, 100, object3dManager_, "Coin.obj");
-        coins_.push_back(coin);
-    }
+    //// コインイニシャライズ
+    //for (int i = 0; i < 5; i++) {
+    //    Coin* coin = new Coin();
+    //    coin->Initialize({ -5.0f + i * 3.0f, 3.0f, 0.0f }, 1.0f, 100, object3dManager_, "Coin.obj");
+    //    coins_.push_back(coin);
+    //}
 
 #ifdef _DEBUG
 
@@ -179,16 +179,16 @@ void GamePlayScene::Update(Input* input)
         GetSceneManager()->SetNextScene(new GameClearScene()); // クリアシーンができたらここに入れて
     }
 
-    // --- コインとの当たり判定 ---
-    Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
+    //// --- コインとの当たり判定 ---
+    //Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
 
-    for (auto& coin : coins_) {
-        coin->Update();
+    //for (auto& coin : coins_) {
+    //    coin->Update();
 
-        if (coin->IsCollision(playerSphere)) {
-            pendulumPlayer_->AddScore(coin->GetScore());
-        }
-    }
+    //    if (coin->IsCollision(playerSphere)) {
+    //        pendulumPlayer_->AddScore(coin->GetScore());
+    //    }
+    //}
 }
 
 void GamePlayScene::Draw()
@@ -205,9 +205,9 @@ void GamePlayScene::Draw()
     skydome_.Draw();
     bumper_->Draw();
     block_->Draw();
-    for (auto& coin : coins_) {
+ /*   for (auto& coin : coins_) {
         coin->Draw();
-    }
+    }*/
     if (goal_->GetIsActive() == true) {
         goal_->Draw();
     }
@@ -235,18 +235,18 @@ void GamePlayScene::Finalize()
     // delete scoreBumper_;
     sprites_.clear();
 
-    // 2. ImGui破棄
+    //  ImGui破棄
     ImGui_ImplDX12_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
 
-    // 3. TextureManager / ModelManager
+    // TextureManager / ModelManager
     ModelManager::GetInstance()->Finalize();
     TextureManager::GetInstance()->Finalize();
-    for (auto& coin : coins_) {
-        delete coin;
-    }
-    coins_.clear();
+    //for (auto& coin : coins_) {
+    //    delete coin;
+    //}
+ /*   coins_.clear();*/
     // 4. Sound
     soundManager_.Finalize(&bgm);
 
