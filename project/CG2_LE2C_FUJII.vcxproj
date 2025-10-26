@@ -214,6 +214,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="TextureManager\TextureManager.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="Object\Wall.cpp" />
+    <ClCompile Include="Object\WarpGate.cpp" />
     <ClCompile Include="Winapp\Utility.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MaxSpeed</Optimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</WholeProgramOptimization>
@@ -268,7 +269,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Player\Player.h" />
     <ClInclude Include="Scene\Game.h" />
     <ClInclude Include="Scene\SceneManager.h" />
-    <ClInclude Include="Scene\GamePlayScene.h" />
+    <ClInclude Include="Object\GamePlayScene.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="Logger\Logger.h" />
     <ClInclude Include="math\Matrix4x4.h" />
@@ -288,6 +289,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="TextureManager\TextureManager.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="Object\Wall.h" />
+    <ClInclude Include="Object\WarpGate.h" />
     <ClInclude Include="Winapp\Utility.h" />
     <ClInclude Include="math\MatrixMath.h" />
     <ClInclude Include="Winapp\WinApp.h" />

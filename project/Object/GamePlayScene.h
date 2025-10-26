@@ -49,6 +49,7 @@
 // #include "ScoreBumper.h"
 #include "Coin.h"
 #include "Skydome.h"
+#include "WarpGate.h"
 // シーン管理
 #include "GameClearScene.h"
 #include "SceneManager.h"
@@ -78,5 +79,6 @@ private:
     Goal* goal_;
     std::vector<Coin*> coins_; // コイン配列
     // ScoreBumper* scoreBumper_;
-
+    WarpGate* warpA_ = nullptr;
+    WarpGate* warpB_ = nullptr;
 };

@@ -106,8 +106,14 @@ void GamePlayScene::Initialize()
     //     coins_.push_back(coin);
     // }
 
+    // --- Initialize() ---
+    warpA_ = new WarpGate();
+    warpA_->Initialize({ -10.0f, 3.0f, 0.0f }, 1.0f, object3dManager_, "plane.obj");
 
-
+    warpB_ = new WarpGate();
+    warpB_->Initialize({ 10.0f, 3.0f, 0.0f }, 1.0f, object3dManager_, "plane.obj");
+    warpA_->SetPair(warpB_);
+    warpB_->SetPair(warpA_);
 #ifdef _DEBUG
 
     Microsoft::WRL::ComPtr<ID3D12InfoQueue>
@@ -191,6 +197,14 @@ void GamePlayScene::Update(Input* input)
     //        pendulumPlayer_->AddScore(coin->GetScore());
     //    }
     //}
+
+    warpA_->Update();
+    warpB_->Update();
+
+    Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
+
+    warpA_->CheckAndWarp(pendulumPlayer_);
+    warpB_->CheckAndWarp(pendulumPlayer_);
 }
 
 void GamePlayScene::Draw()
@@ -210,6 +224,10 @@ void GamePlayScene::Draw()
     /*   for (auto& coin : coins_) {
            coin->Draw();
        }*/
+    warpA_->Draw();
+    warpB_->Draw();
+    warpA_->Draw();
+    warpB_->Draw();
     if (goal_->GetIsActive() == true) {
         goal_->Draw();
     }
@@ -234,6 +252,8 @@ void GamePlayScene::Finalize()
     delete bumper_;
     delete block_;
     delete goal_;
+    delete warpA_;
+    delete warpB_;
     // delete scoreBumper_;
     sprites_.clear();
 

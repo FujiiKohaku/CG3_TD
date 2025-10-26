@@ -265,6 +265,12 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
 
 
     effect_->Update();
+
+    if (warpCooldown_ > 0.0f) {
+        warpCooldown_ -= deltaTime;
+        if (warpCooldown_ < 0.0f)
+            warpCooldown_ = 0.0f;
+    }
 }
 
 void Player::Draw()
