@@ -10,7 +10,8 @@
 #include "algorithm"
 #include "cmath"
 #include "Block.h"
-#include "Goal.h"#include "StageSelectScene.h"
+#include "Goal.h"
+#include "StageSelectScene.h"
 
 class Player {
 
@@ -98,7 +99,7 @@ public:
     const unsigned int& GetColor() const { return color_; }
     const int GetPoint() const { return point_; }
     const int GetIsGoal() const { return isGoal_; }
-
+    void AddScore(int score) { point_ += score; }
     // セッター
     void SetVelocity(Vector3 velocity) { velocity_ = velocity; }
     void SetBumper(Bumper* bumper) { bumper_ = bumper; }
