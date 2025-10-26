@@ -7,6 +7,14 @@
 #include "Sprite.h"
 #include "SpriteManager.h"
 
+class Fade;
+
+enum class Phase {
+    kFadeIn,
+    kMain,
+    kFadeOut,
+};
+
 class TitleScene : public BaseScene {
 public:
     void Initialize() override;
@@ -27,6 +35,8 @@ private:
     Model* planeLineModel_ = nullptr;
     Object3dManager* object3dManager_ = nullptr;
     Camera* camera_ = nullptr;
+	Fade* fade_ = nullptr;
+	Phase phase_ = Phase::kFadeIn;
     // スプライト
     SpriteManager* spriteManager_ = nullptr;
     Sprite* sprite_ = nullptr;
