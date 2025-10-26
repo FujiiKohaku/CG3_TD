@@ -47,8 +47,8 @@
 #include "Bumper.h"
 #include "Player.h"
 // #include "ScoreBumper.h"
+#include "Coin.h"
 #include "Skydome.h"
-
 // シーン管理
 #include "GameClearScene.h"
 #include "SceneManager.h"
@@ -76,5 +76,6 @@ private:
     Bumper* bumper_;
     Block* block_;
     Goal* goal_;
+    std::vector<Coin*> coins_; // コイン配列
     // ScoreBumper* scoreBumper_;
 };
