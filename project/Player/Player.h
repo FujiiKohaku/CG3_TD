@@ -1,17 +1,18 @@
 #pragma once
+#include "Block.h"
 #include "Bumper.h"
 #include "Camera.h"
+#include "Effect.h"
+#include "Goal.h"
 #include "Input.h"
 #include "MatrixMath.h"
 #include "Object3d.h"
 #include "Object3dManager.h"
 #include "Pendulum.h"
+#include "StageSelectScene.h"
 #include "Struct.h"
 #include "algorithm"
 #include "cmath"
-#include "Block.h"
-#include "Goal.h"
-#include "StageSelectScene.h"
 
 class Player {
 
@@ -32,7 +33,6 @@ class Player {
     Bumper* bumper_ = nullptr;
     Block* block_ = nullptr;
     Goal* goal_ = nullptr;
-  
 
     // 壁の位置の初期化ほんとはここに入れるのは良くない本当によくない
     const float wallXMin = -20.0f;
@@ -109,4 +109,6 @@ public:
 
 private:
     Object3d* wallObjects_[4];
+
+    Effect* effect_;
 };

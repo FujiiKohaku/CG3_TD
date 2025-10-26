@@ -152,6 +152,10 @@ void Player::Initialize(int clearPoint, Object3dManager* object3dManager, const 
 
     walls_[3][0] = { wallXMin, wallYMax, 0 };
     walls_[3][1] = { wallXMax, wallYMax, 0 };
+
+    // Initialize()
+    effect_ = new Effect();
+    effect_->Initialize(object3dManager, "Coin.obj");
 }
 
 void Player::Update(const char* keys, const char* preKeys, float deltaTime, Input* input)
@@ -210,6 +214,7 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
                 position_ = prevPos;
                 float dotN = Dot(velocity_, normal);
                 velocity_ = Subtract(velocity_, Multiply(2.0f * dotN, normal));
+                effect_->Emit(position_);
                 break;
             }
         }
@@ -221,8 +226,9 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
             point_ += 100;
             bumper_->ReflectSphereVelocity(playerSphere_, velocity_, bumperSphere_);
             position_ = playerSphere_.center;
+            effect_->Emit(position_);
         }
-       
+
         // ブロックとの当たり判定と反射
         blockAABB_ = { block_->GetBlockAABB() };
         if (block_->IsCollision(blockAABB_, playerSphere_)) {
@@ -233,7 +239,7 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
         // ゴールとの当たり判定
         if (point_ >= clearPoint_) {
             goal_->SetIsActive(true);
-            goalSphere_ = { goal_->GetPosition(),goal_->GetRadius() };
+            goalSphere_ = { goal_->GetPosition(), goal_->GetRadius() };
             if (goal_->IsCollision(playerSphere_, goalSphere_)) {
                 isGoal_ = true;
             }
@@ -256,6 +262,9 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
             pendulum_->SetIsCut(false);
         }
     }
+
+
+    effect_->Update();
 }
 
 void Player::Draw()
@@ -266,6 +275,8 @@ void Player::Draw()
     object3d_->Draw();
 
     DrawWalls();
+
+    effect_->Draw();
 }
 
 void Player::IsCollisionWall()
@@ -290,6 +301,8 @@ void Player::IsCollisionWall()
             position_ = prevPosition_;
             float dotN = Dot(velocity_, normal);
             velocity_ = Subtract(velocity_, Multiply(2.0f * dotN, normal));
+           
+            effect_->Emit(position_);
             break;
         }
     }
@@ -306,8 +319,6 @@ void Player::VelocityReset()
     velocity_ = { 0.0f, 0.0f, 0.0f };
     pendulum_->Reset();
 }
-
-
 
 bool Player::CapsuleIntersectsSegment3D(const Vector3& capsuleStart, const Vector3& capsuleEnd, float radius, const Vector3& segStart, const Vector3& segEnd)
 {
@@ -377,6 +388,8 @@ Player::~Player()
             wallObjects_[i] = nullptr;
         }
     }
+    delete effect_;
+  
 }
 
 float Player::Dot(const Vector3& v1, const Vector3& v2)
@@ -414,4 +427,3 @@ void Player::DrawWalls()
         wallObjects_[i]->Draw();
     }
 }
-
