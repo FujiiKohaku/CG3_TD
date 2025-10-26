@@ -100,11 +100,13 @@ void GamePlayScene::Initialize()
     pendulumPlayer_->SetGoal(goal_);
 
     //// コインイニシャライズ
-    //for (int i = 0; i < 5; i++) {
-    //    Coin* coin = new Coin();
-    //    coin->Initialize({ -5.0f + i * 3.0f, 3.0f, 0.0f }, 1.0f, 100, object3dManager_, "Coin.obj");
-    //    coins_.push_back(coin);
-    //}
+    // for (int i = 0; i < 5; i++) {
+    //     Coin* coin = new Coin();
+    //     coin->Initialize({ -5.0f + i * 3.0f, 3.0f, 0.0f }, 1.0f, 100, object3dManager_, "Coin.obj");
+    //     coins_.push_back(coin);
+    // }
+
+
 
 #ifdef _DEBUG
 
@@ -180,10 +182,10 @@ void GamePlayScene::Update(Input* input)
     }
 
     //// --- コインとの当たり判定 ---
-    //Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
+    // Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
 
-    //for (auto& coin : coins_) {
-    //    coin->Update();
+    // for (auto& coin : coins_) {
+    //     coin->Update();
 
     //    if (coin->IsCollision(playerSphere)) {
     //        pendulumPlayer_->AddScore(coin->GetScore());
@@ -205,9 +207,9 @@ void GamePlayScene::Draw()
     skydome_.Draw();
     bumper_->Draw();
     block_->Draw();
- /*   for (auto& coin : coins_) {
-        coin->Draw();
-    }*/
+    /*   for (auto& coin : coins_) {
+           coin->Draw();
+       }*/
     if (goal_->GetIsActive() == true) {
         goal_->Draw();
     }
@@ -243,10 +245,10 @@ void GamePlayScene::Finalize()
     // TextureManager / ModelManager
     ModelManager::GetInstance()->Finalize();
     TextureManager::GetInstance()->Finalize();
-    //for (auto& coin : coins_) {
-    //    delete coin;
-    //}
- /*   coins_.clear();*/
+    // for (auto& coin : coins_) {
+    //     delete coin;
+    // }
+    /*   coins_.clear();*/
     // 4. Sound
     soundManager_.Finalize(&bgm);
 

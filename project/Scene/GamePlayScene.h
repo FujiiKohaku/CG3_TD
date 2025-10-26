@@ -78,4 +78,5 @@ private:
     Goal* goal_;
     std::vector<Coin*> coins_; // コイン配列
     // ScoreBumper* scoreBumper_;
+
 };
