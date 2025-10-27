@@ -35,6 +35,9 @@ void GamePlayScene::Initialize()
 
     spriteManager_ = new SpriteManager();
     spriteManager_->Initialize(GetDx());
+    // スコアUI初期化
+    scoreUI_ = new ScoreUI();
+    scoreUI_->Initialize(spriteManager_);
 
     // =============================
     // Object3D Manager / Camera
@@ -197,7 +200,7 @@ void GamePlayScene::Update(Input* input)
 
     camera_->Update();
     skydome_.Update();
-
+    scoreUI_->Update(pendulumPlayer_->GetPoint());
     // ==============================
     // ステージごとの個別処理
     // ==============================
@@ -265,7 +268,7 @@ void GamePlayScene::Draw()
     object3dManager_->PreDraw();
 
     skydome_.Draw();
-
+    scoreUI_->Draw();
     switch (stageNo_) {
     // ===============================
     // ステージ1
