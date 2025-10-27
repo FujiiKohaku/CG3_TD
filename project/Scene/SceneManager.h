@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseScene.h"
+#include "SceneParam.h"
 
 class WinApp;
 class DirectXCommon;
@@ -10,7 +11,8 @@ public:
 	void Draw();
 	~SceneManager();
 
-	void SetNextScene(BaseScene* nextScene) { nextScene_ = nextScene; }
+	void SetNextScene(BaseScene* nextScene);
+	void SetNextScene(BaseScene* nextScene, const SceneParam& param);
 	void SetSystem(WinApp* wa, DirectXCommon* dx) { winApp_ = wa; dxCommon_ = dx; }
 
 private:
