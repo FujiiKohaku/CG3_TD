@@ -1,4 +1,5 @@
 #pragma once
+#include "SceneParam.h"
 
 class SceneManager;
 class Input;
@@ -15,15 +16,18 @@ public:
 
 	virtual void SetSceneManager(SceneManager* sceneManager) { sceneManager_ = sceneManager; }
     virtual void SetSystem(WinApp* wa, DirectXCommon* dx) { winApp_ = wa; dxCommon_ = dx; }
+    virtual void SetParam(const SceneParam& p) { param_ = p; }
 
 protected:
 	SceneManager* GetSceneManager() const { return sceneManager_; }
     WinApp* GetWinApp() const { return winApp_; }
     DirectXCommon* GetDx() const { return dxCommon_; }
+    const SceneParam& GetParam()const { return param_; }
 
 private:
 	SceneManager* sceneManager_ = nullptr;
     WinApp* winApp_ = nullptr;
 	DirectXCommon* dxCommon_ = nullptr;
+    SceneParam param_;
 };
 

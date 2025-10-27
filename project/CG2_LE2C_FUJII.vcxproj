@@ -210,6 +210,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Scene\StageSelectScene.cpp" />
     <ClCompile Include="Object\ScoreBumper.cpp" />
     <ClCompile Include="Skydome\Skydome.cpp" />
+    <ClCompile Include="Stage1Logic.cpp" />
+    <ClCompile Include="StageFactory.cpp" />
     <ClCompile Include="StringUtility\StringUtility.cpp" />
     <ClCompile Include="TextureManager\TextureManager.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
@@ -282,9 +284,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="3D\Model.h" />
     <ClInclude Include="3D\ModelCommon.h" />
     <ClInclude Include="3D\ModelManager.h" />
+    <ClInclude Include="Scene\SceneParam.h" />
+    <ClInclude Include="Scene\StageId.h" />
     <ClInclude Include="Scene\StageSelectScene.h" />
     <ClInclude Include="Object\ScoreBumper.h" />
     <ClInclude Include="Skydome\Skydome.h" />
+    <ClInclude Include="Scene\StageLogic.h" />
+    <ClInclude Include="Stage1Logic.h" />
+    <ClInclude Include="StageFactory.h" />
     <ClInclude Include="StringUtility\StringUtility.h" />
     <ClInclude Include="TextureManager\TextureManager.h" />
     <ClInclude Include="Scene\TitleScene.h" />

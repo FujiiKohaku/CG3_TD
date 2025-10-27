@@ -1,18 +1,19 @@
 #include "StageSelectScene.h"
 #include "DirectXCommon.h"
 #include "GamePlayScene.h"
+#include "Fade.h"
 #include "Input.h"
 #include "ModelManager.h"
 #include "SceneManager.h"
 #include <cmath>
 #include <numbers>
 
-// ---------------------------------------------
-// 初期化
-// ---------------------------------------------
-void StageSelectScene::Initialize()
-{
-    TextureManager::GetInstance()->Initialize(GetDx());
+void StageSelectScene::Initialize() {
+	fade_ = new Fade();
+	fade_->Initialize(GetDx());
+	fade_->Start(Status::FadeIn, 0.25f);
+  
+  TextureManager::GetInstance()->Initialize(GetDx());
 
     object3dManager_ = new Object3dManager();
     object3dManager_->Initialize(GetDx());
@@ -37,12 +38,29 @@ void StageSelectScene::Initialize()
     }
 }
 
-// ---------------------------------------------
-// 更新
-// ---------------------------------------------
-void StageSelectScene::Update(Input* input)
-{
-    if (input->IsKeyTriggered(DIK_LEFT)) {
+void StageSelectScene::Update(Input* input) {
+	if (fade_) { fade_->Update(); }
+
+	switch (phase_) {
+	case Phase::kFadeIn:
+		if (fade_->IsFinished()) {
+			fade_->Stop();
+			phase_ = Phase::kMain;
+		}
+		break;
+	case Phase::kMain:
+		if (input->IsKeyTriggered(DIK_LEFT)) {
+			selected_ = (selected_ - 1 + int(StageId::Count)) % int(StageId::Count);
+		}
+		if (input->IsKeyTriggered(DIK_RIGHT)) {
+			selected_ = (selected_ + 1) % int(StageId::Count);
+		}
+		if (input->IsKeyTriggered(DIK_SPACE)) {
+
+			fade_->Start(Status::FadeOut, 0.25f);
+			phase_ = Phase::kFadeOut;
+		}
+       if (input->IsKeyTriggered(DIK_LEFT)) {
         stageNo_--;
         if (stageNo_ < 1)
             stageNo_ = 3;
@@ -87,35 +105,37 @@ void StageSelectScene::Update(Input* input)
         float scaleValue = baseScale + (maxScale - baseScale) * ease;
         cubes_[i]->SetScale({ scaleValue, scaleValue, scaleValue });
     }
-}
-
-// ---------------------------------------------
-// 描画
-// ---------------------------------------------
+		break;
+	case Phase::kFadeOut:
+		// �t�F�[�h�A�E�g����
+		if (fade_->IsFinished()) {
+			// �V�[���؂�ւ�
+			SceneParam param{};
+			param.stage = static_cast<StageId>(selected_);
+			GetSceneManager()->SetNextScene(new GamePlayScene(), param);
+		}
+		break;
+	}
+  
 void StageSelectScene::Draw()
 {
     GetDx()->PreDraw();
     object3dManager_->PreDraw();
+  
+	fade_->Draw();
 
+	GetDx()->PostDraw();
+}
+
+void StageSelectScene::Finalize() {
+	delete fade_;
+	fade_ = nullptr;
     for (auto& cube : cubes_) {
         cube->Update();
         cube->Draw();
     }
-
-    GetDx()->PostDraw();
-}
-
-// ---------------------------------------------
-// 終了処理
-// ---------------------------------------------
-void StageSelectScene::Finalize()
-{
-    for (auto& cube : cubes_) {
-        delete cube;
-    }
-    cubes_.clear();
-
-    delete object3dManager_;
+  cubes_.clear();
+   delete object3dManager_;
     object3dManager_ = nullptr;
 
     delete camera_;

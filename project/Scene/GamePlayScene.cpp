@@ -1,21 +1,11 @@
 #include "GamePlayScene.h"
 #include "GameClearScene.h"
 #include "Input.h"
+#include "Fade.h"
 #include "Utility.h"
 #include <filesystem>
 #include <numbers>
 
-// ---------------------------------------------
-// コンストラクタ（ステージ番号受け取り）
-// ---------------------------------------------
-GamePlayScene::GamePlayScene(int stageNo)
-{
-    stageNo_ = stageNo;
-}
-
-// ---------------------------------------------
-// 初期化処理
-// ---------------------------------------------
 void GamePlayScene::Initialize()
 {
 
@@ -64,15 +54,9 @@ void GamePlayScene::Initialize()
     soundManager_.Initialize();
     bgm = soundManager_.SoundLoadWave("Resources/BGM.wav");
 
-#pragma endregion
-
-    // =============================
-    // ステージ別初期化
-    // =============================
-    switch (stageNo_) {
-    case 1: {
-        // 背景
+// 背景
         skydome_.Initialize(object3dManager_);
+
 
         // バンパー生成
         bumper_ = new Bumper();
@@ -100,12 +84,8 @@ void GamePlayScene::Initialize()
         // お互いをリンク（ペア設定）
         warpA_->SetPair(warpB_);
         warpB_->SetPair(warpA_);
-
-        break;
-    }
-
-    case 2: { // ここからステージ2
-        // 背景
+  
+  // 背景
         skydome_.Initialize(object3dManager_);
 
         // バンパー
@@ -118,7 +98,7 @@ void GamePlayScene::Initialize()
                 Coin* coin = new Coin();
 
                 Vector3 pos = { -6.0f + x * 3.0f, 3.0f + y * 2.5f, 0.0f };
-
+                 
                 coin->Initialize(pos, 1.0f, 100, object3dManager_, "Coin.obj");
                 coins_.push_back(coin);
             }
@@ -135,13 +115,20 @@ void GamePlayScene::Initialize()
 
         pendulumPlayer_->SetGoal(goal_);
 
-        break;
-    }
 
-    default:
-        skydome_.Initialize(object3dManager_);
-        break;
-    }
+    // =============================
+    // ステージ別初期化
+    // =============================
+   
+
+
+	// フェードの初期化
+	fade_ = new Fade();
+	fade_->Initialize(GetDx());
+	fade_->Start(Status::FadeIn, 0.25f);
+
+	phase_ = Phase::kFadeIn;
+
 
 #ifdef _DEBUG
     // GPUデバッグ設定
@@ -170,6 +157,101 @@ void GamePlayScene::Initialize()
 // ---------------------------------------------
 void GamePlayScene::Update(Input* input)
 {
+	if (fade_) { fade_->Update(); }
+
+	const BYTE* keys = nullptr;
+	const BYTE* preKeys = nullptr;
+
+	// ==============================
+	//  フレームの先頭処理
+	// ==============================
+	ImGui_ImplDX12_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	if (phase_ == Phase::kMain) {
+		
+
+		// ==============================
+		//  開発用UI
+		// ==============================
+
+		// ImGui::ShowDemoWindow();
+		// ==============================
+		// ImGui デバッグ表示
+		// ==============================
+		ImGui::Begin("Player Debug");
+		ImGui::Text("Score: %d", pendulumPlayer_->GetPoint()); // スコア表示
+
+		ImGui::End();
+
+		// ==============================
+		//  更新処理（Update）
+		// ==============================
+		keys = input->GetKeys();
+		preKeys = input->GetPreKeys();
+
+		// 振り子プレイヤーの更新処理
+		pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f, input);
+
+		// 各3Dオブジェクトの更新
+
+		camera_->Update();
+		skydome_.Update();
+    
+    // ステージ1：ワープゲート＋基本プレイ
+        if (warpA_ && warpB_) {
+            warpA_->Update();
+            warpB_->Update();
+            warpA_->CheckAndWarp(pendulumPlayer_);
+            warpB_->CheckAndWarp(pendulumPlayer_);
+        }
+    // ステージ2：コイン・ブロックなどの処理
+
+        // プレイヤーの球の情報を取得
+        Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
+
+        // pendulum が「切れていない」＝まだ振り子で揺れている間はコインを取得できない
+        if (pendulumPlayer_->GetPendulum()->GetIsCut()) {
+            // 慣性移動中のみコイン判定を行う
+            for (auto& coin : coins_) {
+                coin->Update();
+                if (coin->IsCollision(playerSphere)) {
+                    pendulumPlayer_->AddScore(coin->GetScore());
+                }
+            }
+        } else {
+            // まだロープでつながっている間（スイング中）はコインだけ更新しておく
+            for (auto& coin : coins_) {
+                coin->Update();
+            }
+        }
+
+		// プレイヤーがゴールしたらシーンを切り替える
+		if (pendulumPlayer_->GetIsGoal() == true) {
+
+			if (fade_) { fade_->Start(Status::FadeOut, 0.25f); }
+			phase_ = Phase::kFadeOut;
+		}
+	}
+
+	ImGui::Render(); // ImGuiの内部コマンドを生成（描画直前に呼ぶ）
+
+	switch (phase_) {
+	case Phase::kFadeIn:
+		if (fade_ && fade_->IsFinished()) {
+			fade_->Stop();
+			phase_ = Phase::kMain;
+		}
+		break;
+
+	case Phase::kFadeOut:
+		if (fade_ && fade_->IsFinished()) {
+			GetSceneManager()->SetNextScene(new GameClearScene());// クリアシーンができたらここに入れて
+		}
+		break;
+	}
+
     // ==============================
     // ImGui デバッグUI
     // ==============================
@@ -199,56 +281,6 @@ void GamePlayScene::Update(Input* input)
     skydome_.Update();
 
     // ==============================
-    // ステージごとの個別処理
-    // ==============================
-    switch (stageNo_) {
-    case 1: {
-        // ステージ1：ワープゲート＋基本プレイ
-        if (warpA_ && warpB_) {
-            warpA_->Update();
-            warpB_->Update();
-            warpA_->CheckAndWarp(pendulumPlayer_);
-            warpB_->CheckAndWarp(pendulumPlayer_);
-        }
-        break;
-    }
-
-    case 2: {
-        // ステージ2：コイン・ブロックなどの処理
-
-        // プレイヤーの球の情報を取得
-        Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
-
-        // pendulum が「切れていない」＝まだ振り子で揺れている間はコインを取得できない
-        if (pendulumPlayer_->GetPendulum()->GetIsCut()) {
-            // 慣性移動中のみコイン判定を行う
-            for (auto& coin : coins_) {
-                coin->Update();
-                if (coin->IsCollision(playerSphere)) {
-                    pendulumPlayer_->AddScore(coin->GetScore());
-                }
-            }
-        } else {
-            // まだロープでつながっている間（スイング中）はコインだけ更新しておく
-            for (auto& coin : coins_) {
-                coin->Update();
-            }
-        }
-
-        break;
-    }
-
-    case 3: {
-        // ステージ3：制限時間・特殊ギミックなど
-        // （今後追加予定）
-        break;
-    }
-
-    default:
-        break;
-    }
-
-    // ==============================
     // ゴール処理
     // ==============================
     if (pendulumPlayer_ && pendulumPlayer_->GetIsGoal()) {
@@ -261,64 +293,41 @@ void GamePlayScene::Update(Input* input)
 // ---------------------------------------------
 void GamePlayScene::Draw()
 {
-    GetDx()->PreDraw();
-    object3dManager_->PreDraw();
+	// ==============================
+	//  描画処理（Draw）
+	// ==============================
 
-    skydome_.Draw();
+	// バックバッファの切り替え準備
+	GetDx()->PreDraw();
 
-    switch (stageNo_) {
-    // ===============================
-    // ステージ1
-    // ===============================
-    case 1: {
+	// ----- 3Dオブジェクト描画 -----
+	object3dManager_->PreDraw(); // 3D描画準備
+	skydome_.Draw();
+	bumper_->Draw();
+	block_->Draw();
 
-        bumper_->Draw();
-        if (goal_ && goal_->GetIsActive()) {
-            goal_->Draw();
-        }
-        pendulumPlayer_->Draw();
-        warpA_->Draw();
-        warpB_->Draw();
-        break;
-    }
+	if (goal_->GetIsActive() == true) {
+		goal_->Draw();
+	}
 
-    // ===============================
-    // ステージ2
-    // ===============================
-    case 2: {
+	pendulumPlayer_->Draw();
+	// ----- ImGui描画（デバッグUI） -----
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
 
-        bumper_->Draw();
-        if (goal_ && goal_->GetIsActive())
-            goal_->Draw();
-        pendulumPlayer_->Draw();
-
-        // コイン描画
-        for (auto& coin : coins_) {
-            coin->Draw();
-        }
-        break;
-    }
-
-    // ===============================
-    // ステージ3：追加予定
-    // ===============================
-    case 3: {
-        pendulumPlayer_->Draw();
-        if (goal_ && goal_->GetIsActive())
-            goal_->Draw();
-        // 敵やギミック追加予定
-        break;
-    }
-
-    default:
-        break;
-    }
-
-    // ===============================
+	if (fade_) {
+		fade_->Draw();
+	}
+  
+  // ===============================
     // ImGuiデバッグ表示（共通）
     // ===============================
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
-    GetDx()->PostDraw();
+
+	// ----- 描画終了処理 -----
+	GetDx()->PostDraw();
+
+	// コマンドリスト状態確認ログ
+	Logger::Log("CommandList state check before Close()");
 }
 
 // ---------------------------------------------
@@ -328,6 +337,12 @@ void GamePlayScene::Finalize()
 {
 
     // 各オブジェクトを安全に削除
+  delete fade_;
+  fade_ = nullptr;
+  delete goal_;
+  goal_ = nullptr;
+  delete block_;
+  block_ = nullptr;
     delete pendulumPlayer_;
     pendulumPlayer_ = nullptr;
     delete bumper_;
@@ -359,4 +374,5 @@ void GamePlayScene::Finalize()
 
     // GPU待機
     GetDx()->WaitForGPU();
+
 }
