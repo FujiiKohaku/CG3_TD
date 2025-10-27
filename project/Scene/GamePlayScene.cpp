@@ -1,5 +1,7 @@
 #include "GamePlayScene.h"
 #include "Input.h"
+#include "Fade.h"
+
 void GamePlayScene::Initialize()
 {
 
@@ -9,8 +11,6 @@ void GamePlayScene::Initialize()
 	// ログのディレクトリを用意
 	std::filesystem::create_directory("logs");
 	// main関数の先頭//
-
-#pragma endregion
 
 #pragma region object sprite
 
@@ -109,6 +109,13 @@ void GamePlayScene::Initialize()
 	pendulumPlayer_->SetBlockAABB(block_);
 	pendulumPlayer_->SetGoal(goal_);
 
+	// フェードの初期化
+	fade_ = new Fade();
+	fade_->Initialize(GetDx());
+	fade_->Start(Status::FadeIn, 0.25f);
+
+	phase_ = Phase::kFadeIn;
+
 #ifdef _DEBUG
 
 	Microsoft::WRL::ComPtr<ID3D12InfoQueue>
@@ -143,6 +150,11 @@ void GamePlayScene::Initialize()
 
 void GamePlayScene::Update(Input* input)
 {
+	if (fade_) { fade_->Update(); }
+
+	const BYTE* keys = nullptr;
+	const BYTE* preKeys = nullptr;
+
 	// ==============================
 	//  フレームの先頭処理
 	// ==============================
@@ -150,37 +162,62 @@ void GamePlayScene::Update(Input* input)
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	// ==============================
-	//  開発用UI
-	// ==============================
+	if (phase_ == Phase::kMain) {
+		
 
-	// ImGui::ShowDemoWindow();
-	// ==============================
-	// ImGui デバッグ表示
-	// ==============================
-	ImGui::Begin("Player Debug");
-	ImGui::Text("Score: %d", pendulumPlayer_->GetPoint()); // スコア表示
+		// ==============================
+		//  開発用UI
+		// ==============================
 
-	ImGui::End();
+		// ImGui::ShowDemoWindow();
+		// ==============================
+		// ImGui デバッグ表示
+		// ==============================
+		ImGui::Begin("Player Debug");
+		ImGui::Text("Score: %d", pendulumPlayer_->GetPoint()); // スコア表示
+
+		ImGui::End();
+
+		// ==============================
+		//  更新処理（Update）
+		// ==============================
+		keys = input->GetKeys();
+		preKeys = input->GetPreKeys();
+
+		// 振り子プレイヤーの更新処理
+		pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f, input);
+
+		// 各3Dオブジェクトの更新
+
+		camera_->Update();
+		skydome_.Update();
+
+		// プレイヤーがゴールしたらシーンを切り替える
+		if (pendulumPlayer_->GetIsGoal() == true) {
+
+			if (fade_) { fade_->Start(Status::FadeOut, 0.25f); }
+			phase_ = Phase::kFadeOut;
+		}
+	}
+
 	ImGui::Render(); // ImGuiの内部コマンドを生成（描画直前に呼ぶ）
 
-	// ==============================
-	//  更新処理（Update）
-	// ==============================
-	const BYTE* keys = input->GetKeys();
-	const BYTE* preKeys = input->GetPreKeys();
-	// 振り子プレイヤーの更新処理
-	pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f, input);
+	switch (phase_) {
+	case Phase::kFadeIn:
+		if (fade_ && fade_->IsFinished()) {
+			fade_->Stop();
+			phase_ = Phase::kMain;
+		}
+		break;
 
-	// 各3Dオブジェクトの更新
-
-	camera_->Update();
-	skydome_.Update();
-
-	// プレイヤーがゴールしたらシーンを切り替える
-	if (pendulumPlayer_->GetIsGoal() == true) {
-		GetSceneManager()->SetNextScene(new GameClearScene());// クリアシーンができたらここに入れて
+	case Phase::kFadeOut:
+		if (fade_ && fade_->IsFinished()) {
+			GetSceneManager()->SetNextScene(new GameClearScene());// クリアシーンができたらここに入れて
+		}
+		break;
 	}
+
+	
 
 }
 
@@ -207,6 +244,10 @@ void GamePlayScene::Draw()
 	// ----- ImGui描画（デバッグUI） -----
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
 
+	if (fade_) {
+		fade_->Draw();
+	}
+
 	// ----- 描画終了処理 -----
 	GetDx()->PostDraw();
 
@@ -217,6 +258,7 @@ void GamePlayScene::Draw()
 void GamePlayScene::Finalize()
 {
 	// 1. Player / Object3dなどユーザ作成オブジェクト破棄
+	delete fade_;
 	delete pendulumPlayer_;
 	delete object3dManager_;
 	delete spriteManager_;
