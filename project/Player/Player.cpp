@@ -216,20 +216,17 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
 
         // バンパーとの当たり判定と反射
         playerSphere_ = { position_, radius_ };
-        bumperSphere_ = { bumper_->GetPosition(), bumper_->GetRadius() };
-        if (bumper_->IsCollision(playerSphere_, bumperSphere_)) {
-            point_ += 100;
-            bumper_->ReflectSphereVelocity(playerSphere_, velocity_, bumperSphere_);
-            position_ = playerSphere_.center;
+
+        for (int i = 0; i < kBumperCount; ++i) {
+            bumperSpheres_ = { bumpers_[i]->GetPosition(), bumpers_[i]->GetRadius()};
+
+            if (bumpers_[i]->IsCollision(playerSphere_, bumperSpheres_)) {
+                point_ += 100;
+                bumpers_[i]->ReflectSphereVelocity(playerSphere_, velocity_, bumperSpheres_);
+                position_ = playerSphere_.center;
+            }
         }
        
-        // ブロックとの当たり判定と反射
-        blockAABB_ = { block_->GetBlockAABB() };
-        if (block_->IsCollision(blockAABB_, playerSphere_)) {
-            point_ += 100;
-            block_->ReflectSphereFromAABB(position_, velocity_, blockAABB_, radius_, block_->GetBounce());
-        }
-
         // ゴールとの当たり判定
         if (point_ >= clearPoint_) {
             goal_->SetIsActive(true);
@@ -359,6 +356,13 @@ bool Player::CapsuleIntersectsSegment3D(const Vector3& capsuleStart, const Vecto
     // 距離が半径以下なら交差
     float distSq = LengthSq(Subtract(p1, p2));
     return distSq <= (radius * radius);
+}
+
+void Player::SetBumpers(Bumper* bumpers[], int count)
+{
+    for (int i = 0; i < count; ++i) {
+        bumpers_[i] = bumpers[i];
+    }
 }
 
 Player::~Player()

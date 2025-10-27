@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 // ======================= ヘッダー・ライブラリ関連 ==========================
 #define _USE_MATH_DEFINES
 // 標準ライブラリ//
@@ -48,35 +48,43 @@
 #include "Player.h"
 // #include "ScoreBumper.h"
 #include "Skydome.h"
+#include "Input.h"
 
 // シーン管理
 #include "GameClearScene.h"
 #include "SceneManager.h"
 #include "StageSelectScene.h"
-class GamePlayScene : public BaseScene {
+
+#include "BaseScene.h"
+
+class Stage1 : public BaseScene{
+
 public:
-    void Initialize() override;
-    void Update(Input* input) override;
-    void Draw() override;
-    void Finalize() override;
+	void Initialize() override;
+	void Update(Input* input) override;
+	void Draw() override;
+	void Finalize() override;
 
 private:
-    SoundManager soundManager_;
-    Object3dManager* object3dManager_ = nullptr;
-    SpriteManager* spriteManager_ = nullptr;
-    DebugCamera debugCamera_;
-    ModelCommon modelCommon_;
-    std::vector<Sprite*> sprites_;
-    Object3d object3d_, player2_, enemy_;
-    SoundData bgm;
-    bool isEnd = false;
-    Player* pendulumPlayer_;
-    Camera* camera_;
-    Skydome skydome_;
-    // 例: 最大3つのバンパー
-    static const int kBumperCount = 4;
-    Bumper* bumpers_[kBumperCount];
-    Block* block_;
-    Goal* goal_;
-    // ScoreBumper* scoreBumper_;
+	SoundManager soundManager_;
+	Object3dManager* object3dManager_ = nullptr;
+	SpriteManager* spriteManager_ = nullptr;
+	DebugCamera debugCamera_;
+	ModelCommon modelCommon_;
+	std::vector<Sprite*> sprites_;
+	Object3d object3d_, player2_, enemy_;
+	SoundData bgm;
+	bool isEnd = false;
+	Player* pendulumPlayer_;
+	Camera* camera_;
+	Skydome skydome_;
+	//Bumper* bumper_;
+	Block* block_;
+	Goal* goal_;
+
+	static const int kBumperCount = 4;
+	Bumper* bumpers_[kBumperCount];
+
+
 };
+

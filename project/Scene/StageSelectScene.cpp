@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "DirectXCommon.h"
 #include "GamePlayScene.h"
+#include "Stage1.h"
 
 void StageSelectScene::Initialize() {
 }

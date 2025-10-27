@@ -1,8 +1,7 @@
-#include "GamePlayScene.h"
-#include "Input.h"
-void GamePlayScene::Initialize()
-{
+﻿#include "Stage1.h"
 
+void Stage1::Initialize()
+{
 	// 誰も補足しなかった場合(Unhandled),補足する関数を登録
 	// main関数はじまってすぐに登録するとよい
 	SetUnhandledExceptionFilter(Utility::ExportDump);
@@ -86,15 +85,18 @@ void GamePlayScene::Initialize()
 	// バンパー
 	//=====================
 	// 例: 3つのバンパーを配置
-
+	// 例: 3つのバンパーを配置
 	bumpers_[0] = new Bumper();
-	bumpers_[0]->Initialize({ 0.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
+	bumpers_[0]->Initialize({ 0.0f, 10.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
 
 	bumpers_[1] = new Bumper();
-	bumpers_[1]->Initialize({ 5.0f, 0.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
+	bumpers_[1]->Initialize({ 10.0f, 0.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
 
 	bumpers_[2] = new Bumper();
-	bumpers_[2]->Initialize({ -5.0f, 0.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
+	bumpers_[2]->Initialize({ -10.0f, 0.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
+
+	bumpers_[3] = new Bumper();
+	bumpers_[3]->Initialize({ 0.0f, -10.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
 
 	//=====================
 	// ゴール
@@ -107,7 +109,11 @@ void GamePlayScene::Initialize()
 	//=================================
 	pendulumPlayer_ = new Player();
 	pendulumPlayer_->Initialize(1000, object3dManager_, "PlayerBall.obj");
-	pendulumPlayer_->SetBumpers(bumpers_, kBumperCount);
+
+	for (int i = 0; i < kBumperCount; ++i) {
+		pendulumPlayer_->SetBumpers(bumpers_, kBumperCount);
+	}
+	
 	pendulumPlayer_->SetGoal(goal_);
 
 #ifdef _DEBUG
@@ -142,7 +148,7 @@ void GamePlayScene::Initialize()
 #endif // DEBUG
 }
 
-void GamePlayScene::Update(Input* input)
+void Stage1::Update(Input* input)
 {
 	// ==============================
 	//  フレームの先頭処理
@@ -182,10 +188,9 @@ void GamePlayScene::Update(Input* input)
 	if (pendulumPlayer_->GetIsGoal() == true) {
 		GetSceneManager()->SetNextScene(new GameClearScene());// クリアシーンができたらここに入れて
 	}
-
 }
 
-void GamePlayScene::Draw()
+void Stage1::Draw()
 {
 	// ==============================
 	//  描画処理（Draw）
@@ -201,9 +206,8 @@ void GamePlayScene::Draw()
 	for (int i = 0; i < kBumperCount; ++i) {
 		bumpers_[i]->Draw();
 	}
-	//block_->Draw();
 
-	if (goal_->GetIsActive() == true) {
+	if (goal_->GetIsActive() == 1) {
 		goal_->Draw();
 	}
 
@@ -218,18 +222,19 @@ void GamePlayScene::Draw()
 	Logger::Log("CommandList state check before Close()");
 }
 
-void GamePlayScene::Finalize()
+void Stage1::Finalize()
 {
 	// 1. Player / Object3dなどユーザ作成オブジェクト破棄
 	delete pendulumPlayer_;
 	delete object3dManager_;
 	delete spriteManager_;
+
 	for (int i = 0; i < kBumperCount; ++i) {
 		delete bumpers_[i];
 		bumpers_[i] = nullptr;
 	}
+
 	delete goal_;
-	//delete scoreBumper_;
 	sprites_.clear();
 
 	// 2. ImGui破棄

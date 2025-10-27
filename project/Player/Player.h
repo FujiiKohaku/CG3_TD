@@ -28,10 +28,12 @@ class Player {
 
     Pendulum* pendulum_ = nullptr;
     Object3d* object3d_ = nullptr;
-    Bumper* bumper_ = nullptr;
+
+    static const int kBumperCount = 4;
+    Bumper* bumpers_[kBumperCount];
+    
     Block* block_ = nullptr;
     Goal* goal_ = nullptr;
-  
 
     // 壁の位置の初期化ほんとはここに入れるのは良くない本当によくない
     const float wallXMin = -20.0f;
@@ -48,7 +50,7 @@ class Player {
     };
 
     Sphere playerSphere_;
-    Sphere bumperSphere_;
+    Sphere bumperSpheres_;
     Sphere goalSphere_;
     AABB blockAABB_;
 
@@ -101,7 +103,8 @@ public:
 
     // セッター
     void SetVelocity(Vector3 velocity) { velocity_ = velocity; }
-    void SetBumper(Bumper* bumper) { bumper_ = bumper; }
+    void SetBumpers(Bumper* bumpers[], int count);
+    //void SetBumper(Bumper* bumper) { bumper_ = bumper; }
     void SetBlockAABB(Block* block) { block_ = block; }
     void SetGoal(Goal* goal) { goal_ = goal; }
     void DrawWalls();
