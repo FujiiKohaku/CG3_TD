@@ -80,7 +80,7 @@
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;Skydome;Object;fade;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;Skydome;Object;Effect;fade</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -105,7 +105,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;Skydome;Object;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;Skydome;Object;Effect;fade</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,7 +134,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <Optimization>Disabled</Optimization>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;Skydome;Object;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;Skydome;Object;Effect;fade</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -152,6 +152,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="3D\CreateSphere.cpp" />
+    <ClCompile Include="Effect\Effect.cpp" />
+    <ClCompile Include="Object\Coin.cpp" />
     <ClCompile Include="fade\Fade.cpp" />
     <ClCompile Include="Player\Bumper.cpp" />
     <ClCompile Include="Scene\GameClearScene.cpp" />
@@ -214,6 +216,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="TextureManager\TextureManager.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="Object\Wall.cpp" />
+    <ClCompile Include="Object\WarpGate.cpp" />
     <ClCompile Include="Winapp\Utility.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MaxSpeed</Optimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</WholeProgramOptimization>
@@ -244,6 +247,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3D\CreateSphere.h" />
+    <ClInclude Include="Effect\Effect.h" />
+    <ClInclude Include="Object\Coin.h" />
     <ClInclude Include="fade\Fade.h" />
     <ClInclude Include="Player\Bumper.h" />
     <ClInclude Include="Scene\GameClearScene.h" />
@@ -291,6 +296,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="TextureManager\TextureManager.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="Object\Wall.h" />
+    <ClInclude Include="Object\WarpGate.h" />
     <ClInclude Include="Winapp\Utility.h" />
     <ClInclude Include="math\MatrixMath.h" />
     <ClInclude Include="Winapp\WinApp.h" />

@@ -8,25 +8,25 @@ void Fade::Initialize(DirectXCommon* dxCommon) {
 	TextureManager::GetInstance()->Initialize(dxCommon);
 	TextureManager::GetInstance()->LoadTexture("resources/black2x2.png");
 	spriteManager = new SpriteManager();
-	spriteManager->Initialize(dxCommon); // DX12‚Ì‹¤’Êî•ñ‚Ínullptr‚Å‰Šú‰»iÀÛ‚Ì•`‰æ‚Í‚µ‚È‚¢‚Ì‚Å–â‘è‚È‚µj
+	spriteManager->Initialize(dxCommon); // DX12ã®å…±é€šæƒ…å ±ã¯nullptrã§åˆæœŸåŒ–ï¼ˆå®Ÿéš›ã®æç”»ã¯ã—ãªã„ã®ã§å•é¡Œãªã—ï¼‰
 	
 	for (int i = 0; i < 4; i++) {
 	    Sprite* sprite = new Sprite();
 	    sprite->Initialize(spriteManager, "resources/black2x2.png");
 		sprite->SetPosition({ 640.0f * float(i%2) * float(i-2), 0.0f});
-		if (i == 0) {// ã
+		if (i == 0) {// ä¸Š
 			sprite->SetPosition({ 0.0f, -360.0f });
 			sprite->SetSize({ 1280.0f, 360.0f });
 		}
-		if (i == 1) {// ¶
+		if (i == 1) {// å·¦
 			sprite->SetPosition({ -640.0f,0.0f });
 			sprite->SetSize({ 640.0f, 720.0f });
 		}
-		if (i == 2) {// ‰º
+		if (i == 2) {// ä¸‹
 			sprite->SetPosition({ 0.0f,720.0f });
 			sprite->SetSize({ 1280.0f, 360.0f });
 		}
-		if (i == 3) {// ‰E
+		if (i == 3) {// å³
 			sprite->SetPosition({ 1280.0f,0.0f });
 			sprite->SetSize({ 640.0f, 720.0f });
 		}
@@ -39,52 +39,52 @@ void Fade::Update() {
 	for(auto sprite : sprites_) {
 		sprite->Update();
 	}
-	// ƒtƒF[ƒhó‘Ô‚É‚æ‚é•ªŠò
+	// ãƒ•ã‚§ãƒ¼ãƒ‰çŠ¶æ…‹ã«ã‚ˆã‚‹åˆ†å²
 	switch (status_) {
 	case Status::None:
 		break;
 	case Status::FadeIn:
-		// 1ƒtƒŒ[ƒ€•ª‚Ì•b”‚ğƒJƒEƒ“ƒgƒAƒbƒv
+		// 1ãƒ•ãƒ¬ãƒ¼ãƒ åˆ†ã®ç§’æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—
 		counter_ += 1.0f / 60.0f;
-		// ƒtƒF[ƒhŒp‘±ŠÔ‚É’B‚µ‚½‚ç‘Å‚¿~‚ß
+		// ãƒ•ã‚§ãƒ¼ãƒ‰ç¶™ç¶šæ™‚é–“ã«é”ã—ãŸã‚‰æ‰“ã¡æ­¢ã‚
 		if (counter_ >= duration_) {
 			counter_ = duration_;
 		}
 
 		for(int i = 0; i < 4; i++) {
-			if (i == 0) {// ã
+			if (i == 0) {// ä¸Š
 				sprites_[i]->SetPosition({ 0.0f, -360.0f + std::clamp(360.0f * ((duration_ - counter_) / duration_),0.0f,360.0f) });
 			}
-			if (i == 1) {// ¶
+			if (i == 1) {// å·¦
 				sprites_[i]->SetPosition({ -640.0f + std::clamp(640.0f * ((duration_ - counter_) / duration_),0.0f,640.0f),0.0f });
 			}
-			if (i == 2) {// ‰º
+			if (i == 2) {// ä¸‹
 				sprites_[i]->SetPosition({ 0.0f,720.0f - std::clamp(360.0f * ((duration_ - counter_) / duration_),0.0f,360.0f) });
 			}
-			if (i == 3) {// ‰E
+			if (i == 3) {// å³
 				sprites_[i]->SetPosition({ 1280.0f - std::clamp(640.0f * ((duration_ - counter_) / duration_),0.0f,640.0f),0.0f });
 			}
 		}
 
 		break;
 	case Status::FadeOut:
-		// 1ƒtƒŒ[ƒ€•ª‚Ì•b”‚ğƒJƒEƒ“ƒgƒAƒbƒv
+		// 1ãƒ•ãƒ¬ãƒ¼ãƒ åˆ†ã®ç§’æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—
 		counter_ += 1.0f / 60.0f;
-		// ƒtƒF[ƒhŒp‘±ŠÔ‚É’B‚µ‚½‚ç‘Å‚¿~‚ß
+		// ãƒ•ã‚§ãƒ¼ãƒ‰ç¶™ç¶šæ™‚é–“ã«é”ã—ãŸã‚‰æ‰“ã¡æ­¢ã‚
 		if (counter_ >= duration_) {
 			counter_ = duration_;
 		}
 		for (int i = 0; i < 4; i++) {
-			if (i == 0) {// ã
+			if (i == 0) {// ä¸Š
 				sprites_[i]->SetPosition({ 0.0f, -360.0f + std::clamp(360.0f * (counter_ / duration_),0.0f,360.0f) });
 			}
-			if (i == 1) {// ¶
+			if (i == 1) {// å·¦
 				sprites_[i]->SetPosition({ -640.0f + std::clamp(640.0f * (counter_ / duration_),0.0f,640.0f),0.0f });
 			}
-			if (i == 2) {// ‰º
+			if (i == 2) {// ä¸‹
 				sprites_[i]->SetPosition({ 0.0f,720.0f - std::clamp(360.0f * (counter_ / duration_),0.0f,360.0f) });
 			}
-			if (i == 3) {// ‰E
+			if (i == 3) {// å³
 				sprites_[i]->SetPosition({ 1280.0f - std::clamp(640.0f * (counter_ / duration_),0.0f,640.0f),0.0f });
 			}
 		}
@@ -121,7 +121,7 @@ void Fade::Stop() {
 }
 
 bool Fade::IsFinished() const {
-	// ƒtƒF[ƒhó‘Ô‚É‚æ‚é•ªŠò
+	// ãƒ•ã‚§ãƒ¼ãƒ‰çŠ¶æ…‹ã«ã‚ˆã‚‹åˆ†å²
 	switch (status_) {
 	case Status::FadeIn:
 	case Status::FadeOut:

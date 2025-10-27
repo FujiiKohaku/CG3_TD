@@ -1,16 +1,18 @@
 #pragma once
+#include "Block.h"
 #include "Bumper.h"
 #include "Camera.h"
+#include "Effect.h"
+#include "Goal.h"
 #include "Input.h"
 #include "MatrixMath.h"
 #include "Object3d.h"
 #include "Object3dManager.h"
 #include "Pendulum.h"
+#include "StageSelectScene.h"
 #include "Struct.h"
 #include "algorithm"
 #include "cmath"
-#include "Block.h"
-#include "Goal.h"#include "StageSelectScene.h"
 
 class Player {
 
@@ -31,7 +33,6 @@ class Player {
     Bumper* bumper_ = nullptr;
     Block* block_ = nullptr;
     Goal* goal_ = nullptr;
-  
 
     // 壁の位置の初期化ほんとはここに入れるのは良くない本当によくない
     const float wallXMin = -20.0f;
@@ -92,20 +93,26 @@ public:
 
     void VelocityReset();
 
+    Pendulum* GetPendulum() const { return pendulum_; }
+
     // ゲッターロボ
     const Vector3& GetPosition() const { return position_; }
     const float& GetRadius() const { return radius_; }
     const unsigned int& GetColor() const { return color_; }
     const int GetPoint() const { return point_; }
     const int GetIsGoal() const { return isGoal_; }
-
+    void AddScore(int score) { point_ += score; }
     // セッター
     void SetVelocity(Vector3 velocity) { velocity_ = velocity; }
     void SetBumper(Bumper* bumper) { bumper_ = bumper; }
     void SetBlockAABB(Block* block) { block_ = block; }
     void SetGoal(Goal* goal) { goal_ = goal; }
     void DrawWalls();
+    void SetPosition(Vector3 position) { position_ = position; }
+    float warpCooldown_ = 0.0f;
 
 private:
     Object3d* wallObjects_[4];
+
+    Effect* effect_;
 };

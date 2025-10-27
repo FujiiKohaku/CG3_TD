@@ -2,7 +2,7 @@
 #include "Sprite.h"
 #include "SpriteManager.h"
 
-// ƒtƒF[ƒh‚Ìó‘Ô
+// ãƒ•ã‚§ãƒ¼ãƒ‰ã®çŠ¶æ…‹
 enum class Status {
 	None,
 	FadeIn,
@@ -10,7 +10,7 @@ enum class Status {
 };
 
 /// <summary>
-///  ƒtƒF[ƒh
+///  ãƒ•ã‚§ãƒ¼ãƒ‰
 /// </summary>
 class Fade {
 public:
@@ -19,11 +19,11 @@ public:
 	void Draw();
 	~Fade();
 
-	// ƒtƒF[ƒhŠJn
+	// ãƒ•ã‚§ãƒ¼ãƒ‰é–‹å§‹
 	void Start(Status status, float duration);
-	// ƒtƒF[ƒhI—¹
+	// ãƒ•ã‚§ãƒ¼ãƒ‰çµ‚äº†
 	void Stop();
-	// ƒtƒF[ƒhI—¹”»’è
+	// ãƒ•ã‚§ãƒ¼ãƒ‰çµ‚äº†åˆ¤å®š
 	bool IsFinished() const;
 
 private:
@@ -33,9 +33,9 @@ private:
 	std::vector<Sprite*> sprites_;
 
 	Status status_ = Status::None;
-	// ƒtƒF[ƒh‚Ì‘±ŠÔ
+	// ãƒ•ã‚§ãƒ¼ãƒ‰ã®æŒç¶šæ™‚é–“
 	float duration_ = 0.0f;
-	// Œo‰ßŠÔƒJƒEƒ“ƒ^[
+	// çµŒéæ™‚é–“ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
 	float counter_ = 0.0f;
 };
 
