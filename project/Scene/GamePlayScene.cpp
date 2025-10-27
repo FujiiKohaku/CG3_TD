@@ -41,10 +41,10 @@ void GamePlayScene::Initialize()
     // =============================
     object3dManager_ = new Object3dManager();
     object3dManager_->Initialize(GetDx());
-
+    // カメラ生成
     camera_ = new Camera();
-    camera_->SetTranslate({ 0.0f, 0.0f, -100.0f });
-    camera_->SetRotate({ 0.0f, 0.0f, 0.0f });
+    camera_->SetTranslate(kCameraInitPos);
+    camera_->SetRotate(kCameraInitRot);
     object3dManager_->SetDefaultCamera(camera_);
 
     // =============================
@@ -74,25 +74,30 @@ void GamePlayScene::Initialize()
         // 背景
         skydome_.Initialize(object3dManager_);
 
-        // バンパー
+        // バンパー生成
         bumper_ = new Bumper();
-        bumper_->Initialize({ 0.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
+        bumper_->Initialize(kBumperPos, kBumperRadius, kBumperBounce, object3dManager_, "PlayerBall.obj");
 
         // ゴール
         goal_ = new Goal();
-        goal_->Initialize({ 0.0f, 0.0f, 0.0f }, 3.0f, object3dManager_, "PlayerBall.obj");
+        goal_->Initialize(kGoalPosition, kGoalRadius, object3dManager_, "PlayerBall.obj");
 
         // プレイヤー
         pendulumPlayer_ = new Player();
-        pendulumPlayer_->Initialize(1000, object3dManager_, "PlayerBall.obj");
+        pendulumPlayer_->Initialize(kClearPoint, object3dManager_, "PlayerBall.obj");
         pendulumPlayer_->SetBumper(bumper_);
         pendulumPlayer_->SetGoal(goal_);
 
-        // ワープゲート
+        // -------------------------------------
+        // ワープゲート生成
+        // -------------------------------------
         warpA_ = new WarpGate();
-        warpA_->Initialize({ -10.0f, 3.0f, 0.0f }, 1.0f, object3dManager_, "plane.obj");
+        warpA_->Initialize(kWarpAPosition, kWarpScale, object3dManager_, kWarpModel);
+
         warpB_ = new WarpGate();
-        warpB_->Initialize({ 10.0f, 3.0f, 0.0f }, 1.0f, object3dManager_, "plane.obj");
+        warpB_->Initialize(kWarpBPosition, kWarpScale, object3dManager_, kWarpModel);
+
+        // お互いをリンク（ペア設定）
         warpA_->SetPair(warpB_);
         warpB_->SetPair(warpA_);
 
@@ -107,12 +112,11 @@ void GamePlayScene::Initialize()
         bumper_ = new Bumper();
         bumper_->Initialize({ 5.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
 
-        // コインを縦×横に生成（5列×3行）
+        // コインを縦×横に生成
         for (int y = 0; y < 10; y++) { // 縦方向（段）
             for (int x = 0; x < 10; x++) { // 横方向（列）
                 Coin* coin = new Coin();
 
-                // 配置座標（x:横に間隔、y:段ごとに高さ）
                 Vector3 pos = { -6.0f + x * 3.0f, 3.0f + y * 2.5f, 0.0f };
 
                 coin->Initialize(pos, 1.0f, 100, object3dManager_, "Coin.obj");
