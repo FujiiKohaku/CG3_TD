@@ -48,6 +48,7 @@
 #include "Player.h"
 // #include "ScoreBumper.h"
 #include "Coin.h"
+#include "ScoreUI.h"
 #include "Skydome.h"
 #include "WarpGate.h"
 // シーン管理
@@ -81,6 +82,7 @@ private:
     // ScoreBumper* scoreBumper_;
     WarpGate* warpA_ = nullptr;
     WarpGate* warpB_ = nullptr;
+    ScoreUI* scoreUI_ = nullptr;
 
 private:
     int stageNo_ = 1; // 受け取ったステージ番号を保存
