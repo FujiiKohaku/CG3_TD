@@ -54,9 +54,6 @@
 #include "GameClearScene.h"
 #include "SceneManager.h"
 #include "StageSelectScene.h"
-
-class Fade;
-
 class GamePlayScene : public BaseScene {
 public:
     void Initialize() override;
@@ -66,12 +63,6 @@ public:
     GamePlayScene(int stageNo);
 
 private:
-    enum class Phase {
-        kFadeIn,
-        kMain,
-        kFadeOut,
-    };
-
     SoundManager soundManager_;
     Object3dManager* object3dManager_ = nullptr;
     SpriteManager* spriteManager_ = nullptr;
@@ -88,10 +79,6 @@ private:
     Goal* goal_;
     std::vector<Coin*> coins_; // コイン配列
     // ScoreBumper* scoreBumper_;
-
-    Phase phase_ = Phase::kFadeIn;
-    Fade* fade_ = nullptr;
-
     WarpGate* warpA_ = nullptr;
     WarpGate* warpB_ = nullptr;
 
