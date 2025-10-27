@@ -98,7 +98,7 @@ void GamePlayScene::Initialize()
                 Coin* coin = new Coin();
 
                 Vector3 pos = { -6.0f + x * 3.0f, 3.0f + y * 2.5f, 0.0f };
-
+                 
                 coin->Initialize(pos, 1.0f, 100, object3dManager_, "Coin.obj");
                 coins_.push_back(coin);
             }
