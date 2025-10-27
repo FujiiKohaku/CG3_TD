@@ -93,6 +93,8 @@ public:
 
     void VelocityReset();
 
+    Pendulum* GetPendulum() const { return pendulum_; }
+
     // ゲッターロボ
     const Vector3& GetPosition() const { return position_; }
     const float& GetRadius() const { return radius_; }
@@ -108,7 +110,6 @@ public:
     void DrawWalls();
     void SetPosition(Vector3 position) { position_ = position; }
     float warpCooldown_ = 0.0f;
- 
 
 private:
     Object3d* wallObjects_[4];
