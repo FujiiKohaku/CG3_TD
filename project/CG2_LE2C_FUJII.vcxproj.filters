@@ -288,7 +288,7 @@
     <ClInclude Include="3D\ModelManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Object\GamePlayScene.h">
+    <ClInclude Include="Scene\GamePlayScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="3D\CreateSphere.h">

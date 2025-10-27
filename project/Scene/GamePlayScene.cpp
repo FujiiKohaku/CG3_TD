@@ -1,46 +1,55 @@
 #include "GamePlayScene.h"
+#include "GameClearScene.h"
 #include "Input.h"
+#include "Utility.h"
+#include <filesystem>
+#include <numbers>
+
+// ---------------------------------------------
+// コンストラクタ（ステージ番号受け取り）
+// ---------------------------------------------
+GamePlayScene::GamePlayScene(int stageNo)
+{
+    stageNo_ = stageNo;
+}
+
+// ---------------------------------------------
+// 初期化処理
+// ---------------------------------------------
 void GamePlayScene::Initialize()
 {
 
-    // 誰も補足しなかった場合(Unhandled),補足する関数を登録
-    // main関数はじまってすぐに登録するとよい
+    // ---------------------------------------------
+    // 例外処理・ログ
+    // ---------------------------------------------
     SetUnhandledExceptionFilter(Utility::ExportDump);
-    // ログのディレクトリを用意
     std::filesystem::create_directory("logs");
-    // main関数の先頭//
 
-#pragma endregion
-
-#pragma region object sprite
+#pragma region 共通初期化
 
     // =============================
-    // 2. テクスチャ・スプライト関係
+    // Texture / Sprite
     // =============================
-
-    // TextureManager（シングルトン）
     TextureManager::GetInstance()->Initialize(GetDx());
     TextureManager::GetInstance()->LoadTexture("resources/uvChecker.png");
 
-    // SpriteManager
     spriteManager_ = new SpriteManager();
     spriteManager_->Initialize(GetDx());
 
     // =============================
-    // 3. 3D関連の初期化
+    // Object3D Manager / Camera
     // =============================
-
-    // Object3dManager
     object3dManager_ = new Object3dManager();
     object3dManager_->Initialize(GetDx());
 
-    // カメラ
     camera_ = new Camera();
-    camera_->SetTranslate({ 0.0f, 0.0f, -100.0f }); // 原点から離す
-    camera_->SetRotate({ 0.0f, 0.0f, 0.0f }); // 下向き
+    camera_->SetTranslate({ 0.0f, 0.0f, -100.0f });
+    camera_->SetRotate({ 0.0f, 0.0f, 0.0f });
     object3dManager_->SetDefaultCamera(camera_);
-    // モデル共通設定
 
+    // =============================
+    // モデル読み込み
+    // =============================
     ModelManager::GetInstance()->initialize(GetDx());
     ModelManager::GetInstance()->LoadModel("plane.obj");
     ModelManager::GetInstance()->LoadModel("skydome.obj");
@@ -48,227 +57,303 @@ void GamePlayScene::Initialize()
     ModelManager::GetInstance()->LoadModel("PlayerBall.obj");
     ModelManager::GetInstance()->LoadModel("cube.obj");
     ModelManager::GetInstance()->LoadModel("Coin.obj");
+
     // =============================
-    // 4. モデルと3Dオブジェクト生成
+    // サウンド設定
     // =============================
-    // 3Dオブジェクト生成
-
-    object3d_.Initialize(object3dManager_);
-    object3d_.SetModel("plane.obj");
-
-    // プレイヤー
-
-    // スカイドーム
-    skydome_.Initialize(object3dManager_);
+    soundManager_.Initialize();
+    bgm = soundManager_.SoundLoadWave("Resources/BGM.wav");
 
 #pragma endregion
 
-    //=================================
-    // サウンドマネージャーインスタンス作成
-    //=================================
+    // =============================
+    // ステージ別初期化
+    // =============================
+    switch (stageNo_) {
+    case 1: {
+        // 背景
+        skydome_.Initialize(object3dManager_);
 
-    // サウンドマネージャー初期化！
-    soundManager_.Initialize();
-    // サウンドファイルを読み込み（パスはプロジェクトに合わせて調整）
-    bgm = soundManager_.SoundLoadWave("Resources/BGM.wav");
+        // バンパー
+        bumper_ = new Bumper();
+        bumper_->Initialize({ 0.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
 
-    //=====================
-    // バンパー
-    //=====================
-    bumper_ = new Bumper();
-    bumper_->Initialize({ 0.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj"); // 一時的にプレイヤーのモデルを入れてる
+        // ゴール
+        goal_ = new Goal();
+        goal_->Initialize({ 0.0f, 0.0f, 0.0f }, 3.0f, object3dManager_, "PlayerBall.obj");
 
-    //====================
-    // ブロック
-    //====================
-    //block_ = new Block();
-    //block_->Initialize({ 0.0f, 13.0f, 0.0f }, 10.0f, 3.0f, 1.2f, object3dManager_, "cube.obj"); // 一時的にcubeのモデルをセット
+        // プレイヤー
+        pendulumPlayer_ = new Player();
+        pendulumPlayer_->Initialize(1000, object3dManager_, "PlayerBall.obj");
+        pendulumPlayer_->SetBumper(bumper_);
+        pendulumPlayer_->SetGoal(goal_);
 
-    //=====================
-    // ゴール
-    //=====================
-    goal_ = new Goal();
-    goal_->Initialize({ 0.0f, 0.0f, 0.0f }, 3.0f, object3dManager_, "PlayerBall.obj"); // 一時的にプレイヤーのモデルを入れてる
+        // ワープゲート
+        warpA_ = new WarpGate();
+        warpA_->Initialize({ -10.0f, 3.0f, 0.0f }, 1.0f, object3dManager_, "plane.obj");
+        warpB_ = new WarpGate();
+        warpB_->Initialize({ 10.0f, 3.0f, 0.0f }, 1.0f, object3dManager_, "plane.obj");
+        warpA_->SetPair(warpB_);
+        warpB_->SetPair(warpA_);
 
-    //=================================
-    // 振り子プレイヤー
-    //=================================
-    pendulumPlayer_ = new Player();
-    pendulumPlayer_->Initialize(1000, object3dManager_, "PlayerBall.obj");
-    pendulumPlayer_->SetBumper(bumper_);
-    pendulumPlayer_->SetBlockAABB(block_);
-    pendulumPlayer_->SetGoal(goal_);
+        break;
+    }
 
-    //// コインイニシャライズ
-    // for (int i = 0; i < 5; i++) {
-    //     Coin* coin = new Coin();
-    //     coin->Initialize({ -5.0f + i * 3.0f, 3.0f, 0.0f }, 1.0f, 100, object3dManager_, "Coin.obj");
-    //     coins_.push_back(coin);
-    // }
+    case 2: { //ここからステージ2
+        // 背景
+        skydome_.Initialize(object3dManager_);
 
-    // --- Initialize() ---
-    warpA_ = new WarpGate();
-    warpA_->Initialize({ -10.0f, 3.0f, 0.0f }, 1.0f, object3dManager_, "plane.obj");
+        // ブロック（床や障害物）
+        block_ = new Block();
+        block_->Initialize({ 0.0f, 8.0f, 0.0f }, 10.0f, 3.0f, 1.2f, object3dManager_, "cube.obj");
 
-    warpB_ = new WarpGate();
-    warpB_->Initialize({ 10.0f, 3.0f, 0.0f }, 1.0f, object3dManager_, "plane.obj");
-    warpA_->SetPair(warpB_);
-    warpB_->SetPair(warpA_);
+        // バンパー
+        bumper_ = new Bumper();
+        bumper_->Initialize({ 5.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
+
+        // コインを複数生成
+        for (int i = 0; i < 5; i++) {
+            Coin* coin = new Coin();
+            coin->Initialize({ -5.0f + i * 3.0f, 3.0f, 0.0f }, 1.0f, 100, object3dManager_, "Coin.obj");
+            coins_.push_back(coin);
+        }
+
+        // ゴール
+        goal_ = new Goal();
+        goal_->Initialize({ 15.0f, 0.0f, 0.0f }, 3.0f, object3dManager_, "PlayerBall.obj");
+
+        // プレイヤー
+        pendulumPlayer_ = new Player();
+        pendulumPlayer_->Initialize(1000, object3dManager_, "PlayerBall.obj");
+        pendulumPlayer_->SetBumper(bumper_);
+        pendulumPlayer_->SetBlockAABB(block_);
+        pendulumPlayer_->SetGoal(goal_);
+
+        break;
+    }
+
+    default:
+        skydome_.Initialize(object3dManager_);
+        break;
+    }
+
 #ifdef _DEBUG
-
-    Microsoft::WRL::ComPtr<ID3D12InfoQueue>
-        infoQueue = nullptr;
+    // GPUデバッグ設定
+    Microsoft::WRL::ComPtr<ID3D12InfoQueue> infoQueue = nullptr;
     if (SUCCEEDED(GetDx()->GetDevice()->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
-        // やばいエラー時に止まる
         infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
-        // エラー時に止まる
         infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
-        // 警告時に止まる
         infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
-        // 抑制するメッセージのＩＤ
+
         D3D12_MESSAGE_ID denyIds[] = {
-            // windows11でのDXGIデバックレイヤーとDX12デバックレイヤーの相互作用バグによるエラーメッセージ
-            // https://stackoverflow.com/questions/69805245/directx-12-application-is-crashing-in-windows-11
             D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE
         };
-        // 抑制するレベル
         D3D12_MESSAGE_SEVERITY severities[] = { D3D12_MESSAGE_SEVERITY_INFO };
         D3D12_INFO_QUEUE_FILTER filter {};
         filter.DenyList.NumIDs = _countof(denyIds);
         filter.DenyList.pIDList = denyIds;
         filter.DenyList.NumSeverities = _countof(severities);
         filter.DenyList.pSeverityList = severities;
-        // 指定したメッセージの表示wp抑制する
         infoQueue->PushStorageFilter(&filter);
-        // 解放
-        /*  infoQueue->Release();*/
     }
-#endif // DEBUG
+#endif
 }
 
+// ---------------------------------------------
+// 更新処理
+// ---------------------------------------------
 void GamePlayScene::Update(Input* input)
 {
     // ==============================
-    //  フレームの先頭処理
+    // ImGui デバッグUI
     // ==============================
     ImGui_ImplDX12_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    // ==============================
-    //  開発用UI
-    // ==============================
-
-    // ImGui::ShowDemoWindow();
-    // ==============================
-    // ImGui デバッグ表示
-    // ==============================
-    ImGui::Begin("Player Debug");
-    ImGui::Text("Score: %d", pendulumPlayer_->GetPoint()); // スコア表示
-
+    ImGui::Begin("Debug Info");
+    ImGui::Text("Stage: %d", stageNo_);
+    if (pendulumPlayer_) {
+        ImGui::Text("Score: %d", pendulumPlayer_->GetPoint());
+    }
     ImGui::End();
-    ImGui::Render(); // ImGuiの内部コマンドを生成（描画直前に呼ぶ）
+    ImGui::Render();
 
     // ==============================
-    //  更新処理（Update）
+    // 更新処理
     // ==============================
     const BYTE* keys = input->GetKeys();
     const BYTE* preKeys = input->GetPreKeys();
-    // 振り子プレイヤーの更新処理
-    pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f, input);
 
-    // 各3Dオブジェクトの更新
+    if (pendulumPlayer_) {
+        pendulumPlayer_->Update(
+            reinterpret_cast<const char*>(keys),
+            reinterpret_cast<const char*>(preKeys),
+            1.0f / 60.0f,
+            input);
+    }
 
     camera_->Update();
     skydome_.Update();
 
-    // プレイヤーがゴールしたらシーンを切り替える
-    if (pendulumPlayer_->GetIsGoal() == true) {
-        GetSceneManager()->SetNextScene(new GameClearScene()); // クリアシーンができたらここに入れて
+    // ==============================
+    // ステージごとの個別処理
+    // ==============================
+    switch (stageNo_) {
+    case 1: {
+        // ステージ1：ワープゲート＋基本プレイ
+        if (warpA_ && warpB_) {
+            warpA_->Update();
+            warpB_->Update();
+            warpA_->CheckAndWarp(pendulumPlayer_);
+            warpB_->CheckAndWarp(pendulumPlayer_);
+        }
+        break;
     }
 
-    //// --- コインとの当たり判定 ---
-    // Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
+    case 2: {
+        // ステージ2：コイン・ブロックなどの処理
+        if (block_) {
+            // 必要ならブロックアニメーションや判定処理を追加
+        }
 
-    // for (auto& coin : coins_) {
-    //     coin->Update();
+        if (!coins_.empty()) {
+            Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
+            for (auto& coin : coins_) {
+                coin->Update();
+                if (coin->IsCollision(playerSphere)) {
+                    pendulumPlayer_->AddScore(coin->GetScore());
+                }
+            }
+        }
+        break;
+    }
 
-    //    if (coin->IsCollision(playerSphere)) {
-    //        pendulumPlayer_->AddScore(coin->GetScore());
-    //    }
-    //}
+    case 3: {
+        // ステージ3：制限時間・特殊ギミックなど
+        // （今後追加予定）
+        break;
+    }
 
-    //warpA_->Update();
-    //warpB_->Update();
+    default:
+        break;
+    }
 
-    //Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
-
-    //warpA_->CheckAndWarp(pendulumPlayer_);
-    //warpB_->CheckAndWarp(pendulumPlayer_);
+    // ==============================
+    // ゴール処理
+    // ==============================
+    if (pendulumPlayer_ && pendulumPlayer_->GetIsGoal()) {
+        GetSceneManager()->SetNextScene(new GameClearScene());
+    }
 }
 
+// ---------------------------------------------
+// 描画処理
+// ---------------------------------------------
 void GamePlayScene::Draw()
 {
-    // ==============================
-    //  描画処理（Draw）
-    // ==============================
-
-    // バックバッファの切り替え準備
     GetDx()->PreDraw();
+    object3dManager_->PreDraw();
 
-    // ----- 3Dオブジェクト描画 -----
-    object3dManager_->PreDraw(); // 3D描画準備
     skydome_.Draw();
-    bumper_->Draw();
-    /*   for (auto& coin : coins_) {
-           coin->Draw();
-       }*/
-    //warpA_->Draw();
-    //warpB_->Draw();
 
-    if (goal_->GetIsActive() == true) {
-        goal_->Draw();
+    switch (stageNo_) {
+    // ===============================
+    // ステージ1：ワープ＋バンパー構成
+    // ===============================
+    case 1: {
+        if (bumper_)
+            bumper_->Draw();
+        if (goal_ && goal_->GetIsActive())
+            goal_->Draw();
+        if (pendulumPlayer_)
+            pendulumPlayer_->Draw();
+        if (warpA_)
+            warpA_->Draw();
+        if (warpB_)
+            warpB_->Draw();
+        break;
     }
 
-    pendulumPlayer_->Draw();
-    // ----- ImGui描画（デバッグUI） -----
+    // ===============================
+    // ステージ2：コイン・ブロック構成
+    // ===============================
+    case 2: {
+        if (block_)
+            block_->Draw();
+        if (bumper_)
+            bumper_->Draw();
+        if (goal_ && goal_->GetIsActive())
+            goal_->Draw();
+        if (pendulumPlayer_)
+            pendulumPlayer_->Draw();
+
+        // コイン描画
+        for (auto& coin : coins_) {
+            coin->Draw();
+        }
+        break;
+    }
+
+    // ===============================
+    // ステージ3：追加予定（敵やタイマーなど）
+    // ===============================
+    case 3: {
+        if (pendulumPlayer_)
+            pendulumPlayer_->Draw();
+        if (goal_)
+            goal_->Draw();
+        // 敵やギミック追加予定
+        break;
+    }
+
+    default:
+        break;
+    }
+
+    // ===============================
+    // ImGuiデバッグ表示（共通）
+    // ===============================
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
-
-    // ----- 描画終了処理 -----
     GetDx()->PostDraw();
-
-    // コマンドリスト状態確認ログ
-    Logger::Log("CommandList state check before Close()");
 }
 
+// ---------------------------------------------
+// 終了処理（解放）
+// ---------------------------------------------
 void GamePlayScene::Finalize()
 {
-    // 1. Player / Object3dなどユーザ作成オブジェクト破棄
+
+    // 各オブジェクトを安全に削除
     delete pendulumPlayer_;
-    delete object3dManager_;
-    delete spriteManager_;
+    pendulumPlayer_ = nullptr;
     delete bumper_;
+    bumper_ = nullptr;
     delete goal_;
+    goal_ = nullptr;
     delete warpA_;
+    warpA_ = nullptr;
     delete warpB_;
-    // delete scoreBumper_;
+    warpB_ = nullptr;
+    delete spriteManager_;
+    spriteManager_ = nullptr;
+    delete object3dManager_;
+    object3dManager_ = nullptr;
+
     sprites_.clear();
 
-    //  ImGui破棄
+    // ImGui破棄
     ImGui_ImplDX12_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
 
-    // TextureManager / ModelManager
+    // マネージャ系解放
     ModelManager::GetInstance()->Finalize();
     TextureManager::GetInstance()->Finalize();
-    // for (auto& coin : coins_) {
-    //     delete coin;
-    // }
-    /*   coins_.clear();*/
-    // 4. Sound
+
+    // サウンド解放
     soundManager_.Finalize(&bgm);
 
-    // 5. GPU待機
+    // GPU待機
     GetDx()->WaitForGPU();
 }

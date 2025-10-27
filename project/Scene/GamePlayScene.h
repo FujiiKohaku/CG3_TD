@@ -60,6 +60,7 @@ public:
     void Update(Input* input) override;
     void Draw() override;
     void Finalize() override;
+    GamePlayScene(int stageNo);
 
 private:
     SoundManager soundManager_;
@@ -81,4 +82,9 @@ private:
     // ScoreBumper* scoreBumper_;
     WarpGate* warpA_ = nullptr;
     WarpGate* warpB_ = nullptr;
+ 
+
+private:
+    int stageNo_ = 1; // 受け取ったステージ番号を保存
+
 };
