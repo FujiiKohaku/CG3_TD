@@ -103,9 +103,6 @@ void GamePlayScene::Initialize()
         // 背景
         skydome_.Initialize(object3dManager_);
 
-        // ブロック（床や障害物）
-        block_ = new Block();
-        block_->Initialize({ 0.0f, 8.0f, 0.0f }, 10.0f, 3.0f, 1.2f, object3dManager_, "cube.obj");
 
         // バンパー
         bumper_ = new Bumper();
@@ -126,7 +123,7 @@ void GamePlayScene::Initialize()
         pendulumPlayer_ = new Player();
         pendulumPlayer_->Initialize(1000, object3dManager_, "PlayerBall.obj");
         pendulumPlayer_->SetBumper(bumper_);
-        pendulumPlayer_->SetBlockAABB(block_);
+  
         pendulumPlayer_->SetGoal(goal_);
 
         break;
@@ -213,9 +210,9 @@ void GamePlayScene::Update(Input* input)
 
     case 2: {
         // ステージ2：コイン・ブロックなどの処理
-        if (block_) {
+        
             // 必要ならブロックアニメーションや判定処理を追加
-        }
+        
 
         if (!coins_.empty()) {
             Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
@@ -279,8 +276,6 @@ void GamePlayScene::Draw()
     // ステージ2：コイン・ブロック構成
     // ===============================
     case 2: {
-        if (block_)
-            block_->Draw();
         if (bumper_)
             bumper_->Draw();
         if (goal_ && goal_->GetIsActive())
