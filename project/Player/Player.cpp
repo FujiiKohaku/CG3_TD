@@ -229,12 +229,12 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
             effect_->Emit(position_);
         }
 
-        // ブロックとの当たり判定と反射
-        blockAABB_ = { block_->GetBlockAABB() };
-        if (block_->IsCollision(blockAABB_, playerSphere_)) {
-            point_ += 100;
-            block_->ReflectSphereFromAABB(position_, velocity_, blockAABB_, radius_, block_->GetBounce());
-        }
+        //// ブロックとの当たり判定と反射
+        //blockAABB_ = { block_->GetBlockAABB() };
+        //if (block_->IsCollision(blockAABB_, playerSphere_)) {
+        //    point_ += 100;
+        //    block_->ReflectSphereFromAABB(position_, velocity_, blockAABB_, radius_, block_->GetBounce());
+        //}
 
         // ゴールとの当たり判定
         if (point_ >= clearPoint_) {

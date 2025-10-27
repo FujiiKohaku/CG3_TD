@@ -81,8 +81,8 @@ void GamePlayScene::Initialize()
     //====================
     // ブロック
     //====================
-    block_ = new Block();
-    block_->Initialize({ 0.0f, 13.0f, 0.0f }, 10.0f, 3.0f, 1.2f, object3dManager_, "cube.obj"); // 一時的にcubeのモデルをセット
+    //block_ = new Block();
+    //block_->Initialize({ 0.0f, 13.0f, 0.0f }, 10.0f, 3.0f, 1.2f, object3dManager_, "cube.obj"); // 一時的にcubeのモデルをセット
 
     //=====================
     // ゴール
@@ -198,13 +198,13 @@ void GamePlayScene::Update(Input* input)
     //    }
     //}
 
-    warpA_->Update();
-    warpB_->Update();
+    //warpA_->Update();
+    //warpB_->Update();
 
-    Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
+    //Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
 
-    warpA_->CheckAndWarp(pendulumPlayer_);
-    warpB_->CheckAndWarp(pendulumPlayer_);
+    //warpA_->CheckAndWarp(pendulumPlayer_);
+    //warpB_->CheckAndWarp(pendulumPlayer_);
 }
 
 void GamePlayScene::Draw()
@@ -220,14 +220,12 @@ void GamePlayScene::Draw()
     object3dManager_->PreDraw(); // 3D描画準備
     skydome_.Draw();
     bumper_->Draw();
-    block_->Draw();
     /*   for (auto& coin : coins_) {
            coin->Draw();
        }*/
-    warpA_->Draw();
-    warpB_->Draw();
-    warpA_->Draw();
-    warpB_->Draw();
+    //warpA_->Draw();
+    //warpB_->Draw();
+
     if (goal_->GetIsActive() == true) {
         goal_->Draw();
     }
@@ -250,7 +248,6 @@ void GamePlayScene::Finalize()
     delete object3dManager_;
     delete spriteManager_;
     delete bumper_;
-    delete block_;
     delete goal_;
     delete warpA_;
     delete warpB_;
