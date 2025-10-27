@@ -106,6 +106,9 @@ public:
     void SetBlockAABB(Block* block) { block_ = block; }
     void SetGoal(Goal* goal) { goal_ = goal; }
     void DrawWalls();
+    void SetPosition(Vector3 position) { position_ = position; }
+    float warpCooldown_ = 0.0f;
+ 
 
 private:
     Object3d* wallObjects_[4];

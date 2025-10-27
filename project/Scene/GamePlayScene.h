@@ -49,6 +49,7 @@
 // #include "ScoreBumper.h"
 #include "Coin.h"
 #include "Skydome.h"
+#include "WarpGate.h"
 // シーン管理
 #include "GameClearScene.h"
 #include "SceneManager.h"
@@ -59,6 +60,7 @@ public:
     void Update(Input* input) override;
     void Draw() override;
     void Finalize() override;
+    GamePlayScene(int stageNo);
 
 private:
     SoundManager soundManager_;
@@ -78,5 +80,11 @@ private:
     Goal* goal_;
     std::vector<Coin*> coins_; // コイン配列
     // ScoreBumper* scoreBumper_;
+    WarpGate* warpA_ = nullptr;
+    WarpGate* warpB_ = nullptr;
+ 
+
+private:
+    int stageNo_ = 1; // 受け取ったステージ番号を保存
 
 };
