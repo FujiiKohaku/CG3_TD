@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "ModelManager.h"
 #include "SceneManager.h"
+#include <cmath>
 #include <numbers>
 
 // ---------------------------------------------
@@ -11,23 +12,15 @@
 // ---------------------------------------------
 void StageSelectScene::Initialize()
 {
-    // ==============================
-    // TextureManager 初期化（必須）
-    // ==============================
     TextureManager::GetInstance()->Initialize(GetDx());
 
-    // ==============================
-    // Object3dManager 初期化
-    // ==============================
     object3dManager_ = new Object3dManager();
     object3dManager_->Initialize(GetDx());
 
-    // カメラ設定
     camera_ = new Camera();
     camera_->SetTranslate({ 0.0f, 0.0f, -25.0f });
     object3dManager_->SetDefaultCamera(camera_);
 
-    // モデル読み込み
     ModelManager::GetInstance()->initialize(GetDx());
     ModelManager::GetInstance()->LoadModel("cube.obj");
 
@@ -37,12 +30,12 @@ void StageSelectScene::Initialize()
         cube->Initialize(object3dManager_);
         cube->SetModel("cube.obj");
         cube->SetScale({ 1.0f, 1.0f, 1.0f });
-        cube->SetTranslate({ static_cast<float>(i * 6 - 6), 0.0f, 0.0f }); // 見やすく、選択移動もわかりやすい
+        cube->SetTranslate({ static_cast<float>(i * 6 - 6), 0.0f, 0.0f });
 
         cubes_.push_back(cube);
+        scaleTimers_.push_back(0.0f); // ← イージング用タイマー追加
     }
 }
-
 
 // ---------------------------------------------
 // 更新
@@ -60,28 +53,39 @@ void StageSelectScene::Update(Input* input)
             stageNo_ = 1;
     }
 
-    // スペースキーで選択ステージへ
     if (input->IsKeyTriggered(DIK_SPACE)) {
         GetSceneManager()->SetNextScene(new GamePlayScene(stageNo_));
     }
 
-    // カメラ更新
     camera_->Update();
 
-    // 各キューブの見た目更新
+    // 各キューブ更新
     for (int i = 0; i < cubes_.size(); i++) {
         Vector3 rot = cubes_[i]->GetRotate();
-        rot.y += 0.03f; // くるくる回転
+        rot.y += 0.03f;
         cubes_[i]->SetRotate(rot);
 
-      // 選択中だけ大きく、それ以外は小さく
-        Vector3 scale;
+        // --- イージング処理 ---
         if (i + 1 == stageNo_) {
-            scale = { 2.0f, 2.0f, 2.0f }; // 選択中のステージ
+            // 選択中 → タイマー進行
+            scaleTimers_[i] += 0.05f;
+            if (scaleTimers_[i] > 1.0f)
+                scaleTimers_[i] = 1.0f;
         } else {
-            scale = { 1.0f, 1.0f, 1.0f }; // 非選択ステージ
+            // 非選択 → タイマー減衰
+            scaleTimers_[i] -= 0.05f;
+            if (scaleTimers_[i] < 0.0f)
+                scaleTimers_[i] = 0.0f;
         }
-        cubes_[i]->SetScale(scale);
+
+        // --- イージング関数（sin波でふわっと） ---
+        float ease = (std::sin(scaleTimers_[i] * std::numbers::pi_v<float> / 2.0f));
+
+        // --- スケール反映 ---
+        float baseScale = 1.0f;
+        float maxScale = 2.0f;
+        float scaleValue = baseScale + (maxScale - baseScale) * ease;
+        cubes_[i]->SetScale({ scaleValue, scaleValue, scaleValue });
     }
 }
 
@@ -93,7 +97,6 @@ void StageSelectScene::Draw()
     GetDx()->PreDraw();
     object3dManager_->PreDraw();
 
-    // キューブを描画
     for (auto& cube : cubes_) {
         cube->Update();
         cube->Draw();

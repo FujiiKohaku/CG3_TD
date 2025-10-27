@@ -81,9 +81,29 @@ private:
     // ScoreBumper* scoreBumper_;
     WarpGate* warpA_ = nullptr;
     WarpGate* warpB_ = nullptr;
- 
 
 private:
     int stageNo_ = 1; // 受け取ったステージ番号を保存
-
+    // カメラ設定用の定数
+    const float kCameraDistance = 100.0f; // プレイヤーからの距離
+    const Vector3 kCameraInitPos = { 0.0f, 0.0f, -kCameraDistance };
+    const Vector3 kCameraInitRot = { 0.0f, 0.0f, 0.0f };
+    // バンパー設定用の定数
+    const Vector3 kBumperPos = { 0.0f, 5.0f, 0.0f }; // バンパーの位置
+    const float kBumperRadius = 5.0f; // バンパーの当たり判定半径
+    const float kBumperBounce = 1.2f; // 反発係数
+    // -------------------------------------
+    // ゴール設定用の定数
+    // -------------------------------------
+    const Vector3 kGoalPosition = { 0.0f, 0.0f, 0.0f }; // ゴールの座標
+    const float kGoalRadius = 3.0f; // ゴールの当たり判定（半径）
+    // プレイヤー
+    const int kClearPoint = 1000;
+    // -------------------------------------
+    // ワープゲート設定用の定数
+    // -------------------------------------
+    const Vector3 kWarpAPosition = { -10.0f, 3.0f, 0.0f }; // ワープAの位置
+    const Vector3 kWarpBPosition = { 10.0f, 3.0f, 0.0f }; // ワープBの位置
+    const float kWarpScale = 1.0f; // スケール
+    const std::string kWarpModel = "plane.obj"; // 使用モデル名
 };

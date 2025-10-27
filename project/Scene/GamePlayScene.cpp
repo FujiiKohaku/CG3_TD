@@ -41,10 +41,10 @@ void GamePlayScene::Initialize()
     // =============================
     object3dManager_ = new Object3dManager();
     object3dManager_->Initialize(GetDx());
-
+    // カメラ生成
     camera_ = new Camera();
-    camera_->SetTranslate({ 0.0f, 0.0f, -100.0f });
-    camera_->SetRotate({ 0.0f, 0.0f, 0.0f });
+    camera_->SetTranslate(kCameraInitPos);
+    camera_->SetRotate(kCameraInitRot);
     object3dManager_->SetDefaultCamera(camera_);
 
     // =============================
@@ -74,45 +74,54 @@ void GamePlayScene::Initialize()
         // 背景
         skydome_.Initialize(object3dManager_);
 
-        // バンパー
+        // バンパー生成
         bumper_ = new Bumper();
-        bumper_->Initialize({ 0.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
+        bumper_->Initialize(kBumperPos, kBumperRadius, kBumperBounce, object3dManager_, "PlayerBall.obj");
 
         // ゴール
         goal_ = new Goal();
-        goal_->Initialize({ 0.0f, 0.0f, 0.0f }, 3.0f, object3dManager_, "PlayerBall.obj");
+        goal_->Initialize(kGoalPosition, kGoalRadius, object3dManager_, "PlayerBall.obj");
 
         // プレイヤー
         pendulumPlayer_ = new Player();
-        pendulumPlayer_->Initialize(1000, object3dManager_, "PlayerBall.obj");
+        pendulumPlayer_->Initialize(kClearPoint, object3dManager_, "PlayerBall.obj");
         pendulumPlayer_->SetBumper(bumper_);
         pendulumPlayer_->SetGoal(goal_);
 
-        // ワープゲート
+        // -------------------------------------
+        // ワープゲート生成
+        // -------------------------------------
         warpA_ = new WarpGate();
-        warpA_->Initialize({ -10.0f, 3.0f, 0.0f }, 1.0f, object3dManager_, "plane.obj");
+        warpA_->Initialize(kWarpAPosition, kWarpScale, object3dManager_, kWarpModel);
+
         warpB_ = new WarpGate();
-        warpB_->Initialize({ 10.0f, 3.0f, 0.0f }, 1.0f, object3dManager_, "plane.obj");
+        warpB_->Initialize(kWarpBPosition, kWarpScale, object3dManager_, kWarpModel);
+
+        // お互いをリンク（ペア設定）
         warpA_->SetPair(warpB_);
         warpB_->SetPair(warpA_);
 
         break;
     }
 
-    case 2: { //ここからステージ2
+    case 2: { // ここからステージ2
         // 背景
         skydome_.Initialize(object3dManager_);
-
 
         // バンパー
         bumper_ = new Bumper();
         bumper_->Initialize({ 5.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
 
-        // コインを複数生成
-        for (int i = 0; i < 5; i++) {
-            Coin* coin = new Coin();
-            coin->Initialize({ -5.0f + i * 3.0f, 3.0f, 0.0f }, 1.0f, 100, object3dManager_, "Coin.obj");
-            coins_.push_back(coin);
+        // コインを縦×横に生成
+        for (int y = 0; y < 10; y++) { // 縦方向（段）
+            for (int x = 0; x < 10; x++) { // 横方向（列）
+                Coin* coin = new Coin();
+
+                Vector3 pos = { -6.0f + x * 3.0f, 3.0f + y * 2.5f, 0.0f };
+
+                coin->Initialize(pos, 1.0f, 100, object3dManager_, "Coin.obj");
+                coins_.push_back(coin);
+            }
         }
 
         // ゴール
@@ -123,7 +132,7 @@ void GamePlayScene::Initialize()
         pendulumPlayer_ = new Player();
         pendulumPlayer_->Initialize(1000, object3dManager_, "PlayerBall.obj");
         pendulumPlayer_->SetBumper(bumper_);
-  
+
         pendulumPlayer_->SetGoal(goal_);
 
         break;
@@ -183,11 +192,7 @@ void GamePlayScene::Update(Input* input)
     const BYTE* preKeys = input->GetPreKeys();
 
     if (pendulumPlayer_) {
-        pendulumPlayer_->Update(
-            reinterpret_cast<const char*>(keys),
-            reinterpret_cast<const char*>(preKeys),
-            1.0f / 60.0f,
-            input);
+        pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f, input);
     }
 
     camera_->Update();
@@ -210,19 +215,26 @@ void GamePlayScene::Update(Input* input)
 
     case 2: {
         // ステージ2：コイン・ブロックなどの処理
-        
-            // 必要ならブロックアニメーションや判定処理を追加
-        
 
-        if (!coins_.empty()) {
-            Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
+        // プレイヤーの球の情報を取得
+        Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
+
+        // pendulum が「切れていない」＝まだ振り子で揺れている間はコインを取得できない
+        if (pendulumPlayer_->GetPendulum()->GetIsCut()) {
+            // 慣性移動中のみコイン判定を行う
             for (auto& coin : coins_) {
                 coin->Update();
                 if (coin->IsCollision(playerSphere)) {
                     pendulumPlayer_->AddScore(coin->GetScore());
                 }
             }
+        } else {
+            // まだロープでつながっている間（スイング中）はコインだけ更新しておく
+            for (auto& coin : coins_) {
+                coin->Update();
+            }
         }
+
         break;
     }
 
@@ -256,32 +268,29 @@ void GamePlayScene::Draw()
 
     switch (stageNo_) {
     // ===============================
-    // ステージ1：ワープ＋バンパー構成
+    // ステージ1
     // ===============================
     case 1: {
-        if (bumper_)
-            bumper_->Draw();
-        if (goal_ && goal_->GetIsActive())
+
+        bumper_->Draw();
+        if (goal_ && goal_->GetIsActive()) {
             goal_->Draw();
-        if (pendulumPlayer_)
-            pendulumPlayer_->Draw();
-        if (warpA_)
-            warpA_->Draw();
-        if (warpB_)
-            warpB_->Draw();
+        }
+        pendulumPlayer_->Draw();
+        warpA_->Draw();
+        warpB_->Draw();
         break;
     }
 
     // ===============================
-    // ステージ2：コイン・ブロック構成
+    // ステージ2
     // ===============================
     case 2: {
-        if (bumper_)
-            bumper_->Draw();
+
+        bumper_->Draw();
         if (goal_ && goal_->GetIsActive())
             goal_->Draw();
-        if (pendulumPlayer_)
-            pendulumPlayer_->Draw();
+        pendulumPlayer_->Draw();
 
         // コイン描画
         for (auto& coin : coins_) {
@@ -291,12 +300,11 @@ void GamePlayScene::Draw()
     }
 
     // ===============================
-    // ステージ3：追加予定（敵やタイマーなど）
+    // ステージ3：追加予定
     // ===============================
     case 3: {
-        if (pendulumPlayer_)
-            pendulumPlayer_->Draw();
-        if (goal_)
+        pendulumPlayer_->Draw();
+        if (goal_ && goal_->GetIsActive())
             goal_->Draw();
         // 敵やギミック追加予定
         break;
