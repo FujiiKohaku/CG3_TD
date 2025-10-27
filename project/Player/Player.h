@@ -93,7 +93,7 @@ public:
 
     void VelocityReset();
 
-    Pendulum* GetPendulum() const { return pendulum_; }
+    Pendulum* GetPendulum() const { return pendulum_; }　
 
     // ゲッターロボ
     const Vector3& GetPosition() const { return position_; }
