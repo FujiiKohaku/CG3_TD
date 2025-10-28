@@ -333,9 +333,16 @@ void Player::IsCollisionWall()
                 normal = { 0, -1, 0 };
                 break;
             }
-            position_ = prevPosition_;
+
+            // --- めり込み補正 ---
+            position_ = Add(position_, Multiply(0.05f, normal)); // 壁から少し離す
+
+            // --- 反射処理 ---
             float dotN = Dot(velocity_, normal);
             velocity_ = Subtract(velocity_, Multiply(2.0f * dotN, normal));
+
+            // 減速も軽く入れておくと安定
+            velocity_ = Multiply(0.8f, velocity_);
 
             effect_->Emit(position_);
             break;
