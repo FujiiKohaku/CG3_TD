@@ -17,6 +17,8 @@ public:
 
 	virtual void SetSceneManager(SceneManager* sceneManager) { sceneManager_ = sceneManager; }
     virtual void SetSystem(WinApp* wa, DirectXCommon* dx) { winApp_ = wa; dxCommon_ = dx; }
+    virtual void SetParam(const SceneParam& p) { param_ = p; }
+
 
 protected:
 	SceneManager* GetSceneManager() const { return sceneManager_; }

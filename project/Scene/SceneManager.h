@@ -13,7 +13,7 @@ public:
 	~SceneManager();
 
 	void SetNextScene(BaseScene* nextScene);
-	void SetNextScene(BaseScene* nextScene, SceneParam param);
+	void SetNextScene(BaseScene* nextScene, const SceneParam& param);
 	void SetSystem(WinApp* wa, DirectXCommon* dx) { winApp_ = wa; dxCommon_ = dx; }
 
 private:

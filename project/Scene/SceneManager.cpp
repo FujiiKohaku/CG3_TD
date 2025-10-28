@@ -38,10 +38,12 @@ SceneManager::~SceneManager() {
 }
 
 void SceneManager::SetNextScene(BaseScene* nextScene) {
+	if (!nextScene_) { return; }
 	nextScene_ = nextScene;
 }
 
-void SceneManager::SetNextScene(BaseScene* nextScene, SceneParam param) {
+void SceneManager::SetNextScene(BaseScene* nextScene, const SceneParam& param) {
+	if (!nextScene_) { return; }
+	nextScene_->SetParam(param);
 	nextScene_ = nextScene; 
-	param_ = param;
 }
