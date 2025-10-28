@@ -18,7 +18,7 @@ void Pendulum::Update(const char* keys, const char* preKeys, float deltaTime, In
         angularVelocity_ = angularVelocityMax_;
 
     // 角加速度（減衰込み）
-    angularAcceleration_ = (-9.8f / length_) * sinf(angle_) - damping_ * angularVelocity_;
+    angularAcceleration_ = (-19.6f / length_) * sinf(angle_) - damping_ * angularVelocity_;
     angularVelocity_ += angularAcceleration_ * deltaTime;
     angle_ += angularVelocity_ * deltaTime;
 }
