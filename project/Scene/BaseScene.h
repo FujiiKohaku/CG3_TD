@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Stage/SceneParam.h"
+
 class SceneManager;
 class Input;
 class WinApp;

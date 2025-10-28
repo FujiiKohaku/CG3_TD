@@ -3,7 +3,7 @@
 void Stage1Logic::Initialize() {
 }
 
-void Stage1Logic::Update(Input* input) {
+void Stage1Logic::Update() {
 }
 
 void Stage1Logic::Draw() {

@@ -25,6 +25,8 @@
 #include <string>
 #include <vector>
 #include <wrl.h>
+#include <memory>
+
 // Windows・DirectX関連
 #include <Windows.h> //ウィンドウAPIで消す
 #include <d3d12.h>
@@ -46,6 +48,7 @@
 // 個人ライブラリ
 #include "Bumper.h"
 #include "Player.h"
+#include "Stage/StageLogic.h"
 // #include "ScoreBumper.h"
 #include "Coin.h"
 #include "ScoreUI.h"
@@ -55,13 +58,15 @@
 #include "GameClearScene.h"
 #include "SceneManager.h"
 #include "StageSelectScene.h"
+
+class Fade;
+
 class GamePlayScene : public BaseScene {
 public:
     void Initialize() override;
     void Update(Input* input) override;
     void Draw() override;
     void Finalize() override;
-    GamePlayScene(int stageNo);
 
 private:
     SoundManager soundManager_;
@@ -78,14 +83,16 @@ private:
     Skydome skydome_;
     Bumper* bumper_;
     Goal* goal_;
-    std::vector<Coin*> coins_; // コイン配列
-    // ScoreBumper* scoreBumper_;
+
+    Phase phase_ = Phase::kFadeIn;
+    Fade* fade_ = nullptr;
+    std::unique_ptr<IStageLogic> stage_;
+
     WarpGate* warpA_ = nullptr;
     WarpGate* warpB_ = nullptr;
     ScoreUI* scoreUI_ = nullptr;
 
 private:
-    int stageNo_ = 1; // 受け取ったステージ番号を保存
     // カメラ設定用の定数
     const float kCameraDistance = 100.0f; // プレイヤーからの距離
     const Vector3 kCameraInitPos = { 0.0f, 0.0f, -kCameraDistance };

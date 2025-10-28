@@ -1,5 +1,7 @@
 #pragma once
 #include "BaseScene.h"
+#include "Stage/SceneParam.h"
+
 
 class WinApp;
 class DirectXCommon;

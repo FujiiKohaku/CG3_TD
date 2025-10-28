@@ -21,6 +21,8 @@ void SceneManager::Update(Input* input)
 		scene_->Initialize();
 	}
 
+	if (!scene_) { return; }
+
 	scene_->Update(input);
 }
 
