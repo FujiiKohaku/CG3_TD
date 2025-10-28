@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <numbers>
 
+
 void GamePlayScene::Initialize()
 {
 
@@ -70,19 +71,6 @@ void GamePlayScene::Initialize()
     pendulumPlayer_->SetBumper(bumper_);
     pendulumPlayer_->SetGoal(goal_);
 
-    // -------------------------------------
-    // ワープゲート生成
-    // -------------------------------------
-    warpA_ = new WarpGate();
-    warpA_->Initialize(kWarpAPosition, kWarpScale, object3dManager_, kWarpModel);
-
-    warpB_ = new WarpGate();
-    warpB_->Initialize(kWarpBPosition, kWarpScale, object3dManager_, kWarpModel);
-
-    // お互いをリンク（ペア設定）
-    warpA_->SetPair(warpB_);
-    warpB_->SetPair(warpA_);
-
     // 背景
     skydome_.Initialize(object3dManager_);
 
@@ -118,6 +106,7 @@ void GamePlayScene::Initialize()
 
     scoreUI_ = new ScoreUI();
     scoreUI_->Initialize(spriteManager_);
+
 #ifdef _DEBUG
     // GPUデバッグ設定
     Microsoft::WRL::ComPtr<ID3D12InfoQueue> infoQueue = nullptr;
@@ -183,14 +172,6 @@ void GamePlayScene::Update(Input* input)
 
         camera_->Update();
         skydome_.Update();
-
-        // ステージ1：ワープゲート＋基本プレイ
-        if (warpA_ && warpB_) {
-            warpA_->Update();
-            warpB_->Update();
-            warpA_->CheckAndWarp(pendulumPlayer_);
-            warpB_->CheckAndWarp(pendulumPlayer_);
-        }
 
         stage_->SetContext(object3dManager_);
         stage_->SetPlayer(pendulumPlayer_);

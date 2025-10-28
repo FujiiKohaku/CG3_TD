@@ -53,7 +53,6 @@
 #include "Coin.h"
 #include "ScoreUI.h"
 #include "Skydome.h"
-#include "WarpGate.h"
 // シーン管理
 #include "GameClearScene.h"
 #include "SceneManager.h"
@@ -94,8 +93,7 @@ private:
     Fade* fade_ = nullptr;
     std::unique_ptr<IStageLogic> stage_;
 
-    WarpGate* warpA_ = nullptr;
-    WarpGate* warpB_ = nullptr;
+    
     ScoreUI* scoreUI_ = nullptr;
 
 private:
@@ -114,11 +112,5 @@ private:
     const float kGoalRadius = 3.0f; // ゴールの当たり判定（半径）
     // プレイヤー
     const int kClearPoint = 1000;
-    // -------------------------------------
-    // ワープゲート設定用の定数
-    // -------------------------------------
-    const Vector3 kWarpAPosition = { -10.0f, 3.0f, 0.0f }; // ワープAの位置
-    const Vector3 kWarpBPosition = { 10.0f, 3.0f, 0.0f }; // ワープBの位置
-    const float kWarpScale = 1.0f; // スケール
-    const std::string kWarpModel = "plane.obj"; // 使用モデル名
+    
 };
