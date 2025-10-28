@@ -40,7 +40,10 @@ void Input::Update()
     prePushB_ = isPushB_;
     prePushLeft_ = isPushLeft_;
     prePushRight_ = isPushRight_;
-
+    //ここで戻す
+    isPushB_ = false;
+    isPushLeft_ = false;
+    isPushRight_ = false;
     // 現在のキー状態を取得
     HRESULT result = keyboard_->Acquire();
     if (FAILED(result)) {
