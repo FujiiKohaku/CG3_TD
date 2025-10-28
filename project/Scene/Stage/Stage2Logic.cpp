@@ -44,5 +44,9 @@ void Stage2Logic::Draw() {
 }
 
 void Stage2Logic::Finalize() {
+	for (auto& coin : coins_) {
+		delete coin;
+	}
+	coins_.clear();
 }
 

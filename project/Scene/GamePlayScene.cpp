@@ -263,10 +263,6 @@ void GamePlayScene::Finalize()
     pendulumPlayer_ = nullptr;
     delete bumper_;
     bumper_ = nullptr;
-    delete warpA_;
-    warpA_ = nullptr;
-    delete warpB_;
-    warpB_ = nullptr;
     delete spriteManager_;
     spriteManager_ = nullptr;
     delete object3dManager_;
@@ -274,12 +270,6 @@ void GamePlayScene::Finalize()
     delete scoreUI_;
     scoreUI_ = nullptr;
     sprites_.clear();
-
-    if (stage_) {
-        stage_->Finalize();
-        //delete stage_;
-        stage_ = nullptr;
-    }
 
     // ImGui破棄
     ImGui_ImplDX12_Shutdown();
