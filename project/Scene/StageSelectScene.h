@@ -15,19 +15,20 @@ public:
     void Finalize() override;
 
 private:
-	enum class Phase {
-		kFadeIn,
-		kMain,
-		kFadeOut,
-	};
+    enum class Phase {
+        kFadeIn,
+        kMain,
+        kFadeOut,
+    };
 
-	int selected_ = 0;
-	Fade* fade_ = nullptr;
-	Phase phase_ = Phase::kFadeIn;
+    int selected_ = 0;
+    Fade* fade_ = nullptr;
+    Phase phase_ = Phase::kFadeIn;
 
-	Object3dManager* object3dManager_ = nullptr;
-	Camera* camera_ = nullptr;
-	std::vector<Object3d*> cubes_;
-	std::vector<float> scaleTimers_;
+    Object3dManager* object3dManager_ = nullptr;
+    Camera* camera_ = nullptr;
+    std::vector<Object3d*> cubes_;
+    std::vector<float> scaleTimers_;
+    Object3d* allow_;
+    Object3d* allow2_;
 };
-
