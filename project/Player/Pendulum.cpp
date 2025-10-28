@@ -9,8 +9,8 @@ void Pendulum::Update(const char* keys, const char* preKeys, float deltaTime, In
     if (isCut_)
         return; // 切断後は処理しない
 
-    // SPACEで加速
-    if (input->IsKeyTriggered(DIK_SPACE)) {
+// スペースキー または Bボタンで加速
+    if (input->IsKeyTriggered(DIK_SPACE) || input->IsTriggerB()) {
         angularVelocity_ += kickStrength_;
     }
 

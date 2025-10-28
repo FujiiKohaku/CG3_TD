@@ -1,5 +1,6 @@
 #include "TitleScene.h"
 #include "DirectXCommon.h"
+#include "Fade.h"
 #include "Input.h"
 #include "ModelManager.h"
 #include "Object3d.h"
@@ -9,7 +10,6 @@
 #include "SpriteManager.h"
 #include "StageSelectScene.h"
 #include "TextureManager.h"
-#include "Fade.h"
 #include <numbers>
 
 void TitleScene::Initialize()
@@ -92,9 +92,9 @@ void TitleScene::Initialize()
     plane_->SetScale({ 1.0f, 1.0f, 1.0f });
     plane_->SetRotate({ 0.0f, 0.0f, std::numbers::pi_v<float> / 2.0f });
 
-	fade_ = new Fade();
-	fade_->Initialize(GetDx());
-	fade_->Start(Status::FadeIn, 0.25f);
+    fade_ = new Fade();
+    fade_->Initialize(GetDx());
+    fade_->Start(Status::FadeIn, 0.25f);
 
     giza_ = new Object3d();
     giza_->Initialize(object3dManager_);
@@ -116,7 +116,6 @@ void TitleScene::Initialize()
     spacelogo_->SetTranslate({ -2.0f, -1.0f, 0.0f });
     spacelogo_->SetScale({ 0.5f, 0.5f, 0.5f });
     spacelogo_->SetRotate({ std::numbers::pi_v<float> / 2.0f, 0.0f, 0.0f });
-
 }
 
 void TitleScene::Update(Input* input)
@@ -124,26 +123,26 @@ void TitleScene::Update(Input* input)
     fade_->Update();
 
     switch (phase_) {
-        case Phase::kFadeIn:
+    case Phase::kFadeIn:
         if (fade_->IsFinished()) {
-			fade_->Stop();
+            fade_->Stop();
             phase_ = Phase::kMain;
         }
-		break;
-        case Phase::kMain:
-            if (input->IsKeyTriggered(DIK_SPACE)) {
-                //GetSceneManager()->SetNextScene(new StageSelectScene());
-				fade_->Start(Status::FadeOut, 0.25f);
-				phase_ = Phase::kFadeOut;
-            }
         break;
-        case Phase::kFadeOut:
+    case Phase::kMain:
+        if (input->IsKeyTriggered(DIK_SPACE) || input->IsTriggerB()) {
+            // GetSceneManager()->SetNextScene(new StageSelectScene());
+            fade_->Start(Status::FadeOut, 0.25f);
+            phase_ = Phase::kFadeOut;
+        }
+        break;
+    case Phase::kFadeOut:
         // フェードアウト処理
         if (fade_->IsFinished()) {
             // シーン切り替え
             GetSceneManager()->SetNextScene(new StageSelectScene());
         }
-		break;
+        break;
     }
 
     logoObject_->Update();
@@ -202,7 +201,7 @@ void TitleScene::Draw()
     // ===== 2D描画（最後に）=====
     spriteManager_->PreDraw(); // ← PSO切り替え
 
-	fade_->Draw();
+    fade_->Draw();
 
     // ===== 描画終了 =====
     GetDx()->PostDraw();

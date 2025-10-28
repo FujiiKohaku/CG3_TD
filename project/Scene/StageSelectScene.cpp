@@ -69,14 +69,15 @@ void StageSelectScene::Update(Input* input)
         }
         break;
     case Phase::kMain:
-        if (input->IsKeyTriggered(DIK_LEFT)) {
+        if (input->IsKeyTriggered(DIK_LEFT) || input->IsTriggerLeftButton()) {
             selected_ = (selected_ - 1 + int(StageId::Count)) % int(StageId::Count);
         }
-        if (input->IsKeyTriggered(DIK_RIGHT)) {
+
+        if (input->IsKeyTriggered(DIK_RIGHT) || input->IsTriggerRightButton()) {
             selected_ = (selected_ + 1) % int(StageId::Count);
         }
-        if (input->IsKeyTriggered(DIK_SPACE)) {
 
+        if (input->IsKeyTriggered(DIK_SPACE) || input->IsTriggerB()) {
             fade_->Start(Status::FadeOut, 0.25f);
             phase_ = Phase::kFadeOut;
         }

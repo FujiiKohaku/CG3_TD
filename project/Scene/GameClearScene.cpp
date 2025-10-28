@@ -74,7 +74,7 @@ void GameClearScene::Initialize()
 void GameClearScene::Update(Input* input)
 {
     // スペースキーで次のシーンへ
-    if (input->IsKeyTriggered(DIK_SPACE)) {
+    if (input->IsKeyTriggered(DIK_SPACE) || input->IsTriggerB()) {
         GetSceneManager()->SetNextScene(new StageSelectScene());
     }
     static float s = 0.0f;

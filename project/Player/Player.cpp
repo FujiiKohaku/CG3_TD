@@ -165,7 +165,7 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
         if (!isReleaceTimerStarted_) {
 
             // 振り子開始と同時にフラグを切り替え
-            if (input->IsKeyTriggered(DIK_SPACE)) {
+            if (input->IsKeyTriggered(DIK_SPACE) || input->IsTriggerB()) {
                 isReleaceTimerStarted_ = true;
             }
 
