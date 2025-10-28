@@ -21,11 +21,11 @@
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
+#include <memory>
 #include <sstream>
 #include <string>
 #include <vector>
 #include <wrl.h>
-#include <memory>
 
 // Windows・DirectX関連
 #include <Windows.h> //ウィンドウAPIで消す
@@ -47,12 +47,12 @@
 #pragma comment(lib, "dxcompiler.lib")
 // 個人ライブラリ
 #include "Bumper.h"
-#include "Player.h"
-#include "Stage/StageLogic.h"
-// #include "ScoreBumper.h"
 #include "Coin.h"
+#include "Player.h"
+#include "ScoreBumper.h"
 #include "ScoreUI.h"
 #include "Skydome.h"
+#include "Stage/StageLogic.h"
 // シーン管理
 #include "GameClearScene.h"
 #include "SceneManager.h"
@@ -93,8 +93,9 @@ private:
     Fade* fade_ = nullptr;
     std::unique_ptr<IStageLogic> stage_;
 
-    
     ScoreUI* scoreUI_ = nullptr;
+
+    ScoreBumper* scoreBumper_ = nullptr;
 
 private:
     // カメラ設定用の定数
@@ -112,5 +113,4 @@ private:
     const float kGoalRadius = 3.0f; // ゴールの当たり判定（半径）
     // プレイヤー
     const int kClearPoint = 1000;
-    
 };

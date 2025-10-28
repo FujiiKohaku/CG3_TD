@@ -248,12 +248,20 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
             effect_->Emit(position_);
         }
 
+        Sphere playerSphere = { position_, radius_ };
+        Sphere scoreBumperSphere = { scoreBumper_->GetPosition(), scoreBumper_->GetRadius() };
+        if (scoreBumper_->IsCollision(playerSphere, scoreBumperSphere)) {
+            point_ += 200; // スコア加算
+            scoreBumper_->ReflectSphereVelocity(playerSphere, velocity_, scoreBumperSphere);
+            position_ = playerSphere.center;
+            effect_->Emit(position_);
+        }
         //// ブロックとの当たり判定と反射
-        //blockAABB_ = { block_->GetBlockAABB() };
-        //if (block_->IsCollision(blockAABB_, playerSphere_)) {
-        //    point_ += 100;
-        //    block_->ReflectSphereFromAABB(position_, velocity_, blockAABB_, radius_, block_->GetBounce());
-        //}
+        // blockAABB_ = { block_->GetBlockAABB() };
+        // if (block_->IsCollision(blockAABB_, playerSphere_)) {
+        //     point_ += 100;
+        //     block_->ReflectSphereFromAABB(position_, velocity_, blockAABB_, radius_, block_->GetBounce());
+        // }
 
         // ゴールとの当たり判定
         if (point_ >= clearPoint_) {
@@ -284,7 +292,6 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
             isReleaceTimerStarted_ = false;
         }
     }
-
 
     effect_->Update();
 
@@ -329,7 +336,7 @@ void Player::IsCollisionWall()
             position_ = prevPosition_;
             float dotN = Dot(velocity_, normal);
             velocity_ = Subtract(velocity_, Multiply(2.0f * dotN, normal));
-           
+
             effect_->Emit(position_);
             break;
         }
@@ -417,7 +424,6 @@ Player::~Player()
         }
     }
     delete effect_;
-  
 }
 
 float Player::Dot(const Vector3& v1, const Vector3& v2)

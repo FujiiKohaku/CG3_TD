@@ -2,26 +2,28 @@
 #include "Coin.h"
 #include "Player.h"
 
-void Stage2Logic::Initialize() {
-	// ƒRƒCƒ“‚ğc~‰¡‚É¶¬
-	for (int y = 0; y < 10; y++) { // c•ûŒüi’ij
-		for (int x = 0; x < 10; x++) { // ‰¡•ûŒüi—ñj
-			Coin* coin = new Coin();
+void Stage2Logic::Initialize()
+{
+    // ã‚³ã‚¤ãƒ³ã‚’ç¸¦Ã—æ¨ªã«ç”Ÿæˆ
+    for (int y = 0; y < 15; y++) { // ç¸¦æ–¹å‘ï¼ˆæ®µï¼‰
+        for (int x = 0; x < 12; x++) { // æ¨ªæ–¹å‘ï¼ˆåˆ—ï¼‰
+            Coin* coin = new Coin();
 
-			Vector3 pos = { -6.0f + x * 3.0f, 3.0f + y * 2.5f, 0.0f };
+            // å·¦ä¸‹ã«ç§»å‹•
+            Vector3 pos = { -17.0f + x * 3.0f, -16.0f + y * 2.5f, 0.0f };
 
-			coin->Initialize(pos, 1.0f, 100, object3dManager_, "Coin.obj");
-			coins_.push_back(coin);
-		}
-	}
+            coin->Initialize(pos, 1.0f, 10, object3dManager_, "Coin.obj");
+            coins_.push_back(coin);
+        }
+    }
 }
 
 void Stage2Logic::Update() {
-	// ƒvƒŒƒCƒ„[‚Ì‹…‚Ìî•ñ‚ğæ“¾
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çƒã®æƒ…å ±ã‚’å–å¾—
 	Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
-	// pendulum ‚ªuØ‚ê‚Ä‚¢‚È‚¢v‚Ü‚¾U‚èq‚Å—h‚ê‚Ä‚¢‚éŠÔ‚ÍƒRƒCƒ“‚ğæ“¾‚Å‚«‚È‚¢
+	// pendulum ãŒã€Œåˆ‡ã‚Œã¦ã„ãªã„ã€ï¼ã¾ã æŒ¯ã‚Šå­ã§æºã‚Œã¦ã„ã‚‹é–“ã¯ã‚³ã‚¤ãƒ³ã‚’å–å¾—ã§ããªã„
 	if (pendulumPlayer_->GetPendulum()->GetIsCut()) {
-		// Šµ«ˆÚ“®’†‚Ì‚İƒRƒCƒ“”»’è‚ğs‚¤
+		// æ…£æ€§ç§»å‹•ä¸­ã®ã¿ã‚³ã‚¤ãƒ³åˆ¤å®šã‚’è¡Œã†
 		for (auto& coin : coins_) {
 			coin->Update();
 			if (coin->IsCollision(playerSphere)) {
@@ -29,7 +31,7 @@ void Stage2Logic::Update() {
 			}
 		}
 	} else {
-		// ‚Ü‚¾ƒ[ƒv‚Å‚Â‚È‚ª‚Á‚Ä‚¢‚éŠÔiƒXƒCƒ“ƒO’†j‚ÍƒRƒCƒ“‚¾‚¯XV‚µ‚Ä‚¨‚­
+		// ã¾ã ãƒ­ãƒ¼ãƒ—ã§ã¤ãªãŒã£ã¦ã„ã‚‹é–“ï¼ˆã‚¹ã‚¤ãƒ³ã‚°ä¸­ï¼‰ã¯ã‚³ã‚¤ãƒ³ã ã‘æ›´æ–°ã—ã¦ãŠã
 		for (auto& coin : coins_) {
 			coin->Update();
 		}

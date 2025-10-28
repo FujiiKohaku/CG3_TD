@@ -107,6 +107,9 @@ void GamePlayScene::Initialize()
     scoreUI_ = new ScoreUI();
     scoreUI_->Initialize(spriteManager_);
 
+    scoreBumper_ = new ScoreBumper();
+    scoreBumper_->Initialize({ 4.0f, -8.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "bamper.obj");
+    pendulumPlayer_->SetScoreBumper(scoreBumper_);
 #ifdef _DEBUG
     // GPUデバッグ設定
     Microsoft::WRL::ComPtr<ID3D12InfoQueue> infoQueue = nullptr;
@@ -176,7 +179,9 @@ void GamePlayScene::Update(Input* input)
         stage_->SetContext(object3dManager_);
         stage_->SetPlayer(pendulumPlayer_);
         stage_->Update();
+        scoreBumper_->Update();
 
+  
         // プレイヤーがゴールしたらシーンを切り替える
         if (pendulumPlayer_->GetIsGoal()) {
 
@@ -219,7 +224,7 @@ void GamePlayScene::Draw()
     skydome_.Draw();
     bumper_->Draw();
     stage_->Draw();
-
+    scoreBumper_->Draw();
     if (goal_->GetIsActive()) {
         goal_->Draw();
     }
