@@ -1,288 +1,289 @@
 #include "GamePlayScene.h"
+#include "Fade.h"
 #include "GameClearScene.h"
 #include "Input.h"
-#include "Utility.h"
 #include "Stage/StageFactory.h"
-#include "Fade.h"
+#include "Utility.h"
 #include <filesystem>
 #include <numbers>
 
 
-void GamePlayScene::Initialize() {
+void GamePlayScene::Initialize()
+{
 
-	// ---------------------------------------------
-	// 例外処理・ログ
-	// ---------------------------------------------
-	SetUnhandledExceptionFilter(Utility::ExportDump);
-	std::filesystem::create_directory("logs");
+    // ---------------------------------------------
+    // 例外処理・ログ
+    // ---------------------------------------------
+    SetUnhandledExceptionFilter(Utility::ExportDump);
+    std::filesystem::create_directory("logs");
 
-	// =============================
-	// Texture / Sprite
-	// =============================
-	TextureManager::GetInstance()->Initialize(GetDx());
-	TextureManager::GetInstance()->LoadTexture("resources/uvChecker.png");
+    // =============================
+    // Texture / Sprite
+    // =============================
+    TextureManager::GetInstance()->Initialize(GetDx());
+    TextureManager::GetInstance()->LoadTexture("resources/uvChecker.png");
 
-	spriteManager_ = new SpriteManager();
-	spriteManager_->Initialize(GetDx());
+    spriteManager_ = new SpriteManager();
+    spriteManager_->Initialize(GetDx());
 
-	// =============================
-	// Object3D Manager / Camera
-	// =============================
-	object3dManager_ = new Object3dManager();
-	object3dManager_->Initialize(GetDx());
-	// カメラ生成
-	camera_ = new Camera();
-	camera_->SetTranslate(kCameraInitPos);
-	camera_->SetRotate(kCameraInitRot);
-	object3dManager_->SetDefaultCamera(camera_);
+    // =============================
+    // Object3D Manager / Camera
+    // =============================
+    object3dManager_ = new Object3dManager();
+    object3dManager_->Initialize(GetDx());
+    // カメラ生成
+    camera_ = new Camera();
+    camera_->SetTranslate(kCameraInitPos);
+    camera_->SetRotate(kCameraInitRot);
+    object3dManager_->SetDefaultCamera(camera_);
 
-	// =============================
-	// モデル読み込み
-	// =============================
-	ModelManager::GetInstance()->initialize(GetDx());
-	ModelManager::GetInstance()->LoadModel("plane.obj");
-	ModelManager::GetInstance()->LoadModel("skydome.obj");
-	ModelManager::GetInstance()->LoadModel("axis.obj");
-	ModelManager::GetInstance()->LoadModel("PlayerBall.obj");
-	ModelManager::GetInstance()->LoadModel("cube.obj");
-	ModelManager::GetInstance()->LoadModel("Coin.obj");
+    // =============================
+    // モデル読み込み
+    // =============================
+    ModelManager::GetInstance()->initialize(GetDx());
+    ModelManager::GetInstance()->LoadModel("plane.obj");
+    ModelManager::GetInstance()->LoadModel("skydome.obj");
+    ModelManager::GetInstance()->LoadModel("axis.obj");
+    ModelManager::GetInstance()->LoadModel("PlayerBall.obj");
+    ModelManager::GetInstance()->LoadModel("cube.obj");
+    ModelManager::GetInstance()->LoadModel("Coin.obj");
 
-	// =============================
-	// サウンド設定
-	// =============================
-	soundManager_.Initialize();
-	bgm = soundManager_.SoundLoadWave("Resources/BGM.wav");
+    // =============================
+    // サウンド設定
+    // =============================
+    soundManager_.Initialize();
+    bgm = soundManager_.SoundLoadWave("Resources/BGM.wav");
 
-	// 背景
-	skydome_.Initialize(object3dManager_);
+    // 背景
+    skydome_.Initialize(object3dManager_);
 
+    // バンパー生成
+    bumper_ = new Bumper();
+    bumper_->Initialize(kBumperPos, kBumperRadius, kBumperBounce, object3dManager_, "PlayerBall.obj");
 
-	// バンパー生成
-	bumper_ = new Bumper();
-	bumper_->Initialize(kBumperPos, kBumperRadius, kBumperBounce, object3dManager_, "PlayerBall.obj");
+    // ゴール
+    goal_ = new Goal();
+    goal_->Initialize(kGoalPosition, kGoalRadius, object3dManager_, "PlayerBall.obj");
 
-	// ゴール
-	goal_ = new Goal();
-	goal_->Initialize(kGoalPosition, kGoalRadius, object3dManager_, "PlayerBall.obj");
+    // プレイヤー
+    pendulumPlayer_ = new Player();
+    pendulumPlayer_->Initialize(kClearPoint, object3dManager_, "PlayerBall.obj");
+    pendulumPlayer_->SetBumper(bumper_);
+    pendulumPlayer_->SetGoal(goal_);
 
-	// プレイヤー
-	pendulumPlayer_ = new Player();
-	pendulumPlayer_->Initialize(kClearPoint, object3dManager_, "PlayerBall.obj");
-	pendulumPlayer_->SetBumper(bumper_);
-	pendulumPlayer_->SetGoal(goal_);
+    // 背景
+    skydome_.Initialize(object3dManager_);
 
-	
+    // バンパー
+    bumper_ = new Bumper();
+    bumper_->Initialize({ 5.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
 
-	// 背景
-	skydome_.Initialize(object3dManager_);
+    // ゴール
+    goal_ = new Goal();
+    goal_->Initialize({ 15.0f, 0.0f, 0.0f }, 3.0f, object3dManager_, "PlayerBall.obj");
 
-	// バンパー
-	bumper_ = new Bumper();
-	bumper_->Initialize({ 5.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
+    // プレイヤー
+    pendulumPlayer_ = new Player();
+    pendulumPlayer_->Initialize(1000, object3dManager_, "PlayerBall.obj");
+    pendulumPlayer_->SetBumper(bumper_);
 
+    pendulumPlayer_->SetGoal(goal_);
 
+    // フェードの初期化
+    fade_ = new Fade();
+    fade_->Initialize(GetDx());
+    fade_->Start(Status::FadeIn, 0.25f);
 
-	// ゴール
-	goal_ = new Goal();
-	goal_->Initialize({ 15.0f, 0.0f, 0.0f }, 3.0f, object3dManager_, "PlayerBall.obj");
+    phase_ = Phase::kFadeIn;
 
-	// プレイヤー
-	pendulumPlayer_ = new Player();
-	pendulumPlayer_->Initialize(1000, object3dManager_, "PlayerBall.obj");
-	pendulumPlayer_->SetBumper(bumper_);
+    SceneParam param = GetParam();
 
-	pendulumPlayer_->SetGoal(goal_);
+    // stage_.reset();
+    stage_ = CreateStageLogic(param.stage);
+    stage_->SetContext(object3dManager_);
+    stage_->SetPlayer(pendulumPlayer_);
+    stage_->Initialize();
 
-
-	// フェードの初期化
-	fade_ = new Fade();
-	fade_->Initialize(GetDx());
-	fade_->Start(Status::FadeIn, 0.25f);
-
-	phase_ = Phase::kFadeIn;
-
-	SceneParam param = GetParam();
-
-	//stage_.reset();
-	stage_ = CreateStageLogic(param.stage);
-	stage_->SetContext(object3dManager_);
-	stage_->SetPlayer(pendulumPlayer_);
-	stage_->Initialize();
-
+    scoreUI_ = new ScoreUI();
+    scoreUI_->Initialize(spriteManager_);
 
 #ifdef _DEBUG
-	// GPUデバッグ設定
-	Microsoft::WRL::ComPtr<ID3D12InfoQueue> infoQueue = nullptr;
-	if (SUCCEEDED(GetDx()->GetDevice()->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
-		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
-		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
-		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+    // GPUデバッグ設定
+    Microsoft::WRL::ComPtr<ID3D12InfoQueue> infoQueue = nullptr;
+    if (SUCCEEDED(GetDx()->GetDevice()->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
+        infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
+        infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
+        infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
 
-		D3D12_MESSAGE_ID denyIds[] = {
-			D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE
-		};
-		D3D12_MESSAGE_SEVERITY severities[] = { D3D12_MESSAGE_SEVERITY_INFO };
-		D3D12_INFO_QUEUE_FILTER filter{};
-		filter.DenyList.NumIDs = _countof(denyIds);
-		filter.DenyList.pIDList = denyIds;
-		filter.DenyList.NumSeverities = _countof(severities);
-		filter.DenyList.pSeverityList = severities;
-		infoQueue->PushStorageFilter(&filter);
-	}
+        D3D12_MESSAGE_ID denyIds[] = {
+            D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE
+        };
+        D3D12_MESSAGE_SEVERITY severities[] = { D3D12_MESSAGE_SEVERITY_INFO };
+        D3D12_INFO_QUEUE_FILTER filter {};
+        filter.DenyList.NumIDs = _countof(denyIds);
+        filter.DenyList.pIDList = denyIds;
+        filter.DenyList.NumSeverities = _countof(severities);
+        filter.DenyList.pSeverityList = severities;
+        infoQueue->PushStorageFilter(&filter);
+    }
 #endif
 }
 
-void GamePlayScene::Update(Input* input) {
-	if (fade_) { fade_->Update(); }
+void GamePlayScene::Update(Input* input)
+{
+    if (fade_) {
+        fade_->Update();
+    }
 
-	const BYTE* keys = nullptr;
-	const BYTE* preKeys = nullptr;
+    const BYTE* keys = nullptr;
+    const BYTE* preKeys = nullptr;
 
-	// ==============================
-	//  フレームの先頭処理
-	// ==============================
-	ImGui_ImplDX12_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
+    // ==============================
+    //  フレームの先頭処理
+    // ==============================
+    ImGui_ImplDX12_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
+   
+    if (phase_ == Phase::kMain) {
+        int score = pendulumPlayer_->GetPoint(); // 例：プレイヤーのスコア取得
+        scoreUI_->Update(score);
+        // ==============================
+        //  開発用UI
+        // ==============================
 
-	if (phase_ == Phase::kMain) {
+        // ImGui::ShowDemoWindow();
+        // ==============================
+        // ImGui デバッグ表示
+        // ==============================
 
+        ImGui::Begin("Debug Info");
+        if (pendulumPlayer_) {
+            ImGui::Text("Score: %d", pendulumPlayer_->GetPoint());
+        }
+        ImGui::End();
 
-		// ==============================
-		//  開発用UI
-		// ==============================
+        keys = input->GetKeys();
+        preKeys = input->GetPreKeys();
 
-		// ImGui::ShowDemoWindow();
-		// ==============================
-		// ImGui デバッグ表示
-		// ==============================
+        if (pendulumPlayer_) {
+            pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f, input);
+        }
 
-		ImGui::Begin("Debug Info");
-		if (pendulumPlayer_) {
-			ImGui::Text("Score: %d", pendulumPlayer_->GetPoint());
-		}
-		ImGui::End();
+        camera_->Update();
+        skydome_.Update();
 
-		keys = input->GetKeys();
-		preKeys = input->GetPreKeys();
+        stage_->SetContext(object3dManager_);
+        stage_->SetPlayer(pendulumPlayer_);
+        stage_->Update();
 
-		if (pendulumPlayer_) {
-			pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f, input);
-		}
+        // プレイヤーがゴールしたらシーンを切り替える
+        if (pendulumPlayer_->GetIsGoal()) {
 
-		camera_->Update();
-		skydome_.Update();
+            if (fade_) {
+                fade_->Start(Status::FadeOut, 0.25f);
+            }
+            phase_ = Phase::kFadeOut;
+        }
+    }
 
-		
+    ImGui::Render(); // ImGuiの内部コマンドを生成（描画直前に呼ぶ）
 
-		stage_->SetContext(object3dManager_);
-		stage_->SetPlayer(pendulumPlayer_);
-		stage_->Update();
+    switch (phase_) {
+    case Phase::kFadeIn:
+        if (fade_ && fade_->IsFinished()) {
+            fade_->Stop();
+            phase_ = Phase::kMain;
+        }
+        break;
 
-		// プレイヤーがゴールしたらシーンを切り替える
-		if (pendulumPlayer_->GetIsGoal()) {
-
-			if (fade_) { fade_->Start(Status::FadeOut, 0.25f); }
-			phase_ = Phase::kFadeOut;
-		}
-
-	}
-
-	ImGui::Render(); // ImGuiの内部コマンドを生成（描画直前に呼ぶ）
-
-	switch (phase_) {
-	case Phase::kFadeIn:
-		if (fade_ && fade_->IsFinished()) {
-			fade_->Stop();
-			phase_ = Phase::kMain;
-		}
-		break;
-
-	case Phase::kFadeOut:
-		if (fade_ && fade_->IsFinished()) {
-			GetSceneManager()->SetNextScene(new GameClearScene());// クリアシーンができたらここに入れて
-		}
-		break;
-	}
+    case Phase::kFadeOut:
+        if (fade_ && fade_->IsFinished()) {
+            GetSceneManager()->SetNextScene(new GameClearScene()); // クリアシーンができたらここに入れて
+        }
+        break;
+    }
 }
 
-void GamePlayScene::Draw() {
-	// ==============================
-	//  描画処理（Draw）
-	// ==============================
+void GamePlayScene::Draw()
+{
+    // ==============================
+    // バックバッファの切り替え準備
+    // ==============================
+    GetDx()->PreDraw();
 
-	// バックバッファの切り替え準備
-	GetDx()->PreDraw();
+    // ==============================
+    // 3D描画
+    // ==============================
+    object3dManager_->PreDraw();
+    skydome_.Draw();
+    bumper_->Draw();
+    stage_->Draw();
 
-	// ----- 3Dオブジェクト描画 -----
-	object3dManager_->PreDraw(); // 3D描画準備
-	skydome_.Draw();
-	bumper_->Draw();
+    if (goal_->GetIsActive()) {
+        goal_->Draw();
+    }
 
-	stage_->Draw();
+    pendulumPlayer_->Draw();
 
-	if (goal_->GetIsActive() == true) {
-		goal_->Draw();
-	}
+    // ==============================
+    // 2D描画（スプライト・UIなど）
+    // ==============================
+    spriteManager_->PreDraw(); // 2D描画の準備（PSO切り替え）
+    scoreUI_->Draw(); // スコアUIを描画
 
-	pendulumPlayer_->Draw();
-	// ----- ImGui描画（デバッグUI） -----
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
+    // フェードもSpriteを使っている場合はここ！
+    if (fade_) {
+        fade_->Draw();
+    }
 
-	if (fade_) {
-		fade_->Draw();
-	}
+    // ==============================
+    // ImGui描画
+    // ==============================
+    ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
 
-	// ===============================
-	  // ImGuiデバッグ表示（共通）
-	  // ===============================
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
+    // ==============================
+    // バックバッファ表示
+    // ==============================
+    GetDx()->PostDraw();
 
-	// ===============================
-	// ImGuiデバッグ表示（共通）
-	// ===============================
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
-	GetDx()->PostDraw();
-
-	// コマンドリスト状態確認ログ
-	Logger::Log("CommandList state check before Close()");
+    Logger::Log("CommandList state check before Close()");
 }
 
+void GamePlayScene::Finalize()
+{
 
-void GamePlayScene::Finalize() {
+    // 各オブジェクトを安全に削除
+    delete fade_;
+    fade_ = nullptr;
+    delete goal_;
+    goal_ = nullptr;
+    delete pendulumPlayer_;
+    pendulumPlayer_ = nullptr;
+    delete bumper_;
+    bumper_ = nullptr;
+    delete goal_;
+    goal_ = nullptr;
+    delete spriteManager_;
+    spriteManager_ = nullptr;
+    delete object3dManager_;
+    object3dManager_ = nullptr;
+    delete scoreUI_;
+    scoreUI_ = nullptr;
+    sprites_.clear();
 
-	// 各オブジェクトを安全に削除
-	delete fade_;
-	fade_ = nullptr;
-	delete goal_;
-	goal_ = nullptr;
-	delete pendulumPlayer_;
-	pendulumPlayer_ = nullptr;
-	delete bumper_;
-	bumper_ = nullptr;
-	delete goal_;
-	goal_ = nullptr;
-	
-	delete spriteManager_;
-	spriteManager_ = nullptr;
-	delete object3dManager_;
-	object3dManager_ = nullptr;
+    // ImGui破棄
+    ImGui_ImplDX12_Shutdown();
+    ImGui_ImplWin32_Shutdown();
+    ImGui::DestroyContext();
 
-	sprites_.clear();
+    // マネージャ系解放
+    ModelManager::GetInstance()->Finalize();
+    TextureManager::GetInstance()->Finalize();
 
-	// ImGui破棄
-	ImGui_ImplDX12_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+    // サウンド解放
+    soundManager_.Finalize(&bgm);
 
-	// マネージャ系解放
-	ModelManager::GetInstance()->Finalize();
-	TextureManager::GetInstance()->Finalize();
-
-	// サウンド解放
-	soundManager_.Finalize(&bgm);
-
-	// GPU待機
-	GetDx()->WaitForGPU();
-
+    // GPU待機
+    GetDx()->WaitForGPU();
 }
