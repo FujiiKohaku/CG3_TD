@@ -156,6 +156,13 @@ void Player::Initialize(int clearPoint, Object3dManager* object3dManager, const 
     // Initialize()
     effect_ = new Effect();
     effect_->Initialize(object3dManager, "Coin.obj");
+    sound_ = new SoundManager();
+    sound_->Initialize();
+    // --- サウンド読み込み ---
+    if (sound_) { // ← nullptrチェック
+        hitSE_ = sound_->SoundLoadWave("resources/seHit.wav");
+      
+    }
 }
 
 void Player::Update(const char* keys, const char* preKeys, float deltaTime, Input* input)
@@ -242,6 +249,7 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
         playerSphere_ = { position_, radius_ };
         bumperSphere_ = { bumper_->GetPosition(), bumper_->GetRadius() };
         if (bumper_->IsCollision(playerSphere_, bumperSphere_)) {
+
             point_ += 100;
             bumper_->ReflectSphereVelocity(playerSphere_, velocity_, bumperSphere_);
             position_ = playerSphere_.center;
@@ -251,6 +259,7 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
         Sphere playerSphere = { position_, radius_ };
         Sphere scoreBumperSphere = { scoreBumper_->GetPosition(), scoreBumper_->GetRadius() };
         if (scoreBumper_->IsCollision(playerSphere, scoreBumperSphere)) {
+            sound_->SoundPlayWave(hitSE_, false);
             point_ += 200; // スコア加算
             scoreBumper_->ReflectSphereVelocity(playerSphere, velocity_, scoreBumperSphere);
             position_ = playerSphere.center;
@@ -343,7 +352,7 @@ void Player::IsCollisionWall()
 
             // 減速も軽く入れておくと安定
             velocity_ = Multiply(0.8f, velocity_);
-
+            sound_->SoundPlayWave(hitSE_, false);
             effect_->Emit(position_);
             break;
         }
@@ -431,6 +440,13 @@ Player::~Player()
         }
     }
     delete effect_;
+    // ===== サウンド解放 =====
+    if (sound_) {
+        sound_->SoundUnload(&hitSE_);
+        sound_->Finalize(nullptr);
+        delete sound_;
+        sound_ = nullptr;
+    }
 }
 
 float Player::Dot(const Vector3& v1, const Vector3& v2)
