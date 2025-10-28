@@ -51,14 +51,13 @@
 #include "Stage/StageLogic.h"
 // #include "ScoreBumper.h"
 #include "Coin.h"
+#include "ScoreUI.h"
 #include "Skydome.h"
 #include "WarpGate.h"
 // シーン管理
 #include "GameClearScene.h"
 #include "SceneManager.h"
 #include "StageSelectScene.h"
-
-
 
 class Fade;
 
@@ -70,12 +69,6 @@ public:
     void Finalize() override;
 
 private:
-    enum class Phase {
-        kFadeIn,
-        kMain,
-        kFadeOut,
-    };
-
     SoundManager soundManager_;
     Object3dManager* object3dManager_ = nullptr;
     SpriteManager* spriteManager_ = nullptr;
@@ -90,8 +83,6 @@ private:
     Skydome skydome_;
     Bumper* bumper_;
     Goal* goal_;
-    std::vector<Coin*> coins_; // コイン配列
-    // ScoreBumper* scoreBumper_;
 
     Phase phase_ = Phase::kFadeIn;
     Fade* fade_ = nullptr;
@@ -99,6 +90,7 @@ private:
 
     WarpGate* warpA_ = nullptr;
     WarpGate* warpB_ = nullptr;
+    ScoreUI* scoreUI_ = nullptr;
 
 private:
     // カメラ設定用の定数

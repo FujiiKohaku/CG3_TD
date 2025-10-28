@@ -35,21 +35,4 @@ SceneManager::~SceneManager() {
 	// 最期のシーンの終了と解放
 	scene_->Finalize();
 	delete scene_;
-	scene_ = nullptr;
-
-	if (nextScene_) {
-		delete nextScene_;
-		nextScene_ = nullptr;
-	}
-}
-
-void SceneManager::SetNextScene(BaseScene* nextScene) {
-	if (!nextScene) { return; }
-	nextScene_ = nextScene;
-}
-
-void SceneManager::SetNextScene(BaseScene* nextScene, const SceneParam& param) {
-	if (!nextScene) { return; }
-	nextScene->SetParam(param);
-	nextScene_ = nextScene;
 }

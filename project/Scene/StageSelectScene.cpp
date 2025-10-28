@@ -1,7 +1,6 @@
 #include "StageSelectScene.h"
 #include "DirectXCommon.h"
 #include "GamePlayScene.h"
-#include "Fade.h"
 #include "Input.h"
 #include "ModelManager.h"
 #include "SceneManager.h"
@@ -135,4 +134,5 @@ void StageSelectScene::Finalize() {
 	camera_ = nullptr;
 
 	ModelManager::GetInstance()->Finalize();
+
 }

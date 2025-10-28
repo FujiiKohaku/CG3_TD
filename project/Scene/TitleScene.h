@@ -9,6 +9,12 @@
 
 class Fade;
 
+enum class Phase {
+    kFadeIn,
+    kMain,
+    kFadeOut,
+};
+
 class TitleScene : public BaseScene {
 public:
     void Initialize() override;
@@ -17,12 +23,6 @@ public:
     void Finalize() override;
 
 private:
-    enum class Phase {
-        kFadeIn,
-        kMain,
-        kFadeOut,
-    };
-
     Object3d* logoObject_ = nullptr; // ロゴ3Dオブジェクト
     Object3d* backGround_ = nullptr; // 背景
     Object3d* plane_ = nullptr; // 背景

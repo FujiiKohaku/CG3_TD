@@ -1,11 +1,11 @@
 #include "GamePlayScene.h"
 #include "GameClearScene.h"
 #include "Input.h"
-#include "Fade.h"
 #include "Utility.h"
 #include "Stage/StageFactory.h"
 #include <filesystem>
 #include <numbers>
+
 
 void GamePlayScene::Initialize() {
 
@@ -119,6 +119,7 @@ void GamePlayScene::Initialize() {
 	stage_->SetPlayer(pendulumPlayer_);
 	stage_->Initialize();
 
+
 #ifdef _DEBUG
 	// GPUデバッグ設定
 	Microsoft::WRL::ComPtr<ID3D12InfoQueue> infoQueue = nullptr;
@@ -170,16 +171,19 @@ void GamePlayScene::Update(Input* input) {
 
 		ImGui::End();
 
-		// ==============================
-		//  更新処理（Update）
-		// ==============================
-		keys = input->GetKeys();
-		preKeys = input->GetPreKeys();
+    ImGui::Begin("Debug Info");
+    ImGui::Text("Stage: %d", stageNo_);
+    if (pendulumPlayer_) {
+        ImGui::Text("Score: %d", pendulumPlayer_->GetPoint());
+    }
+    ImGui::End();
+ 
+    keys = input->GetKeys();
+preKeys = input->GetPreKeys();
 
-		// 振り子プレイヤーの更新処理
-		pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f, input);
-
-		// 各3Dオブジェクトの更新
+    if (pendulumPlayer_) {
+        pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f, input);
+    }
 
 		camera_->Update();
 		skydome_.Update();
@@ -190,10 +194,6 @@ void GamePlayScene::Update(Input* input) {
 			warpB_->Update();
 			warpA_->CheckAndWarp(pendulumPlayer_);
 			warpB_->CheckAndWarp(pendulumPlayer_);
-		}
-
-		if (pendulumPlayer_) {
-			pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f, input);
 		}
 
 		stage_->SetContext(object3dManager_);
@@ -259,12 +259,16 @@ void GamePlayScene::Draw() {
 	  // ===============================
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
 
-	// ----- 描画終了処理 -----
-	GetDx()->PostDraw();
-
-	// コマンドリスト状態確認ログ
-	Logger::Log("CommandList state check before Close()");
+    // ===============================
+    // ImGuiデバッグ表示（共通）
+    // ===============================
+    ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
+    GetDx()->PostDraw();
+  
+  // コマンドリスト状態確認ログ
+Logger::Log("CommandList state check before Close()");
 }
+
 
 void GamePlayScene::Finalize() {
 
