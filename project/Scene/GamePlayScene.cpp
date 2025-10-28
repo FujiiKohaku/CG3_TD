@@ -7,7 +7,6 @@
 #include <filesystem>
 #include <numbers>
 
-
 void GamePlayScene::Initialize()
 {
 
@@ -47,7 +46,8 @@ void GamePlayScene::Initialize()
     ModelManager::GetInstance()->LoadModel("PlayerBall.obj");
     ModelManager::GetInstance()->LoadModel("cube.obj");
     ModelManager::GetInstance()->LoadModel("Coin.obj");
-
+    ModelManager::GetInstance()->LoadModel("warp.obj");
+     ModelManager::GetInstance() -> LoadModel("bamper.obj");
     // =============================
     // サウンド設定
     // =============================
@@ -59,7 +59,7 @@ void GamePlayScene::Initialize()
 
     // バンパー生成
     bumper_ = new Bumper();
-    bumper_->Initialize(kBumperPos, kBumperRadius, kBumperBounce, object3dManager_, "PlayerBall.obj");
+    bumper_->Initialize(kBumperPos, kBumperRadius, kBumperBounce, object3dManager_, "bamper.obj");
 
     // ゴール
     goal_ = new Goal();
@@ -75,19 +75,19 @@ void GamePlayScene::Initialize()
     skydome_.Initialize(object3dManager_);
 
     // バンパー
-    //bumper_ = new Bumper();
-    //bumper_->Initialize({ 5.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
+    // bumper_ = new Bumper();
+    // bumper_->Initialize({ 5.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
 
     // ゴール
-    //goal_ = new Goal();
-    //goal_->Initialize({ 15.0f, 0.0f, 0.0f }, 3.0f, object3dManager_, "PlayerBall.obj");
+    // goal_ = new Goal();
+    // goal_->Initialize({ 15.0f, 0.0f, 0.0f }, 3.0f, object3dManager_, "PlayerBall.obj");
 
     // プレイヤー
-    //pendulumPlayer_ = new Player();
-    //pendulumPlayer_->Initialize(1000, object3dManager_, "PlayerBall.obj");
-    //pendulumPlayer_->SetBumper(bumper_);
+    // pendulumPlayer_ = new Player();
+    // pendulumPlayer_->Initialize(1000, object3dManager_, "PlayerBall.obj");
+    // pendulumPlayer_->SetBumper(bumper_);
 
-    //pendulumPlayer_->SetGoal(goal_);
+    // pendulumPlayer_->SetGoal(goal_);
 
     // フェードの初期化
     fade_ = new Fade();
@@ -144,7 +144,7 @@ void GamePlayScene::Update(Input* input)
     ImGui_ImplDX12_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
-   
+
     if (phase_ == Phase::kMain) {
         int score = pendulumPlayer_->GetPoint(); // 例：プレイヤーのスコア取得
         scoreUI_->Update(score);

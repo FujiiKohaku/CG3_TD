@@ -116,6 +116,5 @@ public:
 
 private:
     Object3d* wallObjects_[4];
-
     Effect* effect_;
 };

@@ -28,6 +28,6 @@ private:
     const Vector3 kWarpAPosition = { -10.0f, 3.0f, 0.0f }; // ワープAの位置
     const Vector3 kWarpBPosition = { 10.0f, 3.0f, 0.0f }; // ワープBの位置
     const float kWarpScale = 1.0f; // スケール
-    const std::string kWarpModel = "plane.obj"; // 使用モデル名
+    const std::string kWarpModel = "warp.obj"; // 使用モデル名
 };
 
