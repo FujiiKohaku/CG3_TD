@@ -11,10 +11,10 @@ class Pendulum {
     float radius_ = 0.05f;
     float angularVelocity_ = 0.0f;
     float angularAcceleration_ = 0.0f;
-    float angularVelocityMax_ = 18.0f;
+    float angularVelocityMax_ = 15.0f;
     unsigned int color_ = 0xFFFFFFFF;
     int strokeCount_ = 0;
-    float kickStrength_ = 0.75f;
+    float kickStrength_ = 1.0f;
     // Vector3 anchorAtCut;// 切断時のアンカー位置（基準）
 
     // 打球位置の履歴管理

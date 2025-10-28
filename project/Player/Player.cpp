@@ -161,24 +161,6 @@ void Player::Initialize(int clearPoint, Object3dManager* object3dManager, const 
 void Player::Update(const char* keys, const char* preKeys, float deltaTime, Input* input)
 {
     if (!pendulum_->GetIsCut()) {
-
-        if (!isReleaceTimerStarted_) {
-
-            // 振り子開始と同時にフラグを切り替え
-            if (input->IsKeyTriggered(DIK_SPACE)) {
-                isReleaceTimerStarted_ = true;
-            }
-
-        } else {
-
-            --releaseTimer_;
-
-            if (releaseTimer_ < 0) {
-                isReleaced_ = true;
-                releaseTimer_ = 0;
-            }
-        }
-
         // 振り子モード
         pendulum_->Update(keys, preKeys, deltaTime, input);
 
@@ -187,7 +169,7 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
         position_.y = pendulum_->GetAnchor().y - cosf(pendulum_->GetAngle()) * pendulum_->GetLength();
         position_.z = pendulum_->GetAnchor().z;
 
-        if (isReleaced_) {
+        if (input->IsKeyTriggered(DIK_R)) {
             // 切断処理
             pendulum_->SetPrevAnchorPos(pendulum_->GetLastAnchor());
             pendulum_->SetLastAnchorPos(pendulum_->GetAnchor());
@@ -200,7 +182,6 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
 
             pendulum_->SetIsCut(true);
         }
-
     } else {
         // 慣性モード
         Vector3 prevPos = position_;
@@ -279,9 +260,6 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
             }
             pendulum_->Reset();
             pendulum_->SetIsCut(false);
-            releaseTimer_ = 600;
-            isReleaced_ = false;
-            isReleaceTimerStarted_ = false;
         }
     }
 
