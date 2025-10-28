@@ -27,6 +27,9 @@ class Player {
     int point_ = 0;
     int clearPoint_ = 0;
     int isGoal_ = false;
+    int releaseTimer_ = 600;
+    int isReleaced_ = false;
+    int isReleaceTimerStarted_ = false;
 
     Pendulum* pendulum_ = nullptr;
     Object3d* object3d_ = nullptr;

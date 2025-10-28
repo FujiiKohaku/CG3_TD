@@ -130,7 +130,7 @@ void StageSelectScene::Finalize() {
 	cubes_.clear();
 	delete object3dManager_;
 	object3dManager_ = nullptr;
-
+	
 	delete camera_;
 	camera_ = nullptr;
 

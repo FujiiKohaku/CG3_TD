@@ -87,19 +87,19 @@ void GamePlayScene::Initialize()
     skydome_.Initialize(object3dManager_);
 
     // バンパー
-    bumper_ = new Bumper();
-    bumper_->Initialize({ 5.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
+    //bumper_ = new Bumper();
+    //bumper_->Initialize({ 5.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
 
     // ゴール
-    goal_ = new Goal();
-    goal_->Initialize({ 15.0f, 0.0f, 0.0f }, 3.0f, object3dManager_, "PlayerBall.obj");
+    //goal_ = new Goal();
+    //goal_->Initialize({ 15.0f, 0.0f, 0.0f }, 3.0f, object3dManager_, "PlayerBall.obj");
 
     // プレイヤー
-    pendulumPlayer_ = new Player();
-    pendulumPlayer_->Initialize(1000, object3dManager_, "PlayerBall.obj");
-    pendulumPlayer_->SetBumper(bumper_);
+    //pendulumPlayer_ = new Player();
+    //pendulumPlayer_->Initialize(1000, object3dManager_, "PlayerBall.obj");
+    //pendulumPlayer_->SetBumper(bumper_);
 
-    pendulumPlayer_->SetGoal(goal_);
+    //pendulumPlayer_->SetGoal(goal_);
 
     // フェードの初期化
     fade_ = new Fade();
@@ -271,8 +271,9 @@ void GamePlayScene::Draw()
 
 void GamePlayScene::Finalize()
 {
-
     // 各オブジェクトを安全に削除
+    delete camera_;
+    camera_ = nullptr;
     delete fade_;
     fade_ = nullptr;
     delete goal_;
@@ -281,8 +282,6 @@ void GamePlayScene::Finalize()
     pendulumPlayer_ = nullptr;
     delete bumper_;
     bumper_ = nullptr;
-    delete goal_;
-    goal_ = nullptr;
     delete warpA_;
     warpA_ = nullptr;
     delete warpB_;
@@ -294,6 +293,12 @@ void GamePlayScene::Finalize()
     delete scoreUI_;
     scoreUI_ = nullptr;
     sprites_.clear();
+
+    if (stage_) {
+        stage_->Finalize();
+        //delete stage_;
+        stage_ = nullptr;
+    }
 
     // ImGui破棄
     ImGui_ImplDX12_Shutdown();
