@@ -13,7 +13,7 @@
 #include "Struct.h"
 #include "algorithm"
 #include "cmath"
-
+#include "ScoreBumper.h"
 class Player {
 
     Vector3 position_ = { 0.0f, 0.2f, 0.0f };
@@ -113,8 +113,10 @@ public:
     void DrawWalls();
     void SetPosition(Vector3 position) { position_ = position; }
     float warpCooldown_ = 0.0f;
+    void SetScoreBumper(ScoreBumper* scoreBumper) { scoreBumper_ = scoreBumper; }
 
 private:
     Object3d* wallObjects_[4];
     Effect* effect_;
+    ScoreBumper* scoreBumper_;
 };

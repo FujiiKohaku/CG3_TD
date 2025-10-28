@@ -1,9 +1,9 @@
 #include "ScoreBumper.h"
-
-void ScoreBumper::Initialize(Vector3 position, float radius, float bounce, Object3dManager* object3dManager, const std::string& modelName)
+void ScoreBumper::Initialize(Vector3 position, float scale, float bounce, Object3dManager* object3dManager, const std::string& modelName)
 {
     position_ = position;
-    radius_ = radius;
+    scale_ = scale;
+    radius_ *= scale_ / 2.0f;
     bounce_ = bounce;
     object3d_ = new Object3d;
     object3d_->Initialize(object3dManager);
@@ -21,6 +21,7 @@ void ScoreBumper::Draw()
     object3d_->SetTranslate(position_);
     object3d_->Update();
     object3d_->Draw();
+    object3d_->SetScale({ scale_, scale_, scale_ });
 }
 
 float ScoreBumper::Length(const Vector3& v)

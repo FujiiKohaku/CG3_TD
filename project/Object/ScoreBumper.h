@@ -7,11 +7,12 @@ class ScoreBumper {
 public:
     ~ScoreBumper();
     Vector3 position_ = { 0.0f, 0.0f, 0.0f };
-    float radius_ = 0.0f;
+    float radius_ = 1.0f;
     float bounce_ = 1.0f;
     Object3d* object3d_ = nullptr;
 
     Sphere sphre_;
+    float scale_ = 1.0f;
 
 public:
     void Initialize(Vector3 position, float radius, float bounce, Object3dManager* object3dManager, const std::string& modelName);
