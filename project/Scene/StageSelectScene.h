@@ -3,8 +3,8 @@
 #include "Camera.h"
 #include "Object3d.h"
 #include "Object3dManager.h"
+#include "SoundManager.h"
 #include <vector>
-
 class Fade;
 
 class StageSelectScene : public BaseScene {
@@ -31,4 +31,6 @@ private:
     std::vector<float> scaleTimers_;
     Object3d* allow_;
     Object3d* allow2_;
+    SoundManager* sound_ = nullptr;
+    SoundData selectSe_ {};
 };

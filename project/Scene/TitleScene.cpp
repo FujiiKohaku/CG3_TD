@@ -54,6 +54,12 @@ void TitleScene::Initialize()
     // sprite_->SetSize({ 100.0f, 100.0f }); // 大きめに
 
     //----------------------------------------
+    //  サウンド
+    //----------------------------------------
+    sound_ = new SoundManager();
+    sound_->Initialize();
+    selectSe_ = sound_->SoundLoadWave("resources/select.wav");
+    //----------------------------------------
     // モデル読み込み
     //----------------------------------------
     ModelManager::GetInstance()->LoadModel("plane.obj");
@@ -132,6 +138,7 @@ void TitleScene::Update(Input* input)
     case Phase::kMain:
         if (input->IsKeyTriggered(DIK_SPACE) || input->IsTriggerB()) {
             // GetSceneManager()->SetNextScene(new StageSelectScene());
+            sound_->SoundPlayWave(selectSe_, false);
             fade_->Start(Status::FadeOut, 0.25f);
             phase_ = Phase::kFadeOut;
         }
@@ -219,6 +226,15 @@ void TitleScene::Finalize()
     delete sprite_;
     delete spriteManager_;
     delete spacelogo_;
+
+    // ===== サウンド解放 =====
+    if (sound_) {
+        sound_->SoundUnload(&selectSe_);
+        sound_->Finalize(nullptr);
+        delete sound_;
+        sound_ = nullptr;
+    }
+
     ModelManager::GetInstance()->Finalize();
     TextureManager::GetInstance()->Finalize();
 }

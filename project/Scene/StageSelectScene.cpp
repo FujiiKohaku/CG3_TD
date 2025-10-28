@@ -53,6 +53,13 @@ void StageSelectScene::Initialize()
     allow2_->SetTranslate({ -6.0f, -2.0f, 0.0f }); // 位置も反対側に
     allow2_->SetScale({ 1.0f, 1.0f, 1.0f });
     allow2_->SetRotate({ 0.0f, -std::numbers::pi_v<float> / 2.0f, 0.0f });
+
+    //----------------------------------------
+    //  サウンド
+    //----------------------------------------
+    sound_ = new SoundManager();
+    sound_->Initialize();
+    selectSe_ = sound_->SoundLoadWave("resources/select.wav");
 }
 
 void StageSelectScene::Update(Input* input)
@@ -78,6 +85,7 @@ void StageSelectScene::Update(Input* input)
         }
 
         if (input->IsKeyTriggered(DIK_SPACE) || input->IsTriggerB()) {
+            sound_->SoundPlayWave(selectSe_, false);
             fade_->Start(Status::FadeOut, 0.25f);
             phase_ = Phase::kFadeOut;
         }
@@ -159,5 +167,12 @@ void StageSelectScene::Finalize()
     camera_ = nullptr;
     delete allow_;
     allow_ = nullptr;
+    // ===== サウンド解放 =====
+    if (sound_) {
+        sound_->SoundUnload(&selectSe_);
+        sound_->Finalize(nullptr);
+        delete sound_;
+        sound_ = nullptr;
+    }
     ModelManager::GetInstance()->Finalize();
 }

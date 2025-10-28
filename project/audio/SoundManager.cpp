@@ -21,8 +21,15 @@ void SoundManager::Initialize()
 
 void SoundManager::Finalize(SoundData* soundData)
 {
-    xAudio2.Reset();
-    SoundUnload(soundData);
+    // もしまだ存在してたらリセット
+    if (xAudio2) {
+        xAudio2.Reset();
+    }
+
+    // soundData が nullptr ならスキップ
+    if (soundData) {
+        SoundUnload(soundData);
+    }
 }
 
 // チャンクヘッダ
@@ -105,22 +112,29 @@ void SoundManager::SoundUnload(SoundData* soundData)
     soundData->wfex = {};
 }
 
-void SoundManager::SoundPlayWave(const SoundData& soundData)
+void SoundManager::SoundPlayWave(const SoundData& soundData, bool loop)
 {
     HRESULT result;
 
-    // 波形フォーマットをもとにsourceVoiceの生成
+    // ソースボイス作成
     IXAudio2SourceVoice* pSourceVoice = nullptr;
     result = xAudio2->CreateSourceVoice(&pSourceVoice, &soundData.wfex);
     assert(SUCCEEDED(result));
 
-    // 再生する波形データの設定
+    // 再生バッファ設定
     XAUDIO2_BUFFER buf {};
     buf.pAudioData = soundData.pBuffer;
     buf.AudioBytes = soundData.bufferSize;
     buf.Flags = XAUDIO2_END_OF_STREAM;
 
-    // 波形データの再生
+    // 🔁ループ設定
+    if (loop) {
+        buf.LoopCount = XAUDIO2_LOOP_INFINITE; // 無限ループ
+    }
+
+    // 再生開始
     result = pSourceVoice->SubmitSourceBuffer(&buf);
+    assert(SUCCEEDED(result));
     result = pSourceVoice->Start();
+    assert(SUCCEEDED(result));
 }

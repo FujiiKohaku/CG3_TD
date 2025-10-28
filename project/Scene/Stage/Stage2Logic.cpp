@@ -16,39 +16,55 @@ void Stage2Logic::Initialize()
             coins_.push_back(coin);
         }
     }
+
+    //----------------------------------------
+    //  サウンド
+    //----------------------------------------
+    sound_ = new SoundManager();
+    sound_->Initialize();
+    coin_ = sound_->SoundLoadWave("resources/coin.wav");
 }
 
-void Stage2Logic::Update() {
-	// プレイヤーの球の情報を取得
-	Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
-	// pendulum が「切れていない」＝まだ振り子で揺れている間はコインを取得できない
-	if (pendulumPlayer_->GetPendulum()->GetIsCut()) {
-		// 慣性移動中のみコイン判定を行う
-		for (auto& coin : coins_) {
-			coin->Update();
-			if (coin->IsCollision(playerSphere)) {
-				pendulumPlayer_->AddScore(coin->GetScore());
-			}
-		}
-	} else {
-		// まだロープでつながっている間（スイング中）はコインだけ更新しておく
-		for (auto& coin : coins_) {
-			coin->Update();
-		}
-	}
-	
+void Stage2Logic::Update()
+{
+    // プレイヤーの球の情報を取得
+    Sphere playerSphere = { pendulumPlayer_->GetPosition(), pendulumPlayer_->GetRadius() };
+    // pendulum が「切れていない」＝まだ振り子で揺れている間はコインを取得できない
+    if (pendulumPlayer_->GetPendulum()->GetIsCut()) {
+        // 慣性移動中のみコイン判定を行う
+        for (auto& coin : coins_) {
+            coin->Update();
+            if (coin->IsCollision(playerSphere)) {
+                pendulumPlayer_->AddScore(coin->GetScore());
+                sound_->SoundPlayWave(coin_, false);
+            }
+        }
+    } else {
+        // まだロープでつながっている間（スイング中）はコインだけ更新しておく
+        for (auto& coin : coins_) {
+            coin->Update();
+        }
+    }
 }
 
-void Stage2Logic::Draw() {
-	for (auto& coin : coins_) {
-		coin->Draw();
-	}
+void Stage2Logic::Draw()
+{
+    for (auto& coin : coins_) {
+        coin->Draw();
+    }
 }
 
-void Stage2Logic::Finalize() {
-	for (auto& coin : coins_) {
-		delete coin;
-	}
-	coins_.clear();
+void Stage2Logic::Finalize()
+{
+    for (auto& coin : coins_) {
+        delete coin;
+    }
+    // ===== サウンド解放 =====
+    if (sound_) {
+        sound_->SoundUnload(&coin_);
+        sound_->Finalize(nullptr);
+        delete sound_;
+        sound_ = nullptr;
+    }
+    coins_.clear();
 }
-

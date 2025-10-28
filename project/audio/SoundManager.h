@@ -36,7 +36,7 @@ public:
     // 音声データをメモリから解放
     void SoundUnload(SoundData* soundData);
     // 音声を再生
-    void SoundPlayWave(const SoundData& soundData);
+    void SoundPlayWave(const SoundData& soundData, bool loop);
 
 private:
     Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
