@@ -80,7 +80,7 @@
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;Skydome;Object;Effect;fade</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;Skydome;Object;Effect;fade;Stage</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -210,8 +210,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Scene\StageSelectScene.cpp" />
     <ClCompile Include="Object\ScoreBumper.cpp" />
     <ClCompile Include="Skydome\Skydome.cpp" />
-    <ClCompile Include="Stage1Logic.cpp" />
-    <ClCompile Include="StageFactory.cpp" />
+    <ClCompile Include="Scene\Stage\Stage1Logic.cpp" />
+    <ClCompile Include="Scene\Stage\StageFactory.cpp" />
+    <ClCompile Include="Scene\Stage\Stage2Logic.cpp" />
     <ClCompile Include="StringUtility\StringUtility.cpp" />
     <ClCompile Include="TextureManager\TextureManager.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
@@ -284,14 +285,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="3D\Model.h" />
     <ClInclude Include="3D\ModelCommon.h" />
     <ClInclude Include="3D\ModelManager.h" />
-    <ClInclude Include="Scene\SceneParam.h" />
-    <ClInclude Include="Scene\StageId.h" />
+    <ClInclude Include="Scene\Stage\SceneParam.h" />
+    <ClInclude Include="Scene\Stage\StageId.h" />
     <ClInclude Include="Scene\StageSelectScene.h" />
     <ClInclude Include="Object\ScoreBumper.h" />
     <ClInclude Include="Skydome\Skydome.h" />
-    <ClInclude Include="Scene\StageLogic.h" />
-    <ClInclude Include="Stage1Logic.h" />
-    <ClInclude Include="StageFactory.h" />
+    <ClInclude Include="Scene\Stage\StageLogic.h" />
+    <ClInclude Include="Scene\Stage\Stage1Logic.h" />
+    <ClInclude Include="Scene\Stage\StageFactory.h" />
+    <ClInclude Include="Scene\Stage\Stage2Logic.h" />
     <ClInclude Include="StringUtility\StringUtility.h" />
     <ClInclude Include="TextureManager\TextureManager.h" />
     <ClInclude Include="Scene\TitleScene.h" />
