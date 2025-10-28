@@ -12,7 +12,8 @@ public:
 	void Draw();
 	~SceneManager();
 
-	void SetNextScene(BaseScene* nextScene) { nextScene_ = nextScene; }
+	void SetNextScene(BaseScene* nextScene);
+	void SetNextScene(BaseScene* nextScene, SceneParam param);
 	void SetSystem(WinApp* wa, DirectXCommon* dx) { winApp_ = wa; dxCommon_ = dx; }
 
 private:
@@ -24,5 +25,6 @@ private:
 	// 借り物
 	WinApp* winApp_ = nullptr;
 	DirectXCommon* dxCommon_ = nullptr;
+	SceneParam param_;
 };
 

@@ -22,10 +22,13 @@ protected:
 	SceneManager* GetSceneManager() const { return sceneManager_; }
     WinApp* GetWinApp() const { return winApp_; }
     DirectXCommon* GetDx() const { return dxCommon_; }
+    const SceneParam& GetParam()const { return param_; }
+
 
 private:
 	SceneManager* sceneManager_ = nullptr;
     WinApp* winApp_ = nullptr;
 	DirectXCommon* dxCommon_ = nullptr;
+    SceneParam param_;
 };
 

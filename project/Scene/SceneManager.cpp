@@ -36,3 +36,12 @@ SceneManager::~SceneManager() {
 	scene_->Finalize();
 	delete scene_;
 }
+
+void SceneManager::SetNextScene(BaseScene* nextScene) {
+	nextScene_ = nextScene;
+}
+
+void SceneManager::SetNextScene(BaseScene* nextScene, SceneParam param) {
+	nextScene_ = nextScene; 
+	param_ = param;
+}
