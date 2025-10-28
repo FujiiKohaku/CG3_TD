@@ -69,6 +69,12 @@ public:
     void Finalize() override;
 
 private:
+    enum class Phase {
+        kFadeIn,
+        kMain,
+        kFadeOut,
+    };
+
     SoundManager soundManager_;
     Object3dManager* object3dManager_ = nullptr;
     SpriteManager* spriteManager_ = nullptr;

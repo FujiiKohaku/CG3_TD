@@ -5,6 +5,7 @@
 #include "ModelManager.h"
 #include "SceneManager.h"
 #include "Stage/SceneParam.h"
+#include "Fade.h"
 #include <cmath>
 #include <numbers>
 

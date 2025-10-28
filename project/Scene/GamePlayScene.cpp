@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "Utility.h"
 #include "Stage/StageFactory.h"
+#include "Fade.h"
 #include <filesystem>
 #include <numbers>
 
@@ -90,7 +91,7 @@ void GamePlayScene::Initialize() {
 	bumper_ = new Bumper();
 	bumper_->Initialize({ 5.0f, 5.0f, 0.0f }, 5.0f, 1.2f, object3dManager_, "PlayerBall.obj");
 
-	
+
 
 	// ゴール
 	goal_ = new Goal();
@@ -166,24 +167,19 @@ void GamePlayScene::Update(Input* input) {
 		// ==============================
 		// ImGui デバッグ表示
 		// ==============================
-		ImGui::Begin("Player Debug");
-		ImGui::Text("Score: %d", pendulumPlayer_->GetPoint()); // スコア表示
 
+		ImGui::Begin("Debug Info");
+		if (pendulumPlayer_) {
+			ImGui::Text("Score: %d", pendulumPlayer_->GetPoint());
+		}
 		ImGui::End();
 
-    ImGui::Begin("Debug Info");
-    ImGui::Text("Stage: %d", stageNo_);
-    if (pendulumPlayer_) {
-        ImGui::Text("Score: %d", pendulumPlayer_->GetPoint());
-    }
-    ImGui::End();
- 
-    keys = input->GetKeys();
-preKeys = input->GetPreKeys();
+		keys = input->GetKeys();
+		preKeys = input->GetPreKeys();
 
-    if (pendulumPlayer_) {
-        pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f, input);
-    }
+		if (pendulumPlayer_) {
+			pendulumPlayer_->Update(reinterpret_cast<const char*>(keys), reinterpret_cast<const char*>(preKeys), 1.0f / 60.0f, input);
+		}
 
 		camera_->Update();
 		skydome_.Update();
@@ -206,7 +202,7 @@ preKeys = input->GetPreKeys();
 			if (fade_) { fade_->Start(Status::FadeOut, 0.25f); }
 			phase_ = Phase::kFadeOut;
 		}
-		
+
 	}
 
 	ImGui::Render(); // ImGuiの内部コマンドを生成（描画直前に呼ぶ）
@@ -259,14 +255,14 @@ void GamePlayScene::Draw() {
 	  // ===============================
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
 
-    // ===============================
-    // ImGuiデバッグ表示（共通）
-    // ===============================
-    ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
-    GetDx()->PostDraw();
-  
-  // コマンドリスト状態確認ログ
-Logger::Log("CommandList state check before Close()");
+	// ===============================
+	// ImGuiデバッグ表示（共通）
+	// ===============================
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
+	GetDx()->PostDraw();
+
+	// コマンドリスト状態確認ログ
+	Logger::Log("CommandList state check before Close()");
 }
 
 
