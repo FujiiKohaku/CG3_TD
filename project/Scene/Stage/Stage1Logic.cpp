@@ -1,4 +1,4 @@
-#include "Stage1Logic.h"
+ï»¿#include "Stage1Logic.h"
 #include "WarpGate.h"
 
 void Stage1Logic::Initialize() {
@@ -8,13 +8,13 @@ void Stage1Logic::Initialize() {
 	warpB_ = new WarpGate();
 	warpB_->Initialize(kWarpBPosition, kWarpScale, object3dManager_, kWarpModel);
 
-	// ‚¨ŒÝ‚¢‚ðƒŠƒ“ƒNiƒyƒAÝ’èj
+	// ãŠäº’ã„ã‚’ãƒªãƒ³ã‚¯ï¼ˆãƒšã‚¢è¨­å®šï¼‰
 	warpA_->SetPair(warpB_);
 	warpB_->SetPair(warpA_);
 }
 
 void Stage1Logic::Update() {
-	// ƒXƒe[ƒW1Fƒ[ƒvƒQ[ƒg{Šî–{ƒvƒŒƒC
+	// ã‚¹ãƒ†ãƒ¼ã‚¸1ï¼šãƒ¯ãƒ¼ãƒ—ã‚²ãƒ¼ãƒˆï¼‹åŸºæœ¬ãƒ—ãƒ¬ã‚¤
 	if (warpA_ && warpB_) {
 		warpA_->Update();
 		warpB_->Update();

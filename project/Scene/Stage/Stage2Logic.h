@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "StageLogic.h"
 
 #include <vector>
@@ -20,6 +20,6 @@ public:
 private:
     Object3dManager* object3dManager_ = nullptr;
     Player* pendulumPlayer_ = nullptr;
-    std::vector<Coin*> coins_; // ƒRƒCƒ“”z—ñ
+    std::vector<Coin*> coins_; // ã‚³ã‚¤ãƒ³é…åˆ—
 };
 

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "StageLogic.h"
 #include "Struct.h"
 #include <iostream>
@@ -23,11 +23,11 @@ private:
     WarpGate* warpB_ = nullptr;
 
     // -------------------------------------
-    // ƒ[ƒvƒQ[ƒgİ’è—p‚Ì’è”
+    // ãƒ¯ãƒ¼ãƒ—ã‚²ãƒ¼ãƒˆè¨­å®šç”¨ã®å®šæ•°
     // -------------------------------------
-    const Vector3 kWarpAPosition = { -10.0f, 3.0f, 0.0f }; // ƒ[ƒvA‚ÌˆÊ’u
-    const Vector3 kWarpBPosition = { 10.0f, 3.0f, 0.0f }; // ƒ[ƒvB‚ÌˆÊ’u
-    const float kWarpScale = 1.0f; // ƒXƒP[ƒ‹
-    const std::string kWarpModel = "plane.obj"; // g—pƒ‚ƒfƒ‹–¼
+    const Vector3 kWarpAPosition = { -10.0f, 3.0f, 0.0f }; // ãƒ¯ãƒ¼ãƒ—Aã®ä½ç½®
+    const Vector3 kWarpBPosition = { 10.0f, 3.0f, 0.0f }; // ãƒ¯ãƒ¼ãƒ—Bã®ä½ç½®
+    const float kWarpScale = 1.0f; // ã‚¹ã‚±ãƒ¼ãƒ«
+    const std::string kWarpModel = "plane.obj"; // ä½¿ç”¨ãƒ¢ãƒ‡ãƒ«å
 };
 
