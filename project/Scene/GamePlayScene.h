@@ -98,6 +98,8 @@ private:
     SoundManager* soundManager_;
     SoundData bgm_;
 
+    Sprite* sprite_;
+
 private:
     // カメラ設定用の定数
     const float kCameraDistance

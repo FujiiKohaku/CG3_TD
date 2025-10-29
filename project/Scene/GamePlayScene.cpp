@@ -20,15 +20,21 @@ void GamePlayScene::Initialize()
     // Texture / Sprite
     // =============================
     TextureManager::GetInstance()->Initialize(GetDx());
-    TextureManager::GetInstance()->LoadTexture("resources/uvChecker.png");
-
+    TextureManager::GetInstance()->LoadTexture("resources/setumei.png");
     spriteManager_ = new SpriteManager();
     spriteManager_->Initialize(GetDx());
 
+    sprite_ = new Sprite();
+    sprite_->Initialize(spriteManager_, "resources/setumei.png");
+
+    // 正方形にする（縦横同じサイズ）
+    sprite_->SetSize({ 300.0f, 300.0f });
+    sprite_->SetPosition({ 0.0f, 120.0f });
     // =============================
     // Object3D Manager / Camera
     // =============================
-    object3dManager_ = new Object3dManager();
+    object3dManager_
+        = new Object3dManager();
     object3dManager_->Initialize(GetDx());
     // カメラ生成
     camera_ = new Camera();
@@ -178,7 +184,7 @@ void GamePlayScene::Update(Input* input)
 
         camera_->Update();
         skydome_.Update();
-
+        sprite_->Update();
         stage_->SetContext(object3dManager_);
         stage_->SetPlayer(pendulumPlayer_);
         stage_->Update();
@@ -238,7 +244,7 @@ void GamePlayScene::Draw()
     // ==============================
     spriteManager_->PreDraw(); // 2D描画の準備（PSO切り替え）
     scoreUI_->Draw(); // スコアUIを描画
-
+    sprite_->Draw();
     // フェードもSpriteを使っている場合はここ！
     if (fade_) {
         fade_->Draw();
@@ -277,7 +283,7 @@ void GamePlayScene::Finalize()
     delete scoreUI_;
     scoreUI_ = nullptr;
     sprites_.clear();
-
+    delete sprite_;
     // ImGui破棄
     ImGui_ImplDX12_Shutdown();
     ImGui_ImplWin32_Shutdown();
