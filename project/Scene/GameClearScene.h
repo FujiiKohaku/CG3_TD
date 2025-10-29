@@ -5,6 +5,7 @@
 #include "ModelManager.h"
 #include "Object3d.h"
 #include "Object3dManager.h"
+#include "Soundmanager.h"
 #include "Sprite.h"
 #include "SpriteManager.h"
 #include "TextureManager.h"
@@ -27,4 +28,7 @@ private:
     Model* planeModel_ = nullptr;
     Object3d* spacelogo_ = nullptr;
     Model* spaceLogpModel_ = nullptr;
+
+    SoundManager* soundManager_ = nullptr;
+    SoundData bgm_ {};
 };

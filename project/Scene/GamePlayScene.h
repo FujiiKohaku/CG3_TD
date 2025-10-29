@@ -74,14 +74,12 @@ private:
         kFadeOut,
     };
 
-    SoundManager soundManager_;
     Object3dManager* object3dManager_ = nullptr;
     SpriteManager* spriteManager_ = nullptr;
     DebugCamera debugCamera_;
     ModelCommon modelCommon_;
     std::vector<Sprite*> sprites_;
     Object3d object3d_, player2_, enemy_;
-    SoundData bgm;
     bool isEnd = false;
     Player* pendulumPlayer_;
     Camera* camera_;
@@ -97,9 +95,13 @@ private:
 
     ScoreBumper* scoreBumper_ = nullptr;
 
+    SoundManager* soundManager_;
+    SoundData bgm_;
+
 private:
     // カメラ設定用の定数
-    const float kCameraDistance = 100.0f; // プレイヤーからの距離
+    const float kCameraDistance
+        = 100.0f; // プレイヤーからの距離
     const Vector3 kCameraInitPos = { 0.0f, 0.0f, -kCameraDistance };
     const Vector3 kCameraInitRot = { 0.0f, 0.0f, 0.0f };
     // バンパー設定用の定数

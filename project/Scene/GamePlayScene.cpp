@@ -47,13 +47,16 @@ void GamePlayScene::Initialize()
     ModelManager::GetInstance()->LoadModel("cube.obj");
     ModelManager::GetInstance()->LoadModel("Coin.obj");
     ModelManager::GetInstance()->LoadModel("warp.obj");
-     ModelManager::GetInstance() -> LoadModel("bamper.obj");
+    ModelManager::GetInstance()->LoadModel("bamper.obj");
     // =============================
     // サウンド設定
     // =============================
-    soundManager_.Initialize();
-    bgm = soundManager_.SoundLoadWave("Resources/BGM.wav");
 
+    soundManager_ = new SoundManager();
+    soundManager_->Initialize();
+    bgm_ = soundManager_->SoundLoadWave("Resources/play.wav");
+
+    soundManager_->SoundPlayWave(bgm_, true);
     // 背景
     skydome_.Initialize(object3dManager_);
 
@@ -181,7 +184,6 @@ void GamePlayScene::Update(Input* input)
         stage_->Update();
         scoreBumper_->Update();
 
-  
         // プレイヤーがゴールしたらシーンを切り替える
         if (pendulumPlayer_->GetIsGoal()) {
 
@@ -286,7 +288,7 @@ void GamePlayScene::Finalize()
     TextureManager::GetInstance()->Finalize();
 
     // サウンド解放
-    soundManager_.Finalize(&bgm);
+    soundManager_->Finalize(&bgm_);
 
     // GPU待機
     GetDx()->WaitForGPU();

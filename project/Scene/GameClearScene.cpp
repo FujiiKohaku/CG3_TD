@@ -5,6 +5,7 @@
 
 void GameClearScene::Initialize()
 {
+
     //----------------------------------------
     //  TextureManager 初期化（最優先）
     //----------------------------------------
@@ -69,6 +70,17 @@ void GameClearScene::Initialize()
     spacelogo_->SetTranslate({ -2.0f, -1.0f, 0.0f });
     spacelogo_->SetScale({ 0.5f, 0.5f, 0.5f });
     spacelogo_->SetRotate({ std::numbers::pi_v<float> / 2.0f, 0.0f, 0.0f });
+
+    //----------------------------------------
+    // サウンド
+    //----------------------------------------
+    soundManager_ = new SoundManager();
+
+    soundManager_->Initialize();
+
+    bgm_ = soundManager_->SoundLoadWave("Resources/ed.wav");
+
+    soundManager_->SoundPlayWave(bgm_, true);
 }
 
 void GameClearScene::Update(Input* input)

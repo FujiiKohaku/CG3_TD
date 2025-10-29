@@ -50,4 +50,5 @@ private:
     // サウンド
     SoundManager* sound_ = nullptr;
     SoundData selectSe_ {}; // 初期化しておく
+    SoundData Bgm_ {}; // 初期化しておく
 };

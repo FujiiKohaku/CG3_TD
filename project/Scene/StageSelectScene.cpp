@@ -60,6 +60,8 @@ void StageSelectScene::Initialize()
     sound_ = new SoundManager();
     sound_->Initialize();
     selectSe_ = sound_->SoundLoadWave("resources/select.wav");
+    selectBgm_ = sound_->SoundLoadWave("resources/selectBGM.wav");
+    sound_->SoundPlayWave(selectBgm_, true);
 }
 
 void StageSelectScene::Update(Input* input)
