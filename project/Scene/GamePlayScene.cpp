@@ -63,8 +63,6 @@ void GamePlayScene::Initialize()
     bgm_ = soundManager_->SoundLoadWave("Resources/play.wav");
 
     soundManager_->SoundPlayWave(bgm_, true);
-    // 背景
-    skydome_.Initialize(object3dManager_);
 
     // バンパー生成
     bumper_ = new Bumper();
