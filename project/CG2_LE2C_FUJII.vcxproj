@@ -214,6 +214,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Scene\Stage\Stage1Logic.cpp" />
     <ClCompile Include="Scene\Stage\StageFactory.cpp" />
     <ClCompile Include="Scene\Stage\Stage2Logic.cpp" />
+    <ClCompile Include="Scene\Stage\Stage3Logic.cpp" />
     <ClCompile Include="StringUtility\StringUtility.cpp" />
     <ClCompile Include="TextureManager\TextureManager.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
@@ -296,6 +297,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Scene\Stage\Stage1Logic.h" />
     <ClInclude Include="Scene\Stage\StageFactory.h" />
     <ClInclude Include="Scene\Stage\Stage2Logic.h" />
+    <ClInclude Include="Scene\Stage\Stage3Logic.h" />
     <ClInclude Include="StringUtility\StringUtility.h" />
     <ClInclude Include="TextureManager\TextureManager.h" />
     <ClInclude Include="Scene\TitleScene.h" />
