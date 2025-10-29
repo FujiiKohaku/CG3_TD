@@ -75,7 +75,7 @@ void WinApp::initialize()
     // ウィンドウ生成
     hwnd_ = CreateWindow(
         wc_.lpszClassName, // クラス名
-        L"CG2", // タイトル
+        L"2128_圧倒的投擲", // タイトル
         WS_OVERLAPPEDWINDOW, // スタイル
         CW_USEDEFAULT, CW_USEDEFAULT, // 位置（自動）
         wrc.right - wrc.left, // 幅

@@ -241,6 +241,7 @@ void Player::Update(const char* keys, const char* preKeys, float deltaTime, Inpu
                 float dotN = Dot(velocity_, normal);
                 velocity_ = Subtract(velocity_, Multiply(2.0f * dotN, normal));
                 effect_->Emit(position_);
+                sound_->SoundPlayWave(hitSE_, false);
                 break;
             }
         }
