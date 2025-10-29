@@ -12,11 +12,16 @@ public:
     bool IsCollision(const Sphere& playerSphere);
     bool GetIsActive() const { return isActive_; }
     int GetScore() const { return score_; }
+    Vector3 GetPosition() const { return position_; }
+
+    void SetPosition(Vector3 pos) { position_ = pos; }
+    void SetVelocity(Vector3 velocity) { velocity_ = velocity; }
 
     ~Coin();
 
 private:
     Vector3 position_ {};
+    Vector3 velocity_{};
     float radius_ = 1.0f;
     float scale_ = 1.0f;
     int score_ = 0;
