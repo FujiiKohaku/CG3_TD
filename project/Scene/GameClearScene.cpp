@@ -123,6 +123,7 @@ void GameClearScene::Finalize()
     delete planeLine_;
     delete plane_;
     delete spacelogo_;
+    delete soundManager_;
     ModelManager::GetInstance()->Finalize();
     TextureManager::GetInstance()->Finalize();
 }

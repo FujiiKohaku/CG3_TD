@@ -81,6 +81,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;Skydome;Object;Effect;fade;Score</AdditionalIncludeDirectories>
+      <Optimization>MinSpace</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -106,6 +107,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;Skydome;Object;Effect;fade;Score</AdditionalIncludeDirectories>
+      <Optimization>MinSpace</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -132,7 +134,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MinSpace</Optimization>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalIncludeDirectories>audio;debugcamera;math;input;Winapp;C:\Projects\2025A\CG2\project\externals;Logger;StringUtility;externals;D3DResourceLeakChecker;2D;DirectXCommon;TextureManager;3D;Camera;Scene;Player;Skydome;Object;Effect;fade;Score</AdditionalIncludeDirectories>
     </ClCompile>

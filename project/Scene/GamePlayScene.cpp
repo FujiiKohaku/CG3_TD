@@ -169,11 +169,7 @@ void GamePlayScene::Update(Input* input)
         // ImGui デバッグ表示
         // ==============================
 
-        ImGui::Begin("Debug Info");
-        if (pendulumPlayer_) {
-            ImGui::Text("Score: %d", pendulumPlayer_->GetPoint());
-        }
-        ImGui::End();
+
 
         keys = input->GetKeys();
         preKeys = input->GetPreKeys();
