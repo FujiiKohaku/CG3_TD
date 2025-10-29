@@ -59,6 +59,7 @@ void TitleScene::Initialize()
     sound_ = new SoundManager();
     sound_->Initialize();
     selectSe_ = sound_->SoundLoadWave("resources/select.wav");
+    Bgm_ = sound_->SoundLoadWave("resources/bgm2.wav");
     //----------------------------------------
     // モデル読み込み
     //----------------------------------------
@@ -122,12 +123,14 @@ void TitleScene::Initialize()
     spacelogo_->SetTranslate({ -2.0f, -1.0f, 0.0f });
     spacelogo_->SetScale({ 0.5f, 0.5f, 0.5f });
     spacelogo_->SetRotate({ std::numbers::pi_v<float> / 2.0f, 0.0f, 0.0f });
+
+     sound_->SoundPlayWave(Bgm_, true);
 }
 
 void TitleScene::Update(Input* input)
 {
     fade_->Update();
-
+   
     switch (phase_) {
     case Phase::kFadeIn:
         if (fade_->IsFinished()) {

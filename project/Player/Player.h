@@ -9,11 +9,12 @@
 #include "Object3d.h"
 #include "Object3dManager.h"
 #include "Pendulum.h"
+#include "ScoreBumper.h"
+#include "SoundManager.h"
 #include "StageSelectScene.h"
 #include "Struct.h"
 #include "algorithm"
 #include "cmath"
-#include "ScoreBumper.h"
 class Player {
 
     Vector3 position_ = { 0.0f, 0.2f, 0.0f };
@@ -119,4 +120,7 @@ private:
     Object3d* wallObjects_[4];
     Effect* effect_;
     ScoreBumper* scoreBumper_;
+    SoundManager* sound_ = nullptr; // サウンドマネージャ参照
+    SoundData hitSE_ {}; // 壁衝突音
+    
 };

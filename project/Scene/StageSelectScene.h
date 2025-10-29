@@ -33,4 +33,5 @@ private:
     Object3d* allow2_;
     SoundManager* sound_ = nullptr;
     SoundData selectSe_ {};
+    SoundData selectBgm_ {};
 };

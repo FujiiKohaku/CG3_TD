@@ -12,7 +12,7 @@ void Stage2Logic::Initialize()
             // 左下に移動
             Vector3 pos = { -17.0f + x * 3.0f, -16.0f + y * 2.5f, 0.0f };
 
-            coin->Initialize(pos, 1.0f, 10, object3dManager_, "Coin.obj");
+            coin->Initialize(pos, 1.0f, 5, object3dManager_, "Coin.obj");
             coins_.push_back(coin);
         }
     }
