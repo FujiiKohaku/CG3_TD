@@ -27,6 +27,7 @@ void StageSelectScene::Initialize()
     ModelManager::GetInstance()->initialize(GetDx());
     ModelManager::GetInstance()->LoadModel("stage1.obj");
     ModelManager::GetInstance()->LoadModel("Allow.obj");
+    ModelManager::GetInstance()->LoadModel("skydome.obj");
     // キューブ生成（3つ）
     for (int i = 0; i < 3; i++) {
         Object3d* cube = new Object3d();
@@ -62,6 +63,9 @@ void StageSelectScene::Initialize()
     selectSe_ = sound_->SoundLoadWave("resources/select.wav");
     selectBgm_ = sound_->SoundLoadWave("resources/selectBGM.wav");
     sound_->SoundPlayWave(selectBgm_, true);
+
+    /// スカイドーム
+    skydome_.Initialize(object3dManager_);
 }
 
 void StageSelectScene::Update(Input* input)
@@ -69,6 +73,7 @@ void StageSelectScene::Update(Input* input)
     if (fade_) {
         fade_->Update();
     }
+    skydome_.Update();
 
     switch (phase_) {
     case Phase::kFadeIn:
@@ -93,6 +98,7 @@ void StageSelectScene::Update(Input* input)
         }
 
         camera_->Update();
+        
 
         // 各キューブ更新
         for (int i = 0; i < cubes_.size(); i++) {
@@ -143,6 +149,7 @@ void StageSelectScene::Draw()
 
     object3dManager_->PreDraw();
 
+    skydome_.Draw();
     for (auto& cube : cubes_) {
         cube->Draw();
     }
@@ -164,7 +171,6 @@ void StageSelectScene::Finalize()
     cubes_.clear();
     delete object3dManager_;
     object3dManager_ = nullptr;
-
     delete camera_;
     camera_ = nullptr;
     delete allow_;

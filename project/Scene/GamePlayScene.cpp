@@ -63,8 +63,6 @@ void GamePlayScene::Initialize()
     bgm_ = soundManager_->SoundLoadWave("Resources/play.wav");
 
     soundManager_->SoundPlayWave(bgm_, true);
-    // 背景
-    skydome_.Initialize(object3dManager_);
 
     // バンパー生成
     bumper_ = new Bumper();
@@ -153,9 +151,9 @@ void GamePlayScene::Update(Input* input)
     // ==============================
     //  フレームの先頭処理
     // ==============================
-    ImGui_ImplDX12_NewFrame();
-    ImGui_ImplWin32_NewFrame();
-    ImGui::NewFrame();
+    //ImGui_ImplDX12_NewFrame();
+    //ImGui_ImplWin32_NewFrame();
+    //ImGui::NewFrame();
 
     if (phase_ == Phase::kMain) {
         int score = pendulumPlayer_->GetPoint(); // 例：プレイヤーのスコア取得
@@ -196,7 +194,7 @@ void GamePlayScene::Update(Input* input)
         }
     }
 
-    ImGui::Render(); // ImGuiの内部コマンドを生成（描画直前に呼ぶ）
+    //ImGui::Render(); // ImGuiの内部コマンドを生成（描画直前に呼ぶ）
 
     switch (phase_) {
     case Phase::kFadeIn:
@@ -249,7 +247,7 @@ void GamePlayScene::Draw()
     // ==============================
     // ImGui描画
     // ==============================
-    ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
+    //ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
 
     // ==============================
     // バックバッファ表示

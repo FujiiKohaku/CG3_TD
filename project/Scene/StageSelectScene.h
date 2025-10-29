@@ -4,6 +4,7 @@
 #include "Object3d.h"
 #include "Object3dManager.h"
 #include "SoundManager.h"
+#include "Skydome.h"
 #include <vector>
 class Fade;
 
@@ -34,4 +35,5 @@ private:
     SoundManager* sound_ = nullptr;
     SoundData selectSe_ {};
     SoundData selectBgm_ {};
+    Skydome skydome_;
 };
