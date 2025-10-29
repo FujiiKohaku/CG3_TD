@@ -151,9 +151,9 @@ void GamePlayScene::Update(Input* input)
     // ==============================
     //  フレームの先頭処理
     // ==============================
-    ImGui_ImplDX12_NewFrame();
-    ImGui_ImplWin32_NewFrame();
-    ImGui::NewFrame();
+    //ImGui_ImplDX12_NewFrame();
+    //ImGui_ImplWin32_NewFrame();
+    //ImGui::NewFrame();
 
     if (phase_ == Phase::kMain) {
         int score = pendulumPlayer_->GetPoint(); // 例：プレイヤーのスコア取得
@@ -167,11 +167,11 @@ void GamePlayScene::Update(Input* input)
         // ImGui デバッグ表示
         // ==============================
 
-        ImGui::Begin("Debug Info");
+       /* ImGui::Begin("Debug Info");
         if (pendulumPlayer_) {
             ImGui::Text("Score: %d", pendulumPlayer_->GetPoint());
         }
-        ImGui::End();
+        ImGui::End();*/
 
         keys = input->GetKeys();
         preKeys = input->GetPreKeys();
@@ -198,7 +198,7 @@ void GamePlayScene::Update(Input* input)
         }
     }
 
-    ImGui::Render(); // ImGuiの内部コマンドを生成（描画直前に呼ぶ）
+    //ImGui::Render(); // ImGuiの内部コマンドを生成（描画直前に呼ぶ）
 
     switch (phase_) {
     case Phase::kFadeIn:
@@ -251,7 +251,7 @@ void GamePlayScene::Draw()
     // ==============================
     // ImGui描画
     // ==============================
-    ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
+    //ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx()->GetCommandList());
 
     // ==============================
     // バックバッファ表示

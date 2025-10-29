@@ -118,6 +118,7 @@ void GameClearScene::Finalize()
 {
 
     delete logoObject_;
+    delete soundManager_;
     delete object3dManager_;
     delete camera_;
     delete planeLine_;
